@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_AnalogIn" Id="{db32e83e-8200-4436-9371-6da00ecde8b5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AnalogIn
+VAR_INPUT
+	StatusIn	: INT;					(* Status Analog input signal *)
+	ValueIn		: INT;					(* Analog input value *)
+	MinIn		: INT;					(* Minimum value for input signal *)
+	MaxIn		: INT;					(* Maximum value for input signal *)
+	MinOut		: REAL;					(* Minimum value for output signal *)
+	MaxOut		: REAL;					(* Maximum value for output signal *)
+END_VAR
+VAR
+	RangeIn		: REAL;
+	RangeOut	: REAL;
+END_VAR
+VAR_OUTPUT
+	Out			: AnalogSignal;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[	RangeIn 			:= INT_TO_REAL( MaxIn ) - INT_TO_REAL( MinIn );
+
+	RangeOut 			:= MaxOut - MinOut;
+
+	IF RangeIn <> 0
+	  AND ValueIn >= MinIn
+	  AND ValueIn <= MaxIn THEN
+		Out.rScaled 	:= ( ( ( INT_TO_REAL( ValueIn ) - INT_TO_REAL( MinIn ) ) / RangeIn ) * RangeOut ) + MinOut;
+	ELSE
+		Out.rScaled		:= 0;
+	END_IF
+
+	Out.iRawVal			:= ValueIn;
+
+(* Status *)
+	Out.bUnderRange 	:= StatusIn.0;
+	Out.bOverRange 		:= StatusIn.1;
+	Out.bLimit1.0 		:= StatusIn.2;
+	Out.bLimit1.1 		:= StatusIn.3;
+	Out.bLimit2.0 		:= StatusIn.4;
+	Out.bLimit2.1 		:= StatusIn.5;
+	Out.bError 			:= StatusIn.6;
+	Out.bPDO_State 		:= StatusIn.14;
+	Out.bPDO_Toggle		:= StatusIn.15;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_AnalogIn">
+      <LineId Id="11" Count="22" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

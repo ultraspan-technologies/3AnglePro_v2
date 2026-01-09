@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TAxAdapterStateModule" Id="{8e7f45c0-7f31-4ca8-b010-ea76c6e72d3f}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE TAxAdapterStateModule :
+STRUCT
+	///Axis is enabled
+	AxisEnabled: BOOL;
+	///DisableAxis requested
+	DisableAxisReq: BOOL;
+	///Error Code
+	ErrorCode: WORD;
+	///Error Cause
+	Errorcause: INT;
+	///Act Current [A]
+	AktCurrent: REAL;
+	///Act. Torque %
+	AktTorque: REAL;
+	///Act. Velocity [Rpm]
+	AktVel: REAL;
+	///Act. Intermediate Circuit Voltage
+	AktUZk: REAL;
+	///%
+	MotorI2T: REAL;
+	///%
+	InverterI2T: REAL;
+	InverterState: stInverterState;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

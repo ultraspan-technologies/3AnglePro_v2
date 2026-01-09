@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TAxAdapterCmdModule" Id="{6bf04d0d-5b18-4098-ab02-10cfd73ed822}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE TAxAdapterCmdModule :
+STRUCT
+	///Enable requested
+	EnableAxis: BOOL;
+	///DisableAxis
+	DisableAxis: BOOL;
+	///Geforderter OP-Mode
+	OP_Mode: BYTE;
+	///Maximales positives Drehmoment %
+	Max_TorquePositiv: WORD;
+	///Maximales negatives Drehmoment %
+	Max_TorqueNegativ: WORD;
+	/// >0 Enbl mit Startuprampe [s]
+	StartUpRamp: REAL;
+	/// Quickstopramp [s]
+	QuickStopRamp: REAL;
+	InverterCmd: stInverterCmd;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="AnalogSignal" Id="{7c07ec7e-6933-4fca-b4d9-84f63f9fd8d7}">
+    <Declaration><![CDATA[TYPE AnalogSignal :
+STRUCT
+	iRawVal 		: INT; 	(* raw readout *)
+	rScaled 		: REAL; (* scaled value between min and max *)
+	bUnderRange 	: BOOL;
+	bOverRange 		: BOOL;
+	bLimit1			: BYTE;
+	bLimit2			: BYTE;
+	bError			: BOOL;
+	bPDO_State		: BOOL;
+	bPDO_Toggle		: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

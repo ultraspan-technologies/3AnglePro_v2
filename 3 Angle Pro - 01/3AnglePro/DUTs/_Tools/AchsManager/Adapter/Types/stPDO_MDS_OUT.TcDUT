@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="stPDO_MDS_OUT" Id="{8f90f1b7-547d-4266-9fb5-4a80bf7e1757}">
+    <Declaration><![CDATA[TYPE stPDO_MDS_OUT :
+STRUCT
+	A180_DeviceControl: BYTE;
+	/// 	Controlbyte 1:
+	///	 Bit:0................	Freigabe
+	///		1................ Reset
+	///		2................ Schnellhalt
+	///		3................ Achsenanwahl (LowBit)
+	///		4................ Achsenanwahl (HighBit)
+	///		5................ Achsen deaktivieren
+	///		6................ Bremse öffnen
+	///		7................ ToggleBit
+	///	
+	P20_Control: WORD;
+	///Istgeschwindigkeit  -16384 bis 16384  entspricht 0..100% Override
+	D230_nSoll: INT;
+	///Max.moment  -16384 bis 16384  entspricht -100..100% Override relativ zu Maximalmoment
+	C230_M_Max: INT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

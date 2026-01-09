@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="stPDO_SEW_MOVI_C_IN" Id="{7239583c-5415-4244-9314-17f7286565bd}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE stPDO_SEW_MOVI_C_IN :
+STRUCT
+	///
+	///	BIT:	SEW aktuell // SEW Progress
+	///		0 BB // Ready to switch on 
+	///		1 STO inaktiv // Switched on 
+	///		2 Endstufenfreigabe // Operation enabled 
+	///		3 Bremse geöffnet // Fault 
+	///		4 Motor dreht // Voltage enabled 
+	///		5 Aktiver Antrieb referenziert // Quick stop (1 = Kein Schnellhalt aktiv )
+	///		6 Neue relative Position übernommen // Switch on disabled 
+	///		7 Meldung "In Position" aktiv // Warning 
+	///		8 Fehler // Spare
+	///		9 Warnung // Remote
+	///		10 Antriebsstrang 2 aktiv // pp: target reached/csp,csv,cst: Status toggle
+	///		11 Meldung "Geschwindigkeit-SOll_Ist_Vergleich" aktiv // internal limit active
+	///		12 SW-Endschalter inaktiv // csp,csv,cst: Drive follows command value/hm:homing attained
+	///		13 Reserviert // hm: error
+	///		14: Stand-by Betrieb aktiv // spare
+	///		15: spare
+	PE1_StatusWord: UINT;
+	///Aktuelle Geschwindigkeit [U/m]
+	PE2_Speed: UINT;
+	///Fehlercode BIT 8-15 Hauptfehler, BIT 0-7 Subfehler
+	PE3_ErrorCode: UINT;
+	///Aktueller Strom [mA]
+	PE4_Current_Motor: UINT;
+	///Aktuelles Moment [0.1%]
+	PE4_Torque: UINT;
+	///Digitaleingänge Grundgerät
+	PE5_Digital_IN: UINT;
+	PE6_ModesOfOperation: UINT := 200;
+	///Aktuelle Position [inc]
+	PE7_Position_LOW: DINT;
+	///Aktuelle Position [inc]
+	PE8_Position_HIGH: DINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="stPDO_EL72XX_IN" Id="{da4d1878-2550-4e65-9ec1-e7e2f2c4ccbd}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE stPDO_EL72XX_IN :
+STRUCT
+	///Bit 0..19 Singleturn, Bit 20..31 Multiturn
+	Position: DINT;
+	///	Bit0 = ready to switch on 
+	///									Bit1 = switched on 
+	///									Bit2 = Operation enabled 
+	///									Bit3 = Fault
+	///									Bit6 = Switched on disabled
+	///									Bit7 = Warning
+	Statusword: WORD;
+	///Actual Velocity
+	VelocityActualValue: DINT;
+	///Actual Torque 
+	TorqueActualValue: INT;
+	///InfoData1, Selected over CoE 8010:39 to return Errors
+	///									Bit0 = ADC Error
+	///									Bit1 = Overcurrent
+	///									Bit2 = Undervoltage
+	///									Bit3 = Overvoltage
+	///									Bit4 = Overtemperature
+	///									Bit5 = I^2 Amplifier
+	///									Bit6 = I^2 Motor
+	///									Bit7 = Encoder
+	///									Bit8 = Watchdog
+	Errors: WORD;
+	///Infodata2, Selected over CoE 8010:3A to return Warnings
+	///									Bit2 = Undervoltage
+	///									Bit3 = Overvoltage
+	///									Bit4 = Overtemperature
+	///									Bit5 = I^2 Amplifier
+	///									Bit6 = I^2 Motor
+	///									Bit7 = Encoder
+	Warnings: WORD;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

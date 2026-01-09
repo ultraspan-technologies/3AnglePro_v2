@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="stPDO_Lenze_IN" Id="{eb8979ac-0777-49ff-a2ef-9fb8eed57a0a}">
+    <Declaration><![CDATA[TYPE stPDO_Lenze_IN :
+STRUCT
+	wPI0_Statuswort1: WORD;
+	/// 	Statuswort 1:
+	///	 Bit:	0................	Referenz bekannt	(15ms verzögert) 
+	///		1................Impulssperre aktiv (0= Regler freigegeben)
+	///		2................
+	///		3................Unterspannung im ZK
+	///		4................	Antrieb im Ziel (Compare)
+	///		5................Motor Überlastet
+	///		6................Drehzahl Null (< C24)
+	///		7................Antrieb gesperrt
+	///		8................1=Sicher abgeschaltetes Moment
+	///		9................Profil abgeschlossen
+	///		10..............Beschleunigung aktiv
+	///		11..............Verzögerung aktiv
+	///		12............. Warnung aktiv
+	///		13..............Quickstop aktiv
+	///		14..............Fehler aktiv
+	///		15..............Toggle Bit
+	wPI1_Statuswort2: WORD;
+	///Istgeschwindigkeit  -16384 bis 16384  entspricht 0..100% Override relativ zu Einheiten/t (C1211/1 aus C11) 
+	iPI2_Geschwindigkeit_Ist: INT;
+	///Istmoment  -16384 bis 16384  entspricht 0..100% Override relativ zu Maximalmoment (C0057) 
+	iPI3_Moment_Ist: INT;
+	///Zwischenkreisspannung  0 bis 16384  entspricht 0..1000V DC Zwischenkreisspannung 
+	iPI4_Zwischenkreisspannung: INT;
+	///Mit Achse Systemmanager verknüpfen Istposition  -214748,3647 bis 214748,3647 
+	iPI5_SysMan_Position_Ist_High: INT;
+	///Mit Achse Systemmanager verknüpfen Istposition  -214748,3647 bis 214748,3647 
+	iPI6_SysMan_Position_Ist_Low: INT;
+	/// die letzten 26 Bits beinhalten die Fehlernummer 
+	iPI7_Fehler_Code_High: INT;
+	/// die letzten 26 Bits beinhalten die Fehlernummer 
+	iPI8_Fehler_Code_Low: INT;
+	/// -16384 bis 16384  entspricht -100%..100% Strom relativ zu Gerätenennstrom (C0789) 
+	iPI9_Motorstrom_Ist: INT;
+	/// 0 bis 16384  entspricht 0%..100% entspricht 1000V AC Effektivwert 
+	iPI10_Motorspannung_Ist: INT;
+	iPI11_Reserve: INT;
+	iPI12_Reserve: INT;
+	iPI13_Reserve: INT;
+	iPI14_Reserve: INT;
+	iPI15_Reserve: INT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

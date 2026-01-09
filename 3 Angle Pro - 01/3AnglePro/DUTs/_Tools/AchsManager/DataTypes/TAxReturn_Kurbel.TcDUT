@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TAxReturn_Kurbel" Id="{fcc584c8-87db-4f70-97b0-9bbc761d58bc}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE TAxReturn_Kurbel :
+STRUCT
+	///
+	///		BI0= fährt zurück,
+	///		BIT1= fährt vor,
+	///		BIT2= hat Referenz,
+	///		BIT3= Fehler	
+	Status: WORD;
+	///Position auf welche Positioniert werden soll [°]
+	Sollquote: REAL;
+	///Aktuelle IstPosition [°]
+	IstQuote: REAL;
+	///Position auf welche Positioniert werden soll [mm]
+	SollquoteLin: REAL;
+	///Aktuelle IstPosition [mm]
+	IstQuoteLin: REAL;
+	///Istgeschwindigkeit der Achse [°/s]
+	VelIst: REAL;
+	///Istgeschwindigkeit des Motors des Achse [upm]
+	VelIst_Motor: REAL;
+	///Aktueller Schleppabstand
+	Schlepp_Ist: REAL;
+	///Maximaler Schleppabstand während der letzten Positionierung
+	MaxSchlepp: REAL;
+	///Maximales Überschwingen während der letzten Positionierung
+	Ueberschw: REAL;
+	///Aktueller Ist-Strom [A]
+	I_Ist: REAL;
+	///Maximaler Strom während der letzten Positionierung [A]
+	Max_I: REAL;
+	///Aktuelles Drehmoment [%]
+	Akt_Moment: REAL;
+	///Maximales Drehmomen während der letzten Positionierung [%]
+	Max_Moment: REAL;
+	///i2t Umrichter [%]
+	i2t_Umrichter: REAL;
+	///i2t Motor [%]
+	i2t_Motor: REAL;
+	///Störungszähler
+	Stoerungszaehler: WORD;
+	///
+	///	Status der Achse
+	///		0	keine Aktion / Stillstand
+	///		1 	Schnellhalt SPS aktiv
+	///		2	Schnellhalt Umrichter aktiv
+	///
+	///		5	manuell vorwärts
+	///		6	manuell rückwärts
+	///		7	Referenzfahrt aktiv
+	///	
+	///		10	Positionierung Beschleunigungsphase aktiv
+	///		11	Positionierung Konstantfahrphase aktiv
+	///		12	Positionierung Bremsphase aktiv
+	DriveStatus: BYTE;
+	///
+	///	Zustand des Umrichters
+	///		0	Selbst-Test 
+	///		1	Einschalt-Sperre 
+	///		2	Einschalt-Bereit 
+	///		3	Eingeschaltet 
+	///		4	Freigegeben 
+	///		5	Störung 
+	///		6	Störungsreaktion 
+	///		7	Schnellhalt 
+	InverterStatus: BYTE;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

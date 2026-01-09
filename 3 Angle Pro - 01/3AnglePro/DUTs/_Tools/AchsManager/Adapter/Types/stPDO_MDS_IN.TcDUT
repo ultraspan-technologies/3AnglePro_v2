@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="stPDO_MDS_IN" Id="{200fc479-6342-4683-9a94-6e8caabf0ec8}">
+    <Declaration><![CDATA[TYPE stPDO_MDS_IN :
+STRUCT
+	E200_DeviceState: BYTE;
+	/// 	Statuswort 1:
+	///	 Bit:0................	Freigegeben, keine Störung
+	///		1................ Fehler
+	///		2................ Schnellhalt
+	///		3................ Achsenanwahl (LowBit)
+	///		4................ Achsenanwahl (HighBit)
+	///		5................ Achse ist aktiv
+	///		6................ Lokalbetrieb aktiv
+	///		7................ ToggleBit
+	///	
+	P10_State: INT;
+	/// 	Statuswort 1:
+	///	 Bit:0................
+	///		1................ False = Ladrelais geschlossen. Netzzuschaltung erlaubt.
+	///		
+	P82_Error: UINT;
+	///Upm
+	E91_v_Motor: INT;
+	E153_ActualPosition: DINT;
+	P157_LatchedCount: INT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

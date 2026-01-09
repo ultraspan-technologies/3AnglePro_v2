@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="AnalogSignal_DINT" Id="{80cdd7a5-cc35-43d3-8162-4a606adf2de8}">
+    <Declaration><![CDATA[TYPE AnalogSignal_DINT :
+STRUCT
+	dCounterValue	: DINT ;		// Raw counter value
+	rScaled			: REAL ;		// scaled value
+	bDataError		: BOOL ;		
+	bFrameError		: BOOL ;
+	bPowerFailure	: BOOL ;
+	bDataMismatch	: BOOL ;
+	bSyncError		: BOOL ;
+	bPDO_State		: BOOL ;
+	bPDO_Toggle		: BOOL ;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

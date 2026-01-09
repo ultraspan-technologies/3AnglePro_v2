@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_ReadDiagMessageEL72xx" Id="{7f3a1731-b3f5-44cd-b73c-22d3798b837e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ReadDiagMessageEL72xx
+VAR_INPUT
+	bExcecute: BOOL;
+	sNetId: STRING;
+	nSlaveAddr: UINT;
+END_VAR
+VAR_OUTPUT
+	messageID: WORD;
+	ts: TIMESTRUCT;
+END_VAR
+VAR
+	fbRead: FB_EcCoESdoRead;
+	fbWrite: FB_EcCoESdoWrite;
+	iState: USINT;
+	iIndex: USINT;
+	message: T_DiagMessage_EL72xx;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+CASE iState OF
+
+0:	IF bExcecute THEN
+		(* Read index of newest message *)
+		fbRead.nSubIndex:= 2;
+		fbRead.pDstBuf:= ADR(iIndex);
+		fbRead.cbBufLen:= SIZEOF(iIndex);
+		fbRead.bExecute:= TRUE;
+		fbWrite.bExecute:= FALSE;
+		iState:= iState + 1;
+	END_IF
+
+1:	IF NOT fbRead.bBusy THEN
+		(*Read newest message*)
+		fbRead.nSubIndex:= iIndex;
+		fbRead.pDstBuf:= ADR(message);
+		fbRead.cbBufLen:= SIZEOF(message);
+		fbRead.bExecute:= TRUE;
+		iState:= iState + 1;
+	END_IF
+
+2:	IF NOT fbRead.bBusy THEN
+		(*Write outputs (Error - ID and Timestamp)*)
+		messageID:= message.textId;
+		ts:= DCTIME64_TO_SYSTEMTIME(message.timestamp);
+		(*Acknowledge message*)
+		fbWrite.nSubIndex:= 3;
+		fbWrite.pSrcBuf:= ADR(iIndex);
+		fbWrite.cbBufLen:= SIZEOF(iIndex);
+		fbWrite.bExecute:= TRUE;
+		iState:=0;
+	END_IF
+
+END_CASE
+
+
+fbRead(
+	sNetId:=sNetId,
+	nSlaveAddr:= nSlaveAddr,
+	nIndex:= 16#10F3,
+	tTimeout:= T#10s,
+	bBusy=> ,
+	bError=> ,
+	nErrId=> );
+
+fbWrite(
+	sNetId:= sNetId,
+	nSlaveAddr:= nSlaveAddr,
+	nSubIndex:= 3,
+	nIndex:= 16#10F3,
+	tTimeout:= T#10s,
+	bBusy=> , 
+	bError=> , 
+	nErrId=> );
+
+fbRead.bExecute:= FALSE;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_ReadDiagMessageEL72xx">
+      <LineId Id="3" Count="55" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

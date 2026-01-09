@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_CheckIfLoadRelaisMDSOk" Id="{fc60617a-ff49-4ae0-854e-643f7ba8f98e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_CheckIfLoadRelaisMDSOk
+VAR_IN_OUT
+	///Diese Varible wird in diesem Bausteinm initialisiert und gegebenenfalls von den Umrichtern zurückgesetzt		
+	LoadRelayMDSClosed: BOOL;
+END_VAR
+VAR_OUTPUT
+	///Das Laderelais muss für min 12s geschlossen sein um die Treiberschütze zuzuschalten
+	LoadRelayMDSOk: BOOL;
+END_VAR
+VAR
+	TonLoadRelayOk: TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//Check if a inverter has resetet that the load relais is ok
+TonLoadRelayOk(IN:=LoadRelayMDSClosed,PT:=T#10S);
+LoadRelayMDSOk:=TonLoadRelayOk.Q;
+
+//Initialice load relais ok
+LoadRelayMDSClosed:=TRUE;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_CheckIfLoadRelaisMDSOk">
+      <LineId Id="3" Count="4" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,233 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <GVL Name="GVL" Id="{05d49b24-de93-43f1-a914-a9fdd31de259}">
+    <Declaration><![CDATA[{attribute 'Tc2GvlVarNames'}
+VAR_GLOBAL
+	
+	bInlifeBeat: BOOL;
+		T_200ms: BOOL;
+	
+	
+// ########## Stober setup ##########//
+	SharedSettings: TAxSettingsModule := (  //the 4 setting itself are general constants that are set at the begining. 
+		MaxPos := 100000,
+		MinPos := 0,
+		Velocity := 150,
+		Accel := 100, 
+		Deccel := 100	); //the specific setting for this axis are shared bewteen multiple FB // make sure the delay is enought to avoid the STO lock
+	// use the definition of the TAXSettingsModule to see what is avaialbe. there are options for slave, coupled, Etc.....
+
+	Carriage_Axis :TAXmodule;
+	PDO_CARRIAGEax_IN AT %I* :stPDO_SI6_IN;
+	PDO_CARRIAGEax_OUT AT %Q* :stPDO_SI6_OUT;
+	
+	CarriageSettings: TAxSettingsModule := (  
+		MaxPos		:= 100000,
+		MinPos		:= 0,
+		Velocity	:= 150,
+		Accel		:= 100, 
+		Deccel		:= 100	);
+		
+	fbCarriage_manager: FB_AchsManager;
+	
+	Turret_Axis :TAXmodule;
+	PDO_TURRETax_IN AT %I* :stPDO_SI6_IN;
+	PDO_TURRETax_OUT AT %Q* :stPDO_SI6_OUT;
+	
+	TurretSettings: TAxSettingsModule := (  
+		MaxPos		:= 100000,
+		MinPos		:= 0,
+		Velocity	:= 150,
+		Accel		:= 100, 
+		Deccel		:= 100	);
+		
+	fbTurret_manager: FB_AchsManager;
+	
+	CrossCut_Axis :TAXmodule;
+	PDO_CROSSCUTax_IN AT %I* :stPDO_SI6_IN;
+	PDO_CROSSCUTax_OUT AT %Q* :stPDO_SI6_OUT;
+	
+	CrossCutSettings: TAxSettingsModule := (  
+		MaxPos		:= 100000,
+		MinPos		:= 0,
+		Velocity	:= 150,
+		Accel		:= 100, 
+		Deccel		:= 100	);
+		
+	fbCrossCut_manager: FB_AchsManager;
+	
+	XDrive_Axis :TAXmodule;
+	PDO_XDRIVEax_IN AT %I* :stPDO_SI6_IN;
+	PDO_XDRIVEax_OUT AT %Q* :stPDO_SI6_OUT;
+	
+	XDriveSettings: TAxSettingsModule := (  
+		MaxPos		:= 100000,
+		MinPos		:= 0,
+		Velocity	:= 150,
+		Accel		:= 100, 
+		Deccel		:= 100	);
+		
+	fbXDrive_manager: FB_AchsManager;
+	
+	Z1_Axis :TAXmodule;
+	PDO_Z1ax_IN AT %I* :stPDO_SI6_IN;
+	PDO_Z1ax_OUT AT %Q* :stPDO_SI6_OUT;
+	
+	Z2_Axis :TAXmodule;
+	PDO_Z2ax_IN AT %I* :stPDO_SI6_IN;
+	PDO_Z2ax_OUT AT %Q* :stPDO_SI6_OUT;
+	
+	fbZ1_manager: FB_AchsManager;
+	fbZ2_manager: FB_AchsManager;
+	
+	Z1Settings: TAxSettingsModule := (   
+		MaxPos		:= 100000,
+		MinPos		:= 0,
+		Velocity	:= 150,
+		Accel		:= 100, 
+		Deccel		:= 100,	
+	
+		IsCoupled	:= FALSE			///The axis is coupled with other axes.
+	);
+		
+	Z2Settings: TAxSettingsModule := (  
+		MaxPos		:= 100000,
+		MinPos		:= 0,
+		Velocity	:= 150,
+		Accel		:= 100, 
+		Deccel		:= 100,	
+		
+		IsCoupled	:= FALSE,			///The axis is coupled with other axes.
+		IsSlave		:=TRUE,				///Axis is slave in a Master/Slave application
+		Slave_MaxDiff := 20,			///Maximum deviation between Master and Slave for Positioning; default 20
+		Slave_MaxDiff_Enbl := 100		///Maximum deviation between Master and Slave for ENBL	; default 100
+									);
+// ########## Stober setup ##########//
+
+	
+	
+	XDrivePot	:INT;
+	
+	refsens AT %I* :BOOL;
+	
+	
+// ########## Import ##########//
+	bSafetyOK		: BOOL ;
+	bAutoCrossCut	: BOOL ;
+	bMachineHoming: BOOL;
+	bTurretHome: BOOL;
+	bCarriageHomeRH: BOOL;
+	bCarriageHomeLH: BOOL;
+	bCrossCutHomeLH: BOOL;
+	bCrossCutHomeRH: BOOL;
+	bZAxisHome: BOOL;
+	
+	fbSawCurrent: FB_AnalogIn;
+	
+	bLimitLeft: BOOL;
+    bLimitRight: BOOL;
+	bCrossCutCentre: BOOL;
+	bCrossCutCentreForRotation: BOOL;
+	bApproachingLimitRight: BOOL;
+	bApproachingLimitLeft: BOOL;
+	dCrossCutMedian: DINT;
+	
+	//bTurretReturn: BOOL;
+	//TurretReturn: SR;
+	bTriggerReset: BOOL;
+	bTurretMedianRange: BOOL;
+	bTurretBufferSpeed: BOOL;
+	
+	//Ax1	:	AXIS_REF;
+	//Ax2	:	AXIS_REF;
+	//fbMC_GearIn: MC_GearIn;
+	
+	bSawUP		:	BOOL;
+	bSawDOWN	:	BOOL;
+	
+	bAnyServoError: BOOL;
+	bAutoCrossCutErr: BOOL;
+	
+	uTurretSSIMedian: UDINT;
+	bTurretUnderMedian: BOOL;
+	bTurretOverMedian: BOOL;
+	bTurret045Range: BOOL;
+	
+	RS_TriggerStopLH: RS;
+	RS_TriggerStopRH: RS;
+	
+	//fbCarriageValueFilter: FB_IntFilter;
+	rCrossCutSpeedMultiplier: REAL;
+	dRailLimitLeft: DINT;
+	dRailLimitRight: DINT;
+	bEchainCrashPosLeft: BOOL;
+	bEchainCrashPosRight: BOOL;
+	
+	bTurretMedian: BOOL;
+	bTurretCW: BOOL;
+	bTurretCCW: BOOL;
+	
+	// Visualization Variables
+	bRemote: BOOL;
+(*	bAutoCrossCutSingle: BOOL;
+	bAutoCrossCutDouble: BOOL;
+	bZAxisSlow: BOOL;
+	bZAxisMed: BOOL;
+	bZAxisFast: BOOL;
+	bTrtCCW: BOOL;
+	bTrtCW: BOOL;
+	bCrgLH: BOOL;
+	bCrgRH: BOOL;
+	bTeachLeft: BOOL;
+	bTeachRight: BOOL; *)
+	
+	bLostTurretRetainValues: BOOL;
+	bLostCrossCutRetainValues: BOOL;
+	R_TRIG_TurretValue: R_TRIG;
+
+
+	bXDriveFwd: BOOL;
+	bXDriveRev: BOOL;
+	bRipCutSpeed: BOOL;
+	bSawUpLimit: BOOL;
+	bSawDownLimit: BOOL;
+	bCarriageRightEN: BOOL;
+	bCarriageLeftEN: BOOL;
+	bTurretCWEN: BOOL;
+	bTurretCCWEN: BOOL;
+	bTurretJogFast: BOOL;
+	bWaterLine: BOOL;
+	bSawCutEN: BOOL;
+	bSawReturnEN: BOOL;
+	bZAxisUpEN: BOOL;
+	bZAxisDownEN: BOOL;
+	bAutoCrossCutDouble: BOOL;
+	bAutoCrossCutReady: BOOL;
+	lCarriageMedian: LREAL;
+	bCarriageCentreReference: BOOL;
+	rCrossCutJogVelocity: REAL;
+	bCarriageJogFast: BOOL;
+	bTeachReadyLeft: BOOL;
+	bTeachReadyRight: BOOL;
+	bTeach: BOOL;
+	bCarriageCentreRef: BOOL;
+	AnalogIn_DINT_Turret: FB_AnalogIn_DINT;
+	rZAxisSpeed: REAL;
+	rCarriageMedian: LREAL;
+	AnalogIn_LREAL_Carriage: FB_AnalogIn_LREAL;
+	bCrossCutLeftLimit: BOOL;
+	bCrossCutRightLimit: BOOL;
+	
+	
+	
+//########## HMI Controls ##########//
+	bHorn: BOOL;
+	bFieldLight: BOOL;
+	bCarriageEN: BOOL;
+	bTurretEN: BOOL;
+	bCrossCutEN: BOOL;
+	bCrossCutHMIsensor AT%Q* :BOOL;
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

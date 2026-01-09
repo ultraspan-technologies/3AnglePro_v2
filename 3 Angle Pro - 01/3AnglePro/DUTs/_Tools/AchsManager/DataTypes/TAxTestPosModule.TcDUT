@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TAxTestPosModule" Id="{f541ff2e-05f8-48c6-9965-23de6e9f182c}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE TAxTestPosModule :
+STRUCT
+	///Start TestPositionierung
+	Start: BOOL;
+	///SollPos 1
+	Pos1: REAL;
+	///SollPos 2
+	Pos2: REAL;
+	///Geschwindigkeitsoverride [%]
+	Vel_Over: INT;
+	///Beschleunigungsoverride [%]
+	Acc_Over: INT;
+	///Verzögerungszeit umschalten Sollpos 1 <-> 2
+	T_Wait: TIME;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="AnalogSignal_LREAL" Id="{fb377253-3432-44a4-9094-84524a363657}">
+    <Declaration><![CDATA[TYPE AnalogSignal_LREAL :
+STRUCT
+	lCounterValue	: LREAL ;		// Raw counter value
+	rScaled			: REAL ;		// scaled value
+	bDataError		: BOOL ;		
+	bFrameError		: BOOL ;
+	bPowerFailure	: BOOL ;
+	bDataMismatch	: BOOL ;
+	bSyncError		: BOOL ;
+	bPDO_State		: BOOL ;
+	bPDO_Toggle		: BOOL ;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

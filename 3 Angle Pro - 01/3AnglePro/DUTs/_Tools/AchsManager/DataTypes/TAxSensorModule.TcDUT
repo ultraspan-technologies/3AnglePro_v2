@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TAxSensorModule" Id="{84c2b2b7-363d-4449-aa4f-a1d9d04fe112}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE TAxSensorModule :
+STRUCT
+	///Temperaturkontakt Motor (Extern nicht über Umrichter)
+	E_TempKont_Mot: BOOL := TRUE;
+	///Maximalendschalter. Bei Automatischer Positionierung in positive Richtung (Vel>0) wird ein Fehler ausgegeben, wenn das Signal = TRUE wird
+	E_Vor: BOOL;
+	///Minimalendschalter. Bei Automatischer Positionierung in negative Richtung (Vel<0) wird ein Fehler ausgegeben, wenn das Signal = TRUE wird
+	E_Zur: BOOL;
+	///Wenn TRUE wird die Positionierung im JOG Modus in positive Richtung blockiert
+	E_Vor_Jog: BOOL;
+	///Wenn TRUE wird die Positionierung im JOG Modus in negative Richtung blockiert
+	E_Zur_Jog: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

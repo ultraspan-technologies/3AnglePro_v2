@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="T_DiagMessage_EL72xx" Id="{4de8bc70-f8cc-48e0-a056-435475ade583}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE T_DiagMessage_EL72xx :
+STRUCT
+	diagCode: DWORD;
+	flags: WORD;
+	textId: WORD;
+	timestamp: T_DCTIME64;
+	data: ARRAY[0..11] OF BYTE;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

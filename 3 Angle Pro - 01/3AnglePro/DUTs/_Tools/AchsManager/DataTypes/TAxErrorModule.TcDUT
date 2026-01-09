@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TAxErrorModule" Id="{43c14ad6-ff8b-4a28-b9dd-6d5481c4fd1b}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE TAxErrorModule :
+STRUCT
+	PEH: BOOL;
+	Inverter: BOOL;
+	Voltage: BOOL;
+	///Fehler Sicherheitsmodul
+	SY6: BOOL;
+	Mottemp: BOOL;
+	/// positiv
+	SWEP: BOOL;
+	///negativ
+	SWEN: BOOL;
+	/// positiv
+	HWEP: BOOL;
+	///negativ
+	HWEN: BOOL;
+	Out_of_Bounds: BOOL;
+	SynDel: BOOL;
+	SCHLStill: BOOL;
+	SCHLfahr: BOOL;
+	MaxDiff_MasterSlave: BOOL;
+	TimoutEnbl: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

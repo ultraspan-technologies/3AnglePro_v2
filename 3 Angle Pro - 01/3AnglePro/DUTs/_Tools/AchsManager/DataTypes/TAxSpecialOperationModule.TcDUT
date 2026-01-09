@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TAxSpecialOperationModule" Id="{2e844530-7a29-40d4-bb6a-02c8a8f95317}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE TAxSpecialOperationModule :
+STRUCT
+	///Externe Freigabe. Wenn FALSE kann die Achse nicht gestartet werden
+	RelDrive: BOOL := TRUE;
+	///Umrichter disablen (bei VEL<>0 wird zuerst gebremst und dann disabled)
+	Disable: BOOL;
+	///Externe Fehlernummer. Wenn <> 0 wird AXERROR = ExtErrNr gesetzt
+	SetErrNr: WORD;
+	///Externer Reset auf die Achse. Hat bei OpMode 8 keine Funktion. ( z.B. für Vorschub)
+	AxisReset: BOOL;
+	///Externes Referenzsignal nur bei SyncMode=2 relevant
+	Sync: BOOL;
+	///Referenz löschen. Nur bei SyncMode=1 relevant
+	ResetSync: BOOL;
+	///IstPosition auf RefPos setzen
+	SetPos: BOOL;
+	///Referenzposition bei SetPos
+	RefPos: REAL;
+	///Geschwindigkeits-Begrenzung für die Achse
+	VelLimit: REAL := REAL#1E+20;
+	///Beschleunigungs-Begrenzung für die Achse
+	AccLimit: REAL := REAL#1E+20;
+	///Verzögerungs-Begrenzung für die Achse. wenn =0, wird ACC-Limit verwendet!!
+	DccLimit: REAL;
+	///Ruck-Begrenzung für die Achse. wenn =0, wird Rb-Limit nicht verwendet!!
+	RBLimit: REAL;
+	///Bremse der Achse lüften
+	BrLueft: BOOL := FALSE;
+	///Für Parameterumschaltung. Hier kann die ParameterListe gewählt werden. Braucht es nur, wenn ein AchsManager mehrere Parametersätze braucht z.B. Haspel SLVC und UF
+	ParamSwitch_List_Req: BYTE;
+	///TestPos Modul
+	Testpos: TAxTestPosModule;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

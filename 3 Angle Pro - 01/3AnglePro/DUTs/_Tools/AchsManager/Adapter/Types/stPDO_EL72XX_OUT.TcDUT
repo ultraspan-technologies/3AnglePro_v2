@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="stPDO_EL72XX_OUT" Id="{c55e33bb-a003-4fe6-9b1d-54e94ea4c821}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE stPDO_EL72XX_OUT :
+STRUCT
+	///	0x07 = Switch on
+	///									0x06 = Shutdown 
+	///									0x0F = Enable operation
+	///									0x80 = Fault reset
+	Controlword: WORD;
+	///Target Velocity Scaling defined in 0x9010:14
+	TargetVel: DINT;
+	///Target-Torque Thousandths of rated Current (1000 = 100%)
+	TargetTorque: INT;
+	///Max-Torque Thousandths of rated Current (1000 = 100%)
+	TorqueLimit: UINT := 32767;
+	///Targetposition
+	TargetPosition: DINT;
+	///Operational Mode :  
+	///									0x08 = Cyclic synchronous position mode (CSP)  
+	///									0x09 = Cyclic synchronous velocity mode (CSV)
+	///									0x0A = Cyclic synchronous torque mode (CST)   
+	///									0x0B = Cyclic synchronous torque mode with commutation angle (CSTCA)
+	OpMode: BYTE;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

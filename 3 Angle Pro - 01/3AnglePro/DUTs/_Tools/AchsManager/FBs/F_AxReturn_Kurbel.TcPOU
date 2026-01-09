@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="F_AxReturn_Kurbel" Id="{b04a2ee5-4bbb-42fd-8adc-925f22c7a2c3}" SpecialFunc="None">
+    <Declaration><![CDATA[///Funktion dient zum "Umwandeln" des normalen AxReturns in den AxReturn für Kurbelachsen
+FUNCTION F_AxReturn_Kurbel : TAxReturn_Kurbel
+VAR_INPUT
+	IstQuoteLin: LREAL;
+	SollQuoteLin: LREAL;
+	AxReturn: TAxReturn;
+	Settings: TAxSettingsModule;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[F_AxReturn_Kurbel.Status 			:=	AxReturn.Status;
+F_AxReturn_Kurbel.Sollquote 		:= 	AxReturn.Sollquote;
+F_AxReturn_Kurbel.IstQuote 			:=	AxReturn.IstQuote;
+F_AxReturn_Kurbel.SollquoteLin 		:=	F_Round(SollQuoteLin * Settings.AxReturnMultiplyer,Settings.AxReturnKommaStellen);
+F_AxReturn_Kurbel.IstQuoteLin		:= 	F_Round(IstQuoteLin * Settings.AxReturnMultiplyer,Settings.AxReturnKommaStellen);
+F_AxReturn_Kurbel.VelIst 			:= 	AxReturn.VelIst;
+F_AxReturn_Kurbel.VelIst_Motor 		:=	AxReturn.VelIst_Motor;
+F_AxReturn_Kurbel.Schlepp_Ist 		:=	AxReturn.Schlepp_Ist;
+F_AxReturn_Kurbel.MaxSchlepp		:=	AxReturn.MaxSchlepp;
+F_AxReturn_Kurbel.Ueberschw 		:=	AxReturn.Ueberschw;
+F_AxReturn_Kurbel.I_Ist 			:=	AxReturn.I_Ist;
+F_AxReturn_Kurbel.Max_I 			:=	AxReturn.Max_I;
+F_AxReturn_Kurbel.Akt_Moment 		:=	AxReturn.Akt_Moment;
+F_AxReturn_Kurbel.Max_Moment 		:=	AxReturn.Max_Moment;
+F_AxReturn_Kurbel.i2t_Umrichter 	:= 	AxReturn.i2t_Umrichter;
+F_AxReturn_Kurbel.i2t_Motor 		:=	AxReturn.i2t_Motor;
+F_AxReturn_Kurbel.Stoerungszaehler 	:= 	AxReturn.Stoerungszaehler;
+F_AxReturn_Kurbel.DriveStatus 		:= 	AxReturn.DriveStatus;
+F_AxReturn_Kurbel.InverterStatus 	:= 	AxReturn.InverterStatus;]]></ST>
+    </Implementation>
+    <LineIds Name="F_AxReturn_Kurbel">
+      <LineId Id="3" Count="17" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

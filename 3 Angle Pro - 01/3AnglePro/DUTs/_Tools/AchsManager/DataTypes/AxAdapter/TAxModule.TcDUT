@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TAxModule" Id="{fa4402d2-86e0-445c-bb5f-6c03aeee5b94}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE TAxModule :
+STRUCT
+	///	Achs IN	
+	AchsIn: TKont_Achse_IN;
+	///	Achs Out	
+	AchsOut: TKont_Achse_OUT;
+	///	Status	
+	AxState: TAxAdapterStateModule;
+	///	Befehle	
+	AxCmd: TAxAdapterCmdModule;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TAxDriveModule" Id="{60022be4-dbdd-420b-b305-6d414a98c1ca}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE TAxDriveModule :
+STRUCT
+	///Umrichter freigeben
+	Enable: BOOL;
+	///Referenzfahrt ausführen (Nur wenn Sync = FALSE)
+	Ref: BOOL;
+	///Starte Positionierung auf SollPos (nur wenn Sync = TRUE)
+	StartPos: BOOL;
+	///Sollposition
+	SollPos: LREAL;
+	///jog vorwärts
+	Jog_FW: BOOL;
+	///jog rückwärts
+	Jog_BW: BOOL;
+	///Limitierte Position im Jog Betrieb (1E100 = deaktiviert)
+	LimitposJog: LREAL := 1E+100;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

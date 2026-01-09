@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_AnalogIn_LREAL" Id="{260db007-616b-4fe0-b6ad-b31f3e99c861}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AnalogIn_LREAL
+VAR_INPUT
+	
+	ValueIn		: LREAL;				(* Analog input value *)
+	MinIn		: LREAL;				(* Minimum value for input signal *)
+	MaxIn		: LREAL;				(* Maximum value for input signal *)
+	MinOut		: REAL;					(* Minimum value for output signal *)
+	MaxOut		: REAL;					(* Maximum value for output signal *)
+	
+END_VAR
+VAR_OUTPUT
+	Out			: AnalogSignal_LREAL;
+END_VAR
+VAR
+	RangeIn: REAL;
+	RangeOut: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Rescale input *)
+
+	RangeIn 			:= LREAL_TO_REAL( MaxIn ) - LREAL_TO_REAL( MinIn );
+
+	RangeOut 			:= MaxOut - MinOut;
+
+	IF RangeIn <> 0
+	(*  AND ValueIn >= MinIn
+	  AND ValueIn <= MaxIn *) THEN
+		Out.rScaled 	:= ( ( ( LREAL_TO_REAL( ValueIn  -  MinIn ) ) / RangeIn ) * RangeOut ) + MinOut;
+	ELSE
+		Out.rScaled		:= 0;
+	END_IF
+
+	Out.lCounterValue			:= ValueIn;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_AnalogIn_LREAL">
+      <LineId Id="20" Count="13" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

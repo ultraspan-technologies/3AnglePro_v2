@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PRG_IO" Id="{d36f4d4f-0390-4c81-a0be-a6634af3cb53}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_IO
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[			(* INPUTS *)
+// ID1			
+	IN_bSawBladeSTART			:= IO.ID1.Ch1 ;
+	IN_bSawBladeSTOP			:= IO.ID1.Ch2 ;
+	IN_bJoystickUp		  		:= IO.ID1.Ch3 ;
+	IN_bJoystickDown	 		:= IO.ID1.Ch4 ;
+	IN_bJoystickLeft	 		:= IO.ID1.Ch5 ;
+	IN_bJoystickRight			:= IO.ID1.Ch6 ;
+	IN_bXDriveFwd				:= IO.ID1.Ch7 ;
+	IN_bXDriveRev				:= IO.ID1.Ch8 ;
+	                                           
+// BC1	                    	
+	IN_bCarriageRHLimit			:= IO.BC1.Ch1 ;
+//	IN_b						:= IO.BC1.Ch2 ;
+	IN_bCarriageLHLimit			:= IO.BC1.Ch3 ;
+//	IN_b						:= IO.BC1.Ch4 ;
+//	IN_b						:= IO.BC1.Ch5 ;
+//	IN_b						:= IO.BC1.Ch6 ;
+//	IN_b						:= IO.BC1.Ch7 ;
+//	IN_b						:= IO.BC1.Ch8 ;               
+                                
+// ID3	                    	
+	IN_bRemoteUP				:= IO.ID3.Ch1 ;
+	IN_bRemoteDOWN				:= IO.ID3.Ch2 ;
+	IN_bRemoteCUT				:= IO.ID3.Ch3 ;
+	IN_bRemoteRETURN			:= IO.ID3.Ch4 ;
+	IN_bRemoteCrgLH				:= IO.ID3.Ch5 ;
+	IN_bRemoteCrgRH				:= IO.ID3.Ch6 ;
+	IN_bRemoteTrtCCW			:= IO.ID3.Ch7 ;               
+	IN_bRemoteTrtCW				:= IO.ID3.Ch8 ;
+                                
+// ID4	                        
+	IN_bRemoteDrvFwd			:= IO.ID4.Ch1 ;
+	IN_bRemoteDrvRev			:= IO.ID4.Ch2 ;
+	IN_bRemoteSawON				:= IO.ID4.Ch3 ;
+	IN_bDownLimit				:= IO.ID4.Ch4 ;			// IN_bRemoteStop
+	IN_bAutoCrossCut			:= IO.ID4.Ch5 ;
+	IN_bSawMOLReady				:= IO.ID4.Ch6 ;
+	IN_bCableReelMOLReady		:= IO.ID4.Ch7 ;
+	IN_bHoseReelMOLReady		:= IO.ID4.Ch8 ;
+                   	
+			(* OUTPUTS *) 
+// OD1  	
+	IO.OD1.Ch1					:=	OUT_bFaultResetLED			;
+	IO.OD1.Ch2					:=	OUT_bSawONLED				;
+	IO.OD1.Ch3					:=	OUT_bFieldLight				;
+	IO.OD1.Ch4					:=	OUT_bSprayer				;
+	IO.OD1.Ch5					:=	OUT_bSignalLightReelside	;
+	IO.OD1.Ch6					:=	OUT_bSignalLightPanelside	;
+	IO.OD1.Ch7					:=	OUT_bHorn					;
+	IO.OD1.Ch8					:=	OUT_bWaterLine				;
+						                                        
+// OD2	                                                        
+	IO.OD2.Ch1					:=	OUT_bCableReel				;
+	IO.OD2.Ch2					:=	OUT_bHoseReel				;
+	IO.OD2.Ch3					:=	OUT_bSawON					;
+//	IO.OD2.Ch4					:=	OUT_b						;
+//	IO.OD2.Ch5					:=	OUT_b						;
+//	IO.OD2.Ch6					:=	OUT_b						;
+//	IO.OD2.Ch7					:=	OUT_b						;
+	IO.OD2.Ch8					:=	OUT_bAutoCrosscutLED		;]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_IO">
+      <LineId Id="6" Count="59" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

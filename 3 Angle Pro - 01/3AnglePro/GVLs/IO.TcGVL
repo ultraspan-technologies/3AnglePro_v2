@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="IO" Id="{14511736-6f41-4a6c-aae8-6958c7d7a495}">
+    <Declaration><![CDATA[VAR_GLOBAL
+	
+	ID1							AT%I*		: ST_IOcard ;
+	BC1							AT%I*		: ST_IOcard ;
+	ID3							AT%I*		: ST_IOcard ;
+	ID4							AT%I*		: ST_IOcard ;
+
+	
+	IN_iSawCurrentValue			AT%IW100	: INT ;
+	IN_iSawCurrentStatus		AT%IW101	: INT ;
+	
+	IN_iXDrivePotValue			AT%IW130	: INT ;
+	IN_iXDrivePotStatus			AT%IW131	: INT ;
+	
+//	IN_iCarriagePOSValue		AT%IW136	: INT ;
+//	IN_iCarriagePOSStatus		AT%IW137	: INT ;
+	
+//	IN_iCarriageTESTValue		AT%IW140	: INT ;
+//	IN_iCarriageTESTStatus		AT%IW141 	: INT ;
+
+	OD1							AT%Q*		: ST_IOcard ;
+	OD2							AT%Q*		: ST_IOcard ;
+
+	
+//	OUT_iEncoderDisplay			AT%QW105	: INT ;
+//	OUT_iCrossCutFeedback		AT%QW106	: INT ;
+//	OUT_iXDriveFeedback			AT%QW107	: INT ;
+
+	
+//	IN_uTurretSSI				AT%IW110	: UDINT ;
+//	IN_uCrossCutSSI				AT%IW116	: UDINT ;
+
+	
+	
+			(* INPUTS *)
+// ID1			
+	IN_bSawBladeSTART			: BOOL;
+	IN_bSawBladeSTOP			: BOOL;
+	IN_bJoystickUp				: BOOL;
+	IN_bJoystickDown			: BOOL;
+	IN_bJoystickLeft			: BOOL;
+	IN_bJoystickRight			: BOOL;
+	IN_bXDriveFwd				: BOOL;
+	IN_bXDriveRev				: BOOL;
+	
+// BC1	                    		
+	IN_bCarriageRHLimit			: BOOL;
+//	IN_b						: BOOL;
+	IN_bCarriageLHLimit			: BOOL;
+//	IN_b						: BOOL;
+//	IN_b						: BOOL;
+//	IN_b						: BOOL;
+//	IN_b						: BOOL;
+//	IN_b						: BOOL;
+
+// ID3	                    		
+	IN_bRemoteUP				: BOOL;
+	IN_bRemoteDOWN				: BOOL;
+	IN_bRemoteCUT				: BOOL;
+	IN_bRemoteRETURN			: BOOL;
+	IN_bRemoteCrgLH				: BOOL;
+	IN_bRemoteCrgRH				: BOOL;
+	IN_bRemoteTrtCCW			: BOOL;
+	IN_bRemoteTrtCW				: BOOL;
+
+// ID4	                        	
+	IN_bRemoteDrvFwd			: BOOL;
+	IN_bRemoteDrvRev			: BOOL;
+	IN_bRemoteSawON				: BOOL;
+	IN_bDownLimit				: BOOL;		// IN_bRemoteStop
+	IN_bAutoCrossCut			: BOOL;		
+	IN_bSawMOLReady				: BOOL;
+	IN_bCableReelMOLReady		: BOOL;
+	IN_bHoseReelMOLReady		: BOOL;
+                   	
+			(* OUTPUTS *) 
+// OD1  	
+	OUT_bFaultResetLED			: BOOL;
+	OUT_bSawONLED				: BOOL;
+	OUT_bFieldLight				: BOOL;
+	OUT_bSprayer				: BOOL;
+	OUT_bSignalLightReelside	: BOOL;
+	OUT_bSignalLightPanelside	: BOOL;
+	OUT_bHorn					: BOOL;
+	OUT_bWaterLine				: BOOL;
+
+// OD2	                        	
+	OUT_bCableReel				: BOOL;
+	OUT_bHoseReel				: BOOL;
+	OUT_bSawON					: BOOL;
+//	OUT_b						: BOOL;
+//	OUT_b						: BOOL;
+//	OUT_b						: BOOL;
+//	OUT_b						: BOOL;
+	OUT_bAutoCrosscutLED		: BOOL;
+
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

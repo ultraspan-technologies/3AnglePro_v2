@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="stPDO_SI6_IN" Id="{f9cffc6e-e9d1-4ad7-8da0-be7abd7e982e}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE stPDO_SI6_IN :
+STRUCT
+	///
+	///	BIT:
+	///		0 Ready to switch on 
+	///		1 Switched on 
+	///		2 Operation enabled 
+	///		3 Fault 
+	///		4 Voltage enabled 
+	///		5 Quick stop (1 = Kein Schnellhalt aktiv )
+	///		6 Switch on disabled 
+	///		7 Warning 
+	A516_StatusWord: WORD;
+	///Aktuelle Position [inc]
+	A545_AktPosition: DINT;
+	///
+	///	BIT:
+	///		0 Touch Probe enabled
+	///		1  Positive Flanke erkannt
+	///		2 Negative Flanke erkannt
+	A595_Rot_Touch_Probe_Status: WORD;
+	///Aktueller Strom [A]
+	E00_I_Motor: REAL;
+	///Aktuelle Geschwindigkeit [upm]
+	E15_AktVel: REAL;
+	///i2t Umrichter [%]
+	E22_i2t_Umrichter: REAL;
+	///i2t Motor [%]
+	E23_i2t_Motor: REAL;
+	///Ursache für das zuletzt aufgetretene Ereignis E82
+	E43_ErrUrsache: SINT;
+	///Zustand des Umrichters
+	///		0 Selbsttest 
+	///		1 Einschaltsperre 
+	///		2 Einschaltbereit 
+	///		3 Eingeschaltet 
+	///		4 Freigegeben 
+	///		5 Störung 
+	///		6 Störungsreaktion 
+	///		7 Schnellhalt 
+	E48_GerateStatus: SINT;
+	///Anzeige des aktuelle aktiven Ereignises/Störung
+	E82_ErrArt: SINT;
+	///Aktuelles Moment im Bezug auf C09 [0.01%]
+	E90_AktMoment: REAL;
+	///
+	///	BIT: 
+	///		0: Betriebsbereitschaft (Quelle: E79[0]: 1 = Konfiguration aktiv, Selbsttest nicht aktiv, keine Störung und keine Störungsreaktion) 
+	///		1: Betriebsbereitschaft (Quelle: E79[1]: 1 = Konfiguration aktiv, Selbsttest nicht aktiv, Anlaufsperre ok (Zustand <> Einschaltsperre), keine Störung und keine Störungsreaktion) 
+	///		2: Betriebsbereitschaft (Quelle: E79[2]: 1 = Selbsttest nicht aktiv)
+	///		3: Bremse eingefallen (Quelle: F08[0], gegebenenfalls übersteuert durch Sicherheitsmodul) 0 = Bremse nicht einfallend angesteuert oder einfallend angesteuert, Einfallzeit ist noch nicht abgelaufen; 1 = Bremse einfallend angesteuert, Einfallzeit ist abgelaufen (F05) 
+	///		4: Bremse gelüftet (Quelle: F09[0], gegebenenfalls übersteuert durch Sicherheitsmodul) 0 = Bremse nicht lüftend angesteuert oder lüftend angesteuert, Lüftzeit ist nicht abgelaufen; 1 = Bremse lüftend angesteuert, Lüftzeit ist abgelaufen (F04) 
+	///		5: Sollwertbereit (Quelle: I97: 1= Status "Freigegeben", Bremse ist gelüftet und bei Asynchronmotoren ist die Magnetisierung aufgebaut. Es liegt kein Halt oder Schnellhalt vor. ) 
+	///		6: Tippen aktiv 
+	///		7: Wirksames Signal Positiver Hardware-Endschalter (Quelle: I805)
+	///		8: Wirksames Signal Negativer Hardware-Endschalter (Quelle: I806) 
+	///		9: In Referenz (Quelle: I86) 
+	///		10: STO	
+	///		11: SS1
+	///		12: SS2
+	E201_Statusword2: WORD;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

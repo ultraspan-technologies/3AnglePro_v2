@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="F_AxSyncMode" Id="{ebb614ae-99c3-447a-9c3c-18d910d1552e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_AxSyncMode : BOOL
+VAR_INPUT
+	///Sync Mode is used
+	UseSync: BOOL;
+	///Sync is handeled externally
+	UseExternalSync: BOOL;
+	///External Sync. Only used if sync is not handeled by AchsManager
+	ExternalSync: BOOL;
+	///Reset Sync
+	ResetSync: BOOL;
+END_VAR
+VAR_IN_OUT
+	Settings: TAxSettingsModule;
+	SpecOp: TAxSpecialOperationModule;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+IF UseSync THEN
+	IF UseExternalSync THEN
+		SpecOp.Sync :=ExternalSync;
+		Settings.SyncMode := 2;
+	ELSE
+		SpecOp.ResetSync :=ResetSync;
+		Settings.SyncMode := 1;
+	END_IF
+ELSE
+	Settings.SyncMode := 0;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="F_AxSyncMode">
+      <LineId Id="3" Count="11" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

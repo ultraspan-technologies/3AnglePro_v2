@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TAxCoupleCommandModule" Id="{bd51e203-ad01-4517-81c6-f17efc5d2fd5}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE TAxCoupleCommandModule :
+STRUCT
+	///Startpositionierung gefordert
+	StartPos: BOOL;
+	///Enable gefordert
+	Enable_Req: BOOL;
+	///Umrichter freigeben
+	Enable_Inverter: BOOL;
+	///Enable rücksetzen/Achse trudelt aus
+	Disable: BOOL;
+	///Bremse lüften
+	Open_Brake_Req: BOOL;
+	///Umrichterfehler quittieren
+	Reset_Error: BOOL;
+	///Geforderter OP-Mode
+	OP_Mode: BYTE;
+	///Bestimmt welcher Parametersatz für diese Achse verwendet wird. Ist standardmäßig = 0. Damit bestimmt der Eingang am Umschaltbaustein, den Parametersatz
+	ParamSwitch_List_Req: BYTE := 0;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

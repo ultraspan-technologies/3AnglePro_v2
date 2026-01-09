@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="stPDO_Lenze_OUT" Id="{987e286f-10c5-4784-860e-ea67ae99a8de}">
+    <Declaration><![CDATA[TYPE stPDO_Lenze_OUT :
+STRUCT
+	wPI0_Steuerwort1: WORD;
+	/// 	Steuerwort 1:
+	///	 Bit:	0................	Referenzfahrt starten 
+	///		1................STOPP RÜCKSETZEN
+	///		2................
+	///		3...............QUICKSTOP RÜCKSETZEN
+	///		4................	Drehrichtung umkehren
+	///		5................Handbetrieb positiv
+	///		6................Handbetrieb negativ
+	///		7................Handfahren mit Zwischenstopp
+	///		8................Referenz rücksetzen
+	///		9................REGLER FREIGEBEN
+	///		10..............Fehler setzen
+	///		11..............FEHLER RÜCKSETZEN
+	///		12.............
+	///		13..............
+	///		14..............Programm Start
+	///		15..............Toggle Bit
+	wPI1_Steuerwort2: WORD;
+	///Istgeschwindigkeit  -16384 bis 16384  entspricht 0..100% Override relativ zu Einheiten/t (C1211/1 aus C11) 
+	iPI2_Geschwindigkeit_Soll: INT;
+	///Max.moment  -16384 bis 16384  entspricht -100..100% Override relativ zu Maximalmoment (C0057) 
+	iPI3_Moment_Grenze_positiv: INT;
+	///Max.moment  -16384 bis 16384  entspricht -100..100% Override relativ zu Maximalmoment (C0057) 
+	iPI4_Moment_Grenze_negativ: INT;
+	///Mit Achse Systemmanager verknüpfen Istposition  -214748,3647 bis 214748,3647 
+	iPI5_Position_Soll_High: INT;
+	///Mit Achse Systemmanager verknüpfen Istposition  -214748,3647 bis 214748,3647 
+	iPI6_Position_Soll_Low: INT;
+	///0 bis 16384  entspricht 0..100% Override relativ zu Einheiten/t² (C1303/1) 
+	iPI7_Beschleunigung: INT;
+	///0 bis 16384  entspricht 0..100% Override relativ zu Einheiten/t² (C1304/1) 
+	iPI8_Verzoegerung: INT;
+	/// Betriebsart (0 = Drehzahlfolger) 
+	iPI9_Vorwahl_Betriebsart: INT;
+	iPI10_Reserve1: INT;
+	iPI11_Reserve1: INT;
+	iPI12_Reserve1: INT;
+	iPI13_Reserve1: INT;
+	iPI14_Reserve1: INT;
+	iPI15_Reserve1: INT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

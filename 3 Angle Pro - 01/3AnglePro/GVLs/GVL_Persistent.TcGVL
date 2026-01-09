@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <GVL Name="GVL_Persistent" Id="{14440726-a52a-4e9b-b498-089c0f0ea337}">
+    <Declaration><![CDATA[VAR_GLOBAL PERSISTENT
+
+//	uTeachLimitLeft: UDINT;
+//	uTeachLimitRight: UDINT;
+//	iCarriageMedian: INT;
+//	iCarriageLeftLimit: INT;
+//	iCarriageRightLimit: INT;
+	iZAxisUpperLimitValue: DINT;
+	iZAxisLowerLimitValue: DINT;
+	uTRTCaptureValueMin: UDINT;
+    uTRTCaptureValueMax: UDINT;
+	uTurretValue: UDINT;
+	
+	dTeachLimitLeft: DINT;
+	dTeachLimitRight: DINT;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

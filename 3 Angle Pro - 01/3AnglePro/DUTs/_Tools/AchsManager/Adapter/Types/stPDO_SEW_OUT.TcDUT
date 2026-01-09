@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="stPDO_SEW_OUT" Id="{deea212e-27b7-45c5-ba82-ad2a0fb1fe85}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE stPDO_SEW_OUT :
+STRUCT
+	///
+	///	BIT:
+	///		0 Freigabe/Notstopp // Switch on 
+	///		1 Freigabe/Applikationsstopp // Enable voltage 
+	///		2 Reserviert // Quick stop	(0 = Schnellhalt angefordert; 1 = Kein Schnellhalt angefordert )
+	///		3 Bremse öffnen // Enable operation 
+	///		4 Tippen positiv //– 6: Operation mode specific * 
+	///		5 Tippen negativ
+	///		6 Relative Psoition übernehmen
+	///		7 Start/Stopp mit Feldbusrampe // Fault Reset
+	///		8 Fehlerreset // Halt
+	///		9 Reserviert // Operation Mode Specific
+	///		10 Antriebsstrang 2 aktivieren // Reserved
+	///		11 Reserviert // Manufacturer specific
+	///		12 SW-Endschalter deaktivieren // Manufacturer specific
+	///		13 Endstufensperre aktivieren // Manufacturer specific
+	///		14 Stand-by Betrieb aktivieren 
+	///		15 Movikit-Handshake_IN
+	PA1_ControlWord: UINT;
+	///Sollgeschwindigkeit für Drivebased-Achsen [Upm]
+	PA2_TargetVel: UINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

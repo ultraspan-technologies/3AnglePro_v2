@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <Task Name="FasTask" Id="{abb12d0a-9012-4a63-8954-5245582c71a4}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>1000</CycleTime>
+    <Priority>1</Priority>
+    <PouCall>
+      <Name>KrAxis</Name>
+    </PouCall>
+    <TaskFBGuid>{4fdaccfd-32cd-40e9-a440-6f0c23fc5e79}</TaskFBGuid>
+    <Fb_init>{14e781b9-06f0-4557-8f3b-0bd5c520ffae}</Fb_init>
+    <Fb_exit>{705ef89c-7193-4590-ab93-973b8013e362}</Fb_exit>
+    <CycleUpdate>{d7358dbf-8eb9-415b-8d3e-8999ab6da652}</CycleUpdate>
+    <PostCycleUpdate>{f0621acd-09fe-4fcb-9b12-34abf83841af}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

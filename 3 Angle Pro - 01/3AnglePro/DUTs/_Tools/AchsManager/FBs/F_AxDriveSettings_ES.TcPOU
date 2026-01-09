@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="F_AxDriveSettings_ES" Id="{a56aaa75-af1d-48e7-9613-504a3e2f5fc1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_AxDriveSettings_ES : BOOL
+VAR_INPUT
+	///position offset [u]
+	IstOffset: LREAL;
+	///Fast Velocity for JOG is used
+	Jog_Fast: BOOL;
+	///Stopweg in Benutzereinheiten
+	S_Stop: REAL;
+	///Schleichweg in Benutzereinheiten
+	S_Schleich: REAL;
+END_VAR
+VAR_IN_OUT
+	Settings: TAxSettingsModule_ES;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Settings.IstOffset := IstOffset;
+
+IF Jog_Fast THEN
+	Settings.Vel_JOG := 2;
+ELSE
+	Settings.Vel_JOG := 1;
+END_IF
+
+Settings.S_Stop := S_Stop;
+Settings.S_Schleich := S_Schleich;]]></ST>
+    </Implementation>
+    <LineIds Name="F_AxDriveSettings_ES">
+      <LineId Id="3" Count="8" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

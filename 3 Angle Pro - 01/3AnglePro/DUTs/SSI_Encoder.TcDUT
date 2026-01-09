@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="SSI_Encoder" Id="{98f0bd75-9ded-47cc-aa43-d8dbd63450b4}">
+    <Declaration><![CDATA[TYPE SSI_Encoder :
+STRUCT
+	uCounterValue	: UDINT ;		// Raw counter value
+	rScaled			: REAL ;		// scaled value
+	bDataError		: BOOL ;		
+	bFrameError		: BOOL ;
+	bPowerFailure	: BOOL ;
+	bDataMismatch	: BOOL ;
+	bSyncError		: BOOL ;
+	bPDO_State		: BOOL ;
+	bPDO_Toggle		: BOOL ;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

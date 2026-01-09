@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TAxCoupleStateModule" Id="{ac405050-1094-43ad-9a55-6534cd1b2e53}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE TAxCoupleStateModule :
+STRUCT
+	///Referenz ok
+	SYNC: BOOL;
+	///Freigabe Achse
+	RelDrive: BOOL;
+	///Umrichter wurde auf den entsprechenden Parametersatz umgeschaltet
+	Axis_Active: BOOL;
+	///Startbereit
+	Enabled: BOOL;
+	///Fehler
+	Error: BOOL;
+	///Fehlerursache IstposDifferenz Master-Slave
+	ErrorCause_MaxDiff_MS: BOOL;
+	///Achse ist im Stillstand (Vel-Ist = 0)
+	AxisStopped: BOOL;
+	///Aktuelle Position
+	CurPos: LREAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

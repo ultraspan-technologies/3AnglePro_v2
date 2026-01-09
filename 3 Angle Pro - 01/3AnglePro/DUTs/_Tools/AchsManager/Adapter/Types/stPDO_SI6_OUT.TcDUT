@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="stPDO_SI6_OUT" Id="{d44ecd17-33ba-4dbc-b402-b1006caf12e1}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE stPDO_SI6_OUT :
+STRUCT
+	///
+	///	BIT:
+	///		0 Switch on 
+	///		1 Enable voltage 
+	///		2 Quick stop	(0 = Schnellhalt angefordert; 1 = Kein Schnellhalt angefordert )
+	///		3 Enable operation 
+	///		4– 6: Operation mode specific * 
+	///		8 Halt
+	///		9
+	///		10
+	///		11 Bit0 Parameterumschaltung
+	///		12 Bit1 Paramterumschaltung 
+	///		13 Anforderung Paramterumschaltung aktivieren
+	A515_ControlWord: WORD;
+	///
+	///	OpMode
+	///	▪  0: No mode assigned
+	///	▪  3: Profile velocity mode
+	///	▪  7: Interpolated position mode
+	///	▪  8: Cyclic synchronous position mode
+	///	▪  9: Cyclic synchronous velocity mode
+	///	▪  10: Cyclic synchronous torque mode
+	A541_OpMode: BYTE;
+	///Maximal zulässiges positives Drehmoment  [0.1%]  (In E65/E66 kann das effektive maximale Moment ausgelesen werden) 
+	A315_MaxTorquePositiv: WORD := 1500;
+	///Maximal zulässiges negatives Drehmoment  [0.1%]  (In E65/E66 kann das effektive maximale Moment ausgelesen werden) 
+	A316_MaxTorqueNegativ: WORD := 1500;
+	///Sollposition für Controllerbased-Achsen (OP-Mode 8) [inc]
+	A567_TargetPos: DINT;
+	///Solldrehmoment (OP-Mode 10) [0.1%]
+	A558_TargetTorque: INT;
+	///Sollgeschwindigkeit für Drivebased-Achsen (OP-Mode 3/9) [inc/s]
+	A638_TargetVel: DINT;
+	///Schnellhalteverzögerung [inc/s²]
+	A578_QuickStopDecc: DINT;
+	///
+	///	BIT:
+	///		0 = enable Touch Probe
+	///		1  = Trigger type (0=bei erstem Flankenwechsel; 1=bei jedem Flankenwechsel)
+	///		2 = Trigger source (0=Binärsignal I110; 1=Nullimpuls des Positionsencoders)
+	///		3 	
+	///		4 = Positive Edge  (Flankenerkennung aktivieren)
+	///		5 = Negative Edge (Flankenerkennung aktivieren)
+	A594_Rot_Touch_Probe_Function: WORD;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

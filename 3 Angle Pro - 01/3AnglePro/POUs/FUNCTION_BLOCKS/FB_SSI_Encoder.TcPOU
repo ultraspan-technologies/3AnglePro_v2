@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_SSI_Encoder" Id="{c9d7d969-8b72-4142-bbcd-8b5c166a2046}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_SSI_Encoder
+VAR_INPUT
+	
+	ValueIn		: UDINT;				(* Analog input value *)
+	MinIn		: UDINT;				(* Minimum value for input signal *)
+	MaxIn		: UDINT;				(* Maximum value for input signal *)
+	MinOut		: REAL;					(* Minimum value for output signal *)
+	MaxOut		: REAL;					(* Maximum value for output signal *)
+	
+END_VAR
+VAR_OUTPUT
+	Out			: SSI_Encoder ;
+END_VAR
+VAR
+	RangeIn: REAL;
+	RangeOut: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Rescale input *)
+
+	RangeIn 			:= UDINT_TO_REAL( MaxIn ) - UDINT_TO_REAL( MinIn );
+
+	RangeOut 			:= MaxOut - MinOut;
+
+	IF RangeIn <> 0
+	(*  AND ValueIn >= MinIn
+	  AND ValueIn <= MaxIn *) THEN
+		Out.rScaled 	:= ( ( ( UDINT_TO_REAL( ValueIn  -  MinIn ) ) / RangeIn ) * RangeOut ) + MinOut;
+	ELSE
+		Out.rScaled		:= 0;
+	END_IF
+
+	Out.uCounterValue			:= ValueIn;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_SSI_Encoder">
+      <LineId Id="26" Count="13" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

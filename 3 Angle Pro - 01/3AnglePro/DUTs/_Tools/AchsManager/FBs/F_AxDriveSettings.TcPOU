@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="F_AxDriveSettings" Id="{9a0a832a-e931-478f-a252-9f005a6fce94}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_AxDriveSettings : BOOL
+VAR_INPUT
+	///position offset [u]
+	IstOffset: LREAL;
+	///Velocity override [%]
+	Vel_Over: INT;
+	///Acceleration override [%]
+	Acc_Over: INT;
+	///Decceleration override [%]
+	Dcc_Over: INT;
+	///Jerk [%]
+	RB: INT;
+	///Fast Velocity for JOG ist used
+	Jog_Fast: BOOL;
+	///Velocity for manual movement [u/s]
+	Vel_JOG: REAL;
+	///Fast velocity for manual movement [u/s]
+	Vel_JOG_Fast: REAL;
+	///Acceleration for manual movement [u/s°2]
+	ACC_JOG: REAL;
+	///Decceleration for manual movement [u/s°2]
+	DCC_JOG: REAL;
+	///Max-Torque 
+	MaxTorque: WORD;
+END_VAR
+VAR_IN_OUT
+	Settings: TAxSettingsModule;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Settings.IstOffset := IstOffset;
+Settings.Vel_Over := Vel_Over;
+Settings.Acc_Over := Acc_Over;
+IF Dcc_Over <= 0 THEN
+	Settings.Dcc_Over := Acc_Over;
+ELSE
+	Settings.Dcc_Over := Dcc_Over;
+END_IF
+Settings.RB := Settings.ACCEL * (LIMIT(RB / 10.0, 0.0, 10.0));
+
+IF Jog_Fast THEN
+	Settings.Vel_JOG := Vel_Jog_Fast;
+ELSE
+	Settings.Vel_JOG := Vel_Jog;
+END_IF
+Settings.ACC_JOG := Acc_Jog;
+Settings.DCC_JOG := Dcc_Jog;
+Settings.Max_TorqueNegativ:=Settings.Max_TorquePositiv:=MaxTorque;]]></ST>
+    </Implementation>
+    <LineIds Name="F_AxDriveSettings">
+      <LineId Id="3" Count="16" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

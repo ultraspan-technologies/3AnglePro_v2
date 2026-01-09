@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <GVL Name="TwinSAFE" Id="{1d37246e-691e-4a70-bc5e-13efdf4989c6}">
+    <Declaration><![CDATA[VAR_GLOBAL
+	SafeRUN		AT%Q*: BOOL := TRUE ;
+	SafeErrAck	AT%Q*	: BOOL ;
+	butonACK 	AT %I* :BOOL;
+		
+	IN_FaultReset	AT%I*	: BOOL ;
+	IN_EDM			AT%I*	: BOOL ;
+	OUT_STO			AT%I*	: BOOL ;
+	
+	//relayReset    AT %Q*  :BOOL;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="stPDO_Lenze_IPM_IN" Id="{3f7bd7e4-8632-453f-94f5-ae94d9bfa983}">
+    <Declaration><![CDATA[TYPE stPDO_Lenze_IPM_IN :
+STRUCT
+	NC_Statuswort1: WORD;
+	/// 	Statuswort 1:
+	///		Abbild von wPI1_Statusword - Nur vorhande wg. Strukturgröße
+	///	
+	NC_PositionActualValue: DINT;
+	NC_FollowingError: DINT;
+	/// 0x6041 Statusword 
+	wPI1_Statusword: WORD;
+	///0x606C Istgeschwindigkeit  10000 = 1 Umdrehung/min 
+	iPI2_Geschwindigkeit_Ist: DINT;
+	///0x6077 Istmoment  -16384 bis 16384  entspricht 0..100% Override relativ zu Bezugsdrehmoment Motor (C0057) 
+	iPI3_Moment_Ist: DINT;
+	/// 0x6078  Iststrom -16384 bis 16384  entspricht -100%..100% Strom relativ zu Gerätenennstrom (C0789) 
+	iPI4_Motorstrom_Ist: DINT;
+	/// 0x60FD Digitale Eingänge des Regler 
+	byP5_Digital_Inputs: BYTE;
+	/// 0xA200 Fehler bzw. Warnung Lenze: Index IA200 FMI1_TxD_DWORD 
+	dwPI6_Fehler: DWORD;
+	/// 0x60FB/6 Status des Safty Module 
+	usiPI7_Safe_IO_State: USINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

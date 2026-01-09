@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="F_Round" Id="{b6a331bc-0278-4d19-90ae-8008b42acb83}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_Round : REAL
+VAR_INPUT
+	Value: LREAL;
+	KommaStellen: INT;
+END_VAR
+VAR
+	ValLimited: LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF LrealIsNaN(VALUE) THEN
+	F_Round:=0;
+	RETURN;
+END_IF
+ValLimited:=LIMIT(-1E9/EXPT(10, KommaStellen),Value,1E9/EXPT(10, KommaStellen));
+F_Round:=LREAL_TO_REAL(DINT_TO_REAL(LREAL_TO_DINT(ValLimited*EXPT(10, KommaStellen))) / EXPT(10, KommaStellen));]]></ST>
+    </Implementation>
+    <LineIds Name="F_Round">
+      <LineId Id="3" Count="4" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

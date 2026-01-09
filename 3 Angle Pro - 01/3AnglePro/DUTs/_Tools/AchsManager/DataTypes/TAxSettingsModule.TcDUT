@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TAxSettingsModule" Id="{3966e514-6957-4f23-bbb9-dd925a79625d}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE TAxSettingsModule :
+STRUCT
+	///position offset [u]
+	IstOffset: LREAL;
+	///Reference zero offset
+	Ref_Offset: REAL;
+	///Additional information "Drive No." if multiple motors are operated on one inverter. Information on which motor caused error 31, 32, or 33 (e.g., wire position of rotor, etc.) 
+	Drive_No: WORD := 1;
+	///OPMode: 3 = Speed ​​setting / 8 = Cyclic position setting / 9 = Cyclic speed setting / 10 = Cyclic torque setting 
+	OpMode: BYTE := 9;
+	///Time the ENBL remains set after ENBL_Gef falls off
+	T_Off_ENBL: TIME := TIME#1s0ms;
+	///Maximum position of the axis
+	MaxPos: REAL := 1000000000.0;
+	///Minimum position of the axis
+	MinPos: REAL := -1000000000.0;
+	///Maximum towing error during travel (Vel<>0)
+	Schlepp_Still: REAL := 1000000000.0;
+	///Maximum towing error during standstill (Vel=0)
+	Schlepp_fahr: REAL := 1000000000.0;
+	///Protection function in case of absolute encoder change / encoder problems: If the actual position is outside the min/max positions by this difference, then axis error 14 is output when the start command is issued.
+	IstPosToleranz: REAL := 1000000000.0;
+	///Positioning via JOG is limited to min/max positions
+	IsJogLimited: BOOL := TRUE;
+	///Type of referencing.
+	///									0 = no referencing necessary. 
+	///									1 = The referencing state is stored internally in the function block. 
+	///									2 = The referencing state is stored externally by the FB and set via the "ExtSync" signal (ExtOp.ExtSync).
+	SyncMode: BYTE := 0;
+	///Maximum velocity [u/s]
+	VELOCITY: REAL;
+	///Maximum acceleration [u/s^2]
+	ACCEL: REAL;
+	///Maximum decceleration [u/s^2]
+	DECCEL: REAL;
+	///Velocity override [%]
+	Vel_Over: INT;
+	///Acceleration override [%]
+	Acc_Over: INT;
+	///Decceleration override [%]
+	Dcc_Over: INT;
+	///Jerk [u/s^3]
+	RB: LREAL;
+	///Velocity for manual movement [u/s]
+	Vel_JOG: REAL;
+	///Acceleration for manual movement [u/s^2]
+	ACC_JOG: REAL;
+	///Decceleration for manual movement [u/s^2]
+	DCC_JOG: REAL;
+	///Maximum Torque Positiv [%]
+	Max_TorquePositiv: WORD := 200;
+	///Maximum Torque Negativ [%]
+	Max_TorqueNegativ: WORD := 200;
+	///The axis is a slave in a master/slave application
+	IsSlave: BOOL;
+	///Maximum deviation between master and slave for positioning
+	Slave_MaxDiff: REAL := 20;
+	///Maximum deviation between master and slave for ENBL
+	Slave_MaxDiff_Enbl: REAL := 100;
+	///The axis is coupled with other axes.
+	IsCoupled: BOOL;
+	///AxReturn ActualPos/TargetPos are multiplied by this value
+	AxReturnMultiplyer: REAL := 1.0;
+	///Number of decimal places of the actual/target position in the AxReturn
+	AxReturnKommaStellen: BYTE := 0;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

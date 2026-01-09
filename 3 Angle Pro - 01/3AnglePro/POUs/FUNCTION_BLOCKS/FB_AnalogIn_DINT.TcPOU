@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_AnalogIn_DINT" Id="{0e4e00b7-867b-4020-b192-7d3d3b7ca575}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AnalogIn_DINT
+VAR_INPUT
+		
+	ValueIn		: DINT;					(* Analog input value *)
+	MinIn		: DINT;					(* Minimum value for input signal *)
+	MaxIn		: DINT;					(* Maximum value for input signal *)
+	MinOut		: REAL;					(* Minimum value for output signal *)
+	MaxOut		: REAL;					(* Maximum value for output signal *)
+	
+END_VAR
+VAR_OUTPUT
+	Out			: AnalogSignal_DINT ;
+END_VAR
+VAR
+	RangeIn: REAL;
+	RangeOut: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Rescale input *)
+
+	RangeIn 			:= DINT_TO_REAL( MaxIn ) - DINT_TO_REAL( MinIn );
+
+	RangeOut 			:= MaxOut - MinOut;
+
+	IF RangeIn <> 0
+	(*  AND ValueIn >= MinIn
+	  AND ValueIn <= MaxIn *) THEN
+		Out.rScaled 	:= ( ( ( DINT_TO_REAL( ValueIn  -  MinIn ) ) / RangeIn ) * RangeOut ) + MinOut;
+	ELSE
+		Out.rScaled		:= 0;
+	END_IF
+
+	Out.dCounterValue			:= ValueIn;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_AnalogIn_DINT">
+      <LineId Id="21" Count="13" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

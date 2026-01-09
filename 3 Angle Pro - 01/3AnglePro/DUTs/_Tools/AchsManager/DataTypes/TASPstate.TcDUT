@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TASPstate" Id="{fc1d94fb-0e32-49bf-8ece-0b48b8b0bece}">
+    <Declaration><![CDATA[TYPE TASPState :
+STRUCT
+	Ok: BOOL;		//motor okay and ready to move
+	Del_Ok: BOOL;	//DELAY on motor okay. usually acts as a delay for the contacts to disengage AFTER motor has stopped. 
+	Man: BOOL;		//IF THE MACHINE IS IN MAN MODE
+	Auto: BOOL;		//IF THE MACHINE IS IN AUTO MODE
+	Rst: BOOL;		//reset button , feed it back into the Axis error ACKnolwedge
+	Rst_Gef: BOOL;	//almost never used. 
+	S_Man: BOOL;	//the physcial switch for MAN
+	S_Aut: BOOL;	//the physical switch for AUTO
+	
+	RUN_AUTO: BOOL;	//AUTO=True; Automatic ON (Start-Bottom) acive
+END_STRUCT
+END_TYPE
+
+
+// it might be a good idea to build a FB for this function to plug on to the Manager
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

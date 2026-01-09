@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="F_AxDriveSettingsSlave" Id="{2f4c3683-71f7-4966-9fab-44f2564d466d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_AxDriveSettingsSlave : BOOL
+VAR_INPUT
+	///position offset [u]
+	IstOffset: LREAL;
+	///Max-Torque 
+	MaxTorque: WORD;
+END_VAR
+VAR_IN_OUT
+	Settings: TAxSettingsModule;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Settings.IsSlave := TRUE;
+Settings.IstOffset := IstOffset;
+Settings.Max_Torque:=MaxTorque;]]></ST>
+    </Implementation>
+    <LineIds Name="F_AxDriveSettingsSlave">
+      <LineId Id="3" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

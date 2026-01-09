@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TAxSettingsModule_ES" Id="{3f2a6df9-857e-4f65-94dc-87ff96e5ee53}">
+    <Declaration><![CDATA[{attribute 'pack_mode' := '1'}
+TYPE TAxSettingsModule_ES :
+STRUCT
+	///position offset [u]
+	IstOffset: LREAL;
+	///Referenz Nullpunktverschiebung
+	Ref_Offset: REAL;
+	///Zusdatzinformation "Antrieb-Nr" wenn mehrere Motoren an einem Umrichter betrieben werden. Info, bei welcher der Fehler 31,32,33 aufgetreten ist (z.B. Drahposition bei Rotor u.s.w) 
+	Drive_No: WORD := 1;
+	///Maximalposition der Achse
+	MaxPos: REAL := 1000000000.0;
+	///Minimalposition der Achse
+	MinPos: REAL := -1000000000.0;
+	///Schutzfunktion bei Absolutgeberwechsel / Encoderproblemen: Wenn sich die Istposition um diese Differenz ausserhalb der Min/MaxPositionen befindet, dann wird bei Start-Befehl Achsenfehler 14 ausgegeben
+	IstPosToleranz: REAL := 1000000000.0;
+	///Positionierung über JOG wird auf Min/Maxpos limitiert
+	IsJogLimited: BOOL := TRUE;
+	///Art der Referenzierung.
+	///									0 = keine Referenzierung notwendig. 
+	///									1 = Zustand der Referenzierung wird im FB intern gespeichert. 
+	///									2 = Zustand der Referenzierung wird extern vom FB gespeichert und über das Signal "ExtSync" (ExtOp.ExtSync) gesetzt
+	SyncMode: BYTE := 0;
+	///Velocity for manual movement [2 -> Fast, 1 -> Slow]
+	Vel_JOG: INT := 1;
+	///Velocity for automatic movement [2 -> Fast, 1 -> Slow]
+	Vel_POS: INT := 1;
+	///Stopweg in Benutzereinheiten
+	S_Stop: REAL;
+	///Schleichweg in Benutzereinheiten
+	S_Schleich: REAL;
+	///AxReturn IstPos/SollPos werden um diesen Wert Multipliziert
+	AxReturnMultiplyer: REAL := 1.0;
+	///Anzahl der Nachkommastellen der IstPos/SollPos im AxReturn
+	AxReturnKommaStellen: BYTE := 0;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

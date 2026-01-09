@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_AxDriveLimitJog_PosDW" Id="{58f4b5f5-997c-4ccb-a6aa-aff9de87e3e4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AxDriveLimitJog_PosDW
+VAR_INPUT
+	Rel_: BOOL;
+	Achs_IN: TKont_Achse_IN;
+	Tolerance: REAL := 5.0;
+	StopPos: ARRAY[0..20] OF WORD;
+END_VAR
+VAR_IN_OUT
+	DriveCMD: TAxDriveModule;
+END_VAR
+VAR
+	RT_Jog: R_TRIG;
+	i: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+RT_Jog.CLK := DriveCMD.Jog_FW OR DriveCMD.Jog_BW;
+RT_Jog();
+
+IF RT_Jog.Q THEN
+	FOR i := 1 TO 8 DO
+		IF DriveCMD.Jog_FW THEN
+			IF (StopPos[i] - Achs_IN.IstPos) > Tolerance THEN
+				DriveCMD.LimitposJog := MIN(StopPos[i], DriveCMD.LimitposJog);
+			END_IF
+		ELSIF DriveCMD.Jog_BW THEN
+			IF (Achs_IN.IstPos - StopPos[i]) > Tolerance THEN
+				IF DriveCMD.LimitposJog = 1E100 THEN
+					DriveCMD.LimitposJog := StopPos[i];
+				ELSE	
+					DriveCMD.LimitposJog := MAX(StopPos[i], DriveCMD.LimitposJog);
+				END_IF
+			END_IF
+		END_IF
+	END_FOR
+END_IF
+IF NOT RT_Jog.CLK THEN
+	DriveCMD.LimitposJog := 1E100;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_AxDriveLimitJog_PosDW">
+      <LineId Id="3" Count="22" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
