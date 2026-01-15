@@ -98,7 +98,7 @@ VAR_GLOBAL
 		Deccel		:= 100,	
 		
 		IsCoupled	:= FALSE,			///The axis is coupled with other axes.
-		IsSlave		:=TRUE,				///Axis is slave in a Master/Slave application
+		IsSlave		:= TRUE,			///Axis is slave in a Master/Slave application
 		Slave_MaxDiff := 20,			///Maximum deviation between Master and Slave for Positioning; default 20
 		Slave_MaxDiff_Enbl := 100		///Maximum deviation between Master and Slave for ENBL	; default 100
 									);

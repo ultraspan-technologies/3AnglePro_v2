@@ -48,7 +48,7 @@ CASE iStepHome OF
 		
 	10:	// Raise Z-axis all the way up
 	
-		IF bSawUpLimit AND bSafetyOK AND bMachineHoming THEN
+		IF NOT bSawUpLimit AND bSafetyOK AND bMachineHoming THEN
 			bZAxisHome := TRUE ;
 		ELSE
 			bZAxisHome := FALSE ; 
@@ -63,7 +63,7 @@ CASE iStepHome OF
 		ELSIF dCrossCutEncoderValue > (dRailLimitLeft + dRailLimitRight)/2 AND bSafetyOK AND bMachineHoming THEN
 			bCrossCutHomeRH := TRUE ;
 			bCrossCutHomeLH := FALSE ;
-		ELSIF (dCrossCutEncoderValue > ((dRailLimitLeft + dRailLimitRight)/2) - 50000) OR (dCrossCutEncoderValue < ((dRailLimitLeft + dRailLimitRight)/2) + 50000) AND bSafetyOK AND bMachineHoming THEN
+		ELSIF (dCrossCutEncoderValue > ((dRailLimitLeft + dRailLimitRight)/2) - 1000000) OR (dCrossCutEncoderValue < ((dRailLimitLeft + dRailLimitRight)/2) + 1000000) AND bSafetyOK AND bMachineHoming THEN
 			bCrossCutHomeLH := FALSE ;
 			bCrossCutHomeRH := FALSE ;
 			iStepHome := 30 ;
