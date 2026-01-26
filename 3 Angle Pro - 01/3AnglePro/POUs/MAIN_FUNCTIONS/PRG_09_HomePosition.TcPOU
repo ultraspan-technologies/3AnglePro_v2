@@ -99,7 +99,7 @@ CASE iStepHome OF
 	
 	50: //Crosscut offset towards the control panel (CUT direction)		// 55.5 < CrosscutHome < 55.75
 	
-		IF (AnalogIn_DINT_CrossCut.Out.rScaled < 55.5) AND bMachineHoming AND bSafetyOK THEN
+		(*IF (AnalogIn_DINT_CrossCut.Out.rScaled < 55.5) AND bMachineHoming AND bSafetyOK THEN
 			bCrossCutHomeLH := TRUE ;
 			bCrossCutHomeRH := FALSE ;
 		ELSIF (AnalogIn_DINT_CrossCut.Out.rScaled > 55.75) AND bMachineHoming AND bSafetyOK THEN
@@ -109,13 +109,28 @@ CASE iStepHome OF
 			bCrossCutHomeLH := FALSE ;
 			bCrossCutHomeRH := FALSE ;
 			iStepHome := 0 ;
+		END_IF*)
+
+		IF (AnalogIn_LREAL_CrossCut.Out.rScaled < 7) AND bMachineHoming AND bSafetyOK THEN
+			bCrossCutHomeLH := TRUE ;
+			bCrossCutHomeRH := FALSE ;
+		ELSIF (AnalogIn_LREAL_CrossCut.Out.rScaled > 8) AND bMachineHoming AND bSafetyOK THEN
+			bCrossCutHomeRH := TRUE ;
+			bCrossCutHomeLH := FALSE ;
+		ELSIF (AnalogIn_LREAL_CrossCut.Out.rScaled > 7) AND (AnalogIn_LREAL_CrossCut.Out.rScaled < 8) THEN
+			bCrossCutHomeLH := FALSE ;
+			bCrossCutHomeRH := FALSE ;
+			iStepHome := 0 ;
 		END_IF
 		
 END_CASE]]></ST>
     </Implementation>
     <LineIds Name="PRG_09_HomePosition">
       <LineId Id="5" Count="0" />
-      <LineId Id="10" Count="99" />
+      <LineId Id="10" Count="98" />
+      <LineId Id="118" Count="10" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="109" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>
   </POU>

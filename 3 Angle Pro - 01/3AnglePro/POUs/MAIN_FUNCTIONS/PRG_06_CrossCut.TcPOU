@@ -3,7 +3,7 @@
   <POU Name="PRG_06_CrossCut" Id="{1ada790c-430f-40ff-84a5-63abddfc2ca8}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PRG_06_CrossCut
 VAR
-	AnalogIn_LREAL_CrossCut: FB_AnalogIn_LREAL;
+
 	lCrossCutMin: LREAL;
 	lCrossCutMax: LREAL;
 	dCrossCutLeftLimit: DINT;
@@ -37,6 +37,10 @@ VAR
 	lRailLimitLeft: LREAL;
 	lRailLimitRight: LREAL;
 	lCrossCutEncoderValue: LREAL;
+
+	lCrossCutMedian: LREAL;
+	lRailHypotenuse: LREAL;
+	lTeachLimit: LREAL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -55,7 +59,7 @@ END_VAR
                   <v n="Comment">""</v>
                   <v n="Title">""</v>
                   <v n="Label">""</v>
-                  <v n="OutCommented">true</v>
+                  <v n="OutCommented">false</v>
                   <l2 n="NetworkItems" cet="BoxTreeBox">
                     <o>
                       <v n="BoxType">"FB_AnalogIn_LREAL"</v>
@@ -227,7 +231,7 @@ END_VAR
                   <v n="Comment">""</v>
                   <v n="Title">""</v>
                   <v n="Label">""</v>
-                  <v n="OutCommented">false</v>
+                  <v n="OutCommented">true</v>
                   <l2 n="NetworkItems" cet="BoxTreeBox">
                     <o>
                       <v n="BoxType">"FB_AnalogIn_DINT"</v>
@@ -2525,30 +2529,34 @@ lRailLimitLeft := lCrossCutLeftLimit - 139.7234;
 lRailLimitRight := lCrossCutRightLimit + 139.7234; // 3943.69688
 
 GVL.CrossCut_Axis.AchsIn.IstPos;
-
+(*
 dCrossCutLeftLimit := -1251057172 + dEncoderAddToZero;		// move the saw block all the way to the left
 dCrossCutRightLimit := -2056805324 + dEncoderAddToZero;  	// move the saw block all the way to the right
 dRailLimitLeft := -1321435390 + dEncoderAddToZero;			// align centre of the blade with the left inner edge of the bed rails 
 dRailLimitRight := -1986427106 + dEncoderAddToZero;			// align centre of the blade with the right inner edge of the bed rails
 dEncoderAddToZero := 2100000000;							// Take the absolute value of the lowest negative number and round up
-
+*)
 // Teach Limits left and right		left 4938.23987
-IF bTeachReadyLeft AND bTeach AND bCarriageCentreRef AND RS_TurretCentre.Q1 AND (AnalogIn_DINT_CrossCut.Out.rScaled > (AnalogIn_DINT_CrossCut.MaxOut / 2)) (*AND NOT (bTurretReturn AND bAutoCrossCut AND bMachineHoming)*) THEN
+(*IF bTeachReadyLeft AND bTeach AND bCarriageCentreRef AND RS_TurretCentre.Q1 AND (AnalogIn_DINT_CrossCut.Out.rScaled > (AnalogIn_DINT_CrossCut.MaxOut / 2)) (*AND NOT (bTurretReturn AND bAutoCrossCut AND bMachineHoming)*) THEN
 	dTeachLimitLeft := GVL.PDO_CrossCutAX_IN.A545_AktPosition + dEncoderAddToZero;
 ELSIF bTeachReadyRight AND bTeach AND bCarriageCentreRef AND RS_TurretCentre.Q1 AND (AnalogIn_DINT_CrossCut.Out.rScaled < (AnalogIn_DINT_CrossCut.MaxOut / 2)) (*AND NOT (bTurretReturn AND bAutoCrossCut AND bMachineHoming)*) THEN
 	dTeachLimitRight := GVL.PDO_CrossCutAX_IN.A545_AktPosition + dEncoderAddToZero; 
-END_IF
+END_IF*)
 
-(*
-IF bTeachReadyLeft AND bTeach AND bCarriageCentreRef AND RS_TurretCentre.Q1 AND (AnalogIn_LREAL_CrossCut.Out.rScaled > (AnalogIn_LREAL_CrossCut.MaxOut / 2)) (*AND NOT (bTurretReturn AND bAutoCrossCut AND bMachineHoming)*) THEN
+//(*
+IF bTeachReadyLeft AND bTeach AND bCarriageCentreRef AND RS_TurretCentre.Q1 AND (AnalogIn_LREAL_CrossCut.Out.rScaled > (AnalogIn_LREAL_CrossCut.MaxOut / 2)) AND NOT (bAutoCrossCut AND bMachineHoming) THEN
 	lTeachLimitLeft := GVL.CrossCut_Axis.AchsIn.IstPos;
-ELSIF bTeachReadyRight AND bTeach AND bCarriageCentreRef AND RS_TurretCentre.Q1 AND (AnalogIn_LREAL_CrossCut.Out.rScaled < (AnalogIn_LREAL_CrossCut.MaxOut / 2)) (*AND NOT (bTurretReturn AND bAutoCrossCut AND bMachineHoming)*) THEN
+ELSIF lTeachLimitLeft = 0 THEN
+	lTeachLimitLeft := lRailLimitLeft - 114.64 ;
+ELSIF bTeachReadyRight AND bTeach AND bCarriageCentreRef AND RS_TurretCentre.Q1 AND (AnalogIn_LREAL_CrossCut.Out.rScaled < (AnalogIn_LREAL_CrossCut.MaxOut / 2)) AND NOT (bAutoCrossCut AND bMachineHoming) THEN
 	lTeachLimitRight := GVL.CrossCut_Axis.AchsIn.IstPos; 
+ELSIF lTeachLimitRight = 0 THEN
+	lTeachLimitRight := lRailLimitRight + 114.64 ;
 END_IF
-*)
+//*)
 
 // CrossCut Limits
-IF (dCrossCutEncoderValue >= (dCrossCutMedian + (iRailHypotenuse - dTeachLimit))) OR
+(*IF (dCrossCutEncoderValue >= (dCrossCutMedian + (iRailHypotenuse - dTeachLimit))) OR
 	(((AnalogIn_LREAL_Turret.Out.rScaled > 85 (*Degrees*)) OR (AnalogIn_LREAL_Turret.Out.rScaled < -85)) AND (AnalogIn_DINT_CrossCut.Out.rScaled >= (AnalogIn_DINT_CrossCut.MaxOut - 6 (*Inches*)))) OR
 	(dCrossCutEncoderValue > (dCrossCutLeftLimit - 5000))
 	THEN
@@ -2563,9 +2571,9 @@ ELSIF (dCrossCutEncoderValue <= (dCrossCutMedian - (iRailHypotenuse - dTeachLimi
 ELSE
 	bCrossCutLeftLimit := FALSE ;	
 	bCrossCutRightLimit := FALSE ;	
-END_IF
+END_IF*)
 
-(*
+//(*
 IF (lCrossCutEncoderValue >= (lCrossCutMedian + (lRailHypotenuse - lTeachLimit))) OR
 	(((AnalogIn_LREAL_Turret.Out.rScaled > 85 (*Degrees*)) OR (AnalogIn_LREAL_Turret.Out.rScaled < -85)) AND (AnalogIn_LREAL_CrossCut.Out.rScaled >= (AnalogIn_LREAL_CrossCut.MaxOut - 6 (*Inches*)))) OR
 	(lCrossCutEncoderValue > (lCrossCutLeftLimit - 5))
@@ -2582,10 +2590,10 @@ ELSE
 	bCrossCutLeftLimit := FALSE ;	
 	bCrossCutRightLimit := FALSE ;	
 END_IF
-*)
+//*)
 
 // Slowdowns approaching the limits 
-IF (dCrossCutEncoderValue >= (dCrossCutMedian + (iRailHypotenuse - dTeachLimit))-50000000) OR
+(*IF (dCrossCutEncoderValue >= (dCrossCutMedian + (iRailHypotenuse - dTeachLimit))-50000000) OR
 	(((AnalogIn_LREAL_Turret.Out.rScaled > 85 (*Degrees*)) OR (AnalogIn_LREAL_Turret.Out.rScaled < -85)) AND (AnalogIn_DINT_CrossCut.Out.rScaled >= (AnalogIn_DINT_CrossCut.MaxOut - 6(*Inches*))-1)) OR
 	(dCrossCutEncoderValue > (dCrossCutLeftLimit - 50000000))
 	THEN
@@ -2600,9 +2608,9 @@ ELSIF (dCrossCutEncoderValue <= (dCrossCutMedian - (iRailHypotenuse - dTeachLimi
 ELSE
 	bApproachingLimitRight := FALSE ;
 	bApproachingLimitLeft 	:= FALSE ;
-END_IF
+END_IF*)
 
-(*
+//(*
 IF (lCrossCutEncoderValue >= (lCrossCutMedian + (lRailHypotenuse - lTeachLimit))-50) OR
 	(((AnalogIn_LREAL_Turret.Out.rScaled > 85 (*Degrees*)) OR (AnalogIn_LREAL_Turret.Out.rScaled < -85)) AND (AnalogIn_LREAL_CrossCut.Out.rScaled >= (AnalogIn_LREAL_CrossCut.MaxOut - 6(*Inches*))-1)) OR
 	(lCrossCutEncoderValue > (lCrossCutLeftLimit - 50))
@@ -2619,18 +2627,18 @@ ELSE
 	bApproachingLimitRight := FALSE ;
 	bApproachingLimitLeft 	:= FALSE ;
 END_IF
-*)
+//*)
 
 // CrossCut encoder rollover code. See Turret's
-IF dCrossCutEncoderValue > dCrossCutLeftLimit THEN
+(*IF dCrossCutEncoderValue > dCrossCutLeftLimit THEN
 	dCrossCutEncoderValue := dCrossCutLeftLimit ;
 ELSIF dCrossCutEncoderValue < dCrossCutRightLimit THEN
 	dCrossCutEncoderValue := dCrossCutRightLimit ;
 ELSE
 	dCrossCutEncoderValue := GVL.PDO_CrossCutAX_IN.A545_AktPosition + dEncoderAddToZero ;	
-END_IF
+END_IF*)
 
-(*
+//(*
 IF lCrossCutEncoderValue > lCrossCutLeftLimit THEN
 	lCrossCutEncoderValue := lCrossCutLeftLimit ;
 ELSIF lCrossCutEncoderValue < lCrossCutRightLimit THEN
@@ -2638,30 +2646,36 @@ ELSIF lCrossCutEncoderValue < lCrossCutRightLimit THEN
 ELSE
 	lCrossCutEncoderValue := GVL.CrossCut_Axis.AchsIn.IstPos ;	
 END_IF
-*)
+//*)
 
 // Hypotenuse calculation
-IF ABS(AnalogIn_LREAL_Turret.Out.rScaled) <> 90 THEN
+(*IF ABS(AnalogIn_LREAL_Turret.Out.rScaled) <> 90 THEN
 	rCosineAngle := COS ( (PI / 180) * ABS( AnalogIn_LREAL_Turret.Out.rScaled)) ;
 ELSE
 	rCosineAngle := COS ( (PI / 180) * 89.9999 ) ;
+END_IF*)
+
+IF ABS(AnalogIn_LREAL_Turret.Out.rScaled) < 85 THEN
+	rCosineAngle := COS ( (PI / 180) * ABS( AnalogIn_LREAL_Turret.Out.rScaled)) ;
+ELSE
+	rCosineAngle := COS ( (PI / 180) * 85 ) ;
 END_IF
 
-dTeachLimit := REAL_TO_DINT(((DINT_TO_REAL(dRailLimitLeft - dRailLimitRight))/2) - ((DINT_TO_REAL(dTeachLimitLeft - dTeachLimitRight))/2)) ;
-(*
+//dTeachLimit := REAL_TO_DINT(((DINT_TO_REAL(dRailLimitLeft - dRailLimitRight))/2) - ((DINT_TO_REAL(dTeachLimitLeft - dTeachLimitRight))/2)) ;
+//(*
 lTeachLimit := ((lRailLimitLeft - lRailLimitRight)/2) - ((lTeachLimitLeft - lTeachLimitRight)/2) ;
-*)
+//*)
 
-	rRailHypotenuse := ( (DINT_TO_LREAL(dRailLimitLeft - dRailLimitRight)/2) / rCosineAngle);
-(*
+//	rRailHypotenuse := ( (DINT_TO_LREAL(dRailLimitLeft - dRailLimitRight)/2) / rCosineAngle);
+//(*
 	lRailHypotenuse := ((lRailLimitLeft - lRailLimitRight)/2) / rCosineAngle;
-*)
+//*)
 	
-IF rRailHypotenuse >= 1942843775 OR rRailHypotenuse < 0 THEN
+(*IF rRailHypotenuse >= 1942843775 OR rRailHypotenuse < 0 THEN
 	iRailHypotenuse := 1942843775;		// rRailHypotenuse = 1942843775 	@ 80°
 ELSE
 	iRailHypotenuse := LREAL_TO_DINT(rRailHypotenuse);
-END_IF 
+END_IF *)
 
 (*
 	// no need for iRailHypotenuse
@@ -2678,7 +2692,7 @@ END_IF
 rTurretOffsetMultiplier := (0.5 * (ABS(AnalogIn_LREAL_Turret.Out.rScaled)/90)) ;
 iCrossCutMedianStep;
 
-IF (bCarriageCentreRef AND NOT RS_TurretCentre.Q1 AND AnalogIn_LREAL_Turret.Out.rScaled >0) OR (NOT bCarriageCentreRef AND (AnalogIn_LREAL_Turret.Out.rScaled > 85 OR AnalogIn_LREAL_Turret.Out.rScaled < -85)) THEN	
+(*IF (bCarriageCentreRef AND NOT RS_TurretCentre.Q1 AND AnalogIn_LREAL_Turret.Out.rScaled >0) OR (NOT bCarriageCentreRef AND (AnalogIn_LREAL_Turret.Out.rScaled > 85 OR AnalogIn_LREAL_Turret.Out.rScaled < -85)) THEN	
 	dCrossCutMedian := REAL_TO_DINT (((DINT_TO_REAL(dTeachLimitLeft + dTeachLimitRight)) / 2 ) -  ((rTurretOffsetMultiplier/(AnalogIn_DINT_CrossCut.MaxOut-AnalogIn_DINT_CrossCut.MinOut))*DINT_TO_REAL(dCrossCutLeftLimit-dCrossCutRightLimit))  ) ;
 	iCrossCutMedianStep := 10;
 ELSIF (bCarriageCentreRef AND NOT RS_TurretCentre.Q1 AND AnalogIn_LREAL_Turret.Out.rScaled <0) OR (NOT bCarriageCentreRef AND (AnalogIn_LREAL_Turret.Out.rScaled > 85 OR AnalogIn_LREAL_Turret.Out.rScaled < -85)) THEN	
@@ -2690,9 +2704,9 @@ ELSIF NOT bCarriageCentreRef AND (AnalogIn_LREAL_Carriage.Out.rScaled < rCarriag
 ELSIF NOT bCarriageCentreRef AND (AnalogIn_LREAL_Carriage.Out.rScaled > rCarriageMedian) AND NOT (AnalogIn_LREAL_Turret.Out.rScaled > 85 OR AnalogIn_LREAL_Turret.Out.rScaled < -85) THEN
 	dCrossCutMedian := REAL_TO_DINT(((DINT_TO_REAL(dTeachLimitLeft + dTeachLimitRight)) / 2 ) + ((rCrossCutOffset/(AnalogIn_DINT_CrossCut.MaxOut-AnalogIn_DINT_CrossCut.MinOut))*DINT_TO_REAL(dCrossCutLeftLimit-dCrossCutRightLimit)) /rCosineAngle) ;
 	iCrossCutMedianStep := 40;
-END_IF
+END_IF*)
 
-(*
+//(*
 IF (bCarriageCentreRef AND NOT RS_TurretCentre.Q1 AND AnalogIn_LREAL_Turret.Out.rScaled >0) OR (NOT bCarriageCentreRef AND (AnalogIn_LREAL_Turret.Out.rScaled > 85 OR AnalogIn_LREAL_Turret.Out.rScaled < -85)) THEN	
 	lCrossCutMedian := ((lTeachLimitLeft + lTeachLimitRight) / 2 ) -  ((rTurretOffsetMultiplier/(AnalogIn_LREAL_CrossCut.MaxOut-AnalogIn_LREAL_CrossCut.MinOut))*(lCrossCutLeftLimit-lCrossCutRightLimit)) ;
 	iCrossCutMedianStep := 10;
@@ -2706,21 +2720,21 @@ ELSIF NOT bCarriageCentreRef AND (AnalogIn_LREAL_Carriage.Out.rScaled > rCarriag
 	lCrossCutMedian := ((lTeachLimitLeft + lTeachLimitRight) / 2 ) + ((rCrossCutOffset/(AnalogIn_LREAL_CrossCut.MaxOut-AnalogIn_LREAL_CrossCut.MinOut))*(lCrossCutLeftLimit-lCrossCutRightLimit)) /rCosineAngle ;
 	iCrossCutMedianStep := 40;
 END_IF
-*)
+//*)
 
-IF (dCrossCutEncoderValue >= (dCrossCutMedian - 3000000)) AND (dCrossCutEncoderValue <= (dCrossCutMedian + 3000000)) THEN
+(*IF (dCrossCutEncoderValue >= (dCrossCutMedian - 3000000)) AND (dCrossCutEncoderValue <= (dCrossCutMedian + 3000000)) THEN
 	bCrossCutCentre := TRUE ;
 ELSE
 	bCrossCutCentre := FALSE ;
-END_IF
+END_IF*)
 
-(*
+//(*
 IF (lCrossCutEncoderValue >= (lCrossCutMedian - 30)) AND (lCrossCutEncoderValue <= (lCrossCutMedian + 30)) THEN
 	bCrossCutCentre := TRUE ;
 ELSE
 	bCrossCutCentre := FALSE ;
 END_IF
-*)
+//*)
 ]]></ST>
       </Implementation>
     </Action>
@@ -2767,7 +2781,10 @@ END_IF]]></ST>
       <LineId Id="46" Count="0" />
       <LineId Id="164" Count="0" />
       <LineId Id="163" Count="0" />
-      <LineId Id="167" Count="3" />
+      <LineId Id="167" Count="1" />
+      <LineId Id="261" Count="1" />
+      <LineId Id="169" Count="1" />
+      <LineId Id="263" Count="1" />
       <LineId Id="166" Count="0" />
       <LineId Id="165" Count="0" />
       <LineId Id="15" Count="0" />
@@ -2816,6 +2833,8 @@ END_IF]]></ST>
       <LineId Id="27" Count="0" />
       <LineId Id="51" Count="3" />
       <LineId Id="50" Count="0" />
+      <LineId Id="256" Count="4" />
+      <LineId Id="255" Count="0" />
       <LineId Id="56" Count="1" />
       <LineId Id="181" Count="0" />
       <LineId Id="184" Count="0" />

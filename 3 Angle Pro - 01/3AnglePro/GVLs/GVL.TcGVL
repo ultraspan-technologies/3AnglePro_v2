@@ -218,7 +218,8 @@ VAR_GLOBAL
 	SR_CWlimit: SR;
 	RS_TurretCentre: RS;
 	SR_CCWlimit: SR;
-	AnalogIn_DINT_CrossCut: FB_AnalogIn_DINT;
+//	AnalogIn_DINT_CrossCut: FB_AnalogIn_DINT;
+	AnalogIn_LREAL_CrossCut: FB_AnalogIn_LREAL;
 	
 //########## HMI Controls ##########//
 	bHorn: BOOL;

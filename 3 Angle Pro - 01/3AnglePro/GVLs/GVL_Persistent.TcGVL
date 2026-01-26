@@ -16,6 +16,8 @@
 	
 	dTeachLimitLeft: DINT;
 	dTeachLimitRight: DINT;
+	lTeachLimitRight: LREAL;
+	lTeachLimitLeft: LREAL;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
