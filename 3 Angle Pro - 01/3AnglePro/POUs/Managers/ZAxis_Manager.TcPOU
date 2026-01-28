@@ -3,76 +3,19 @@
   <POU Name="ZAxis_Manager" Id="{998db7fd-c2f3-4cfb-bf62-8a82116b63bd}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM ZAxis_Manager
 VAR
-	ResetError: BOOL;
-	
-	Offset: LREAL; //general offset of the encoder value
-		
-	//half the settings have been filled out already. the FB is used to fill the remaining empty variables. fill out the rest of the starting values up here
-	VeloOverride: INT := 100; // usually used to slow the motor
-	AccOverride: INT := 100; //acceeration or the over ride
-	DccOverride: INT := 100; // deceleration of the override
-	JerkOverride: INT := 100; //jerk
-	ActivateJogFast: BOOL; //trigger for fast movement
-	VeloManJog: REAL := 75; //speed of the regular jog movement
-	VeloManJogFAST: REAL := 50; // speed of the fast movement
-	AccManJOG: REAL := 250; //general ACC
-	DccManJog: REAL := 250; // general DCC
-	MaxTorque: WORD := 150; //150% of max torque
-	
-	
-//	Forwards  : BOOL;
-	ManConsent: BOOL;
-//	Backwards  : BOOL;
-	Target: INT;
-	RefTrigger: BOOL;
-	
 	ExtraSensorInput: TAxSensorModule; // compressed FUN for exteriour sensor inputs. temp, edge, jog stops
 	SpecialOperations: TAxSpecialOperationModule; //compressed FUN for the special operation commands. 
 	AxisCoupleIN: TAxCoupleModule; //connects to the AX_Couple_out of the manager from the next axis. NOT MASTER/SLAVE
 	Z1_AxisCoupleOUT: TAxCoupleModule; //connects to the AX_Couple_out of the manager from the next axis. NOT MASTER/SLAVE
 	Z2_AxisCoupleOUT: TAxCoupleModule; //connects to the AX_Couple_out of the manager from the next axis. NOT MASTER/SLAVE
-
-	DriveIsReal: BOOL; //a check to make sure the drive is real.
 	ErrorWordArray: WORD; //build a array of words that act as a cluster of error watching variables. each step in array will be one axis. differant values of the word for each axis mean a differant error. 
-	
-	ASP: TASPState; //safety interlock system. connects to the safety program OR build a blank ASP that fills all the values but doesnt connect anywhere. 
-	
-	TargetPositionActivate: BOOL; //starts the drive positing to the Sollpos
 	JogStop: LREAL := 1E100 ; // a stopping point using the jog system to signify it is in the right spot. Need to have the LimitPosJOG adjusted after to compensate for the next space.
-
-	
-	(*
-	//programed commands for movement and controls. NOT part of the PMA build, this is exteriour controls. 
-	
-	ManVsAutoSW: BOOL;
-	ResetButton: BOOL;
-	PHYSICALManVsAutoSW: BOOL;
-	
-	TON_OKdelay: TON;
-	*)
-	MotorOK: BOOL; // link this into the EL6910 output STO status. then when STO is good this will be good too. 
-	
-	StartButton: BOOL;
-	
 	DriveCMD_Z1: DriveCMDShortCUT; //extra system for the FB to make it easy to read.
 	DriveCMD_Z2: DriveCMDShortCUT; //extra system for the FB to make it easy to read.
 	ASPshortCut_Z1: ASPshortCUT;  // same as above
 	ASPshortCut_Z2: ASPshortCUT;  // same as above
-	
-	ManIN: BOOL;
-	AutoIN: BOOL;
-	ResetBTN: BOOL;
-	SwitchMAN: BOOL;
-	SwitchAuto: BOOL;
-	AutoRUN: BOOL;
-	SafeTEST: BOOL;
-	ResetSync: BOOL;
-	TOF_ZaxisEnable: TOF;
-	TestControl :BOOL := FALSE;
 	AchsRETURN_Z1: TAxReturn;
 	AchsRETURN_Z2: TAxReturn;
-	testMAN: BOOL;
-	UseSync: BOOL;
 	Z1_Offset: LREAL;
 	Z2_Offset: LREAL;
 END_VAR
@@ -146,7 +89,7 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"VeloOverride"</v>
+                            <v n="Operand">"100"</v>
                             <v n="Type">"INT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -165,7 +108,7 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"AccOverride"</v>
+                            <v n="Operand">"100"</v>
                             <v n="Type">"INT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -184,7 +127,7 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"DccOverride"</v>
+                            <v n="Operand">"100"</v>
                             <v n="Type">"INT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -203,7 +146,7 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"JerkOverride"</v>
+                            <v n="Operand">"100"</v>
                             <v n="Type">"INT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -222,7 +165,7 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"ActivateJogFast"</v>
+                            <v n="Operand">"FALSE"</v>
                             <v n="Type">"BOOL"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -260,8 +203,8 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"VeloManJogFAST"</v>
-                            <v n="Type">"REAL"</v>
+                            <v n="Operand">"1"</v>
+                            <v n="Type">"INT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>
@@ -279,8 +222,8 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"AccManJOG"</v>
-                            <v n="Type">"REAL"</v>
+                            <v n="Operand">"250"</v>
+                            <v n="Type">"USINT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>
@@ -298,8 +241,8 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"DccManJog"</v>
-                            <v n="Type">"REAL"</v>
+                            <v n="Operand">"250"</v>
+                            <v n="Type">"USINT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>
@@ -317,8 +260,8 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"MaxTorque"</v>
-                            <v n="Type">"WORD"</v>
+                            <v n="Operand">"150"</v>
+                            <v n="Type">"USINT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>
@@ -465,7 +408,7 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"VeloOverride"</v>
+                            <v n="Operand">"100"</v>
                             <v n="Type">"INT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -484,7 +427,7 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"AccOverride"</v>
+                            <v n="Operand">"100"</v>
                             <v n="Type">"INT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -503,7 +446,7 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"DccOverride"</v>
+                            <v n="Operand">"100"</v>
                             <v n="Type">"INT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -522,7 +465,7 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"JerkOverride"</v>
+                            <v n="Operand">"100"</v>
                             <v n="Type">"INT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -541,7 +484,7 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"ActivateJogFast"</v>
+                            <v n="Operand">"FALSE"</v>
                             <v n="Type">"BOOL"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -579,8 +522,8 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"VeloManJogFAST"</v>
-                            <v n="Type">"REAL"</v>
+                            <v n="Operand">"1"</v>
+                            <v n="Type">"INT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>
@@ -598,8 +541,8 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"AccManJOG"</v>
-                            <v n="Type">"REAL"</v>
+                            <v n="Operand">"250"</v>
+                            <v n="Type">"USINT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>
@@ -617,8 +560,8 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"DccManJog"</v>
-                            <v n="Type">"REAL"</v>
+                            <v n="Operand">"250"</v>
+                            <v n="Type">"USINT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>
@@ -636,8 +579,8 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"MaxTorque"</v>
-                            <v n="Type">"WORD"</v>
+                            <v n="Operand">"150"</v>
+                            <v n="Type">"USINT"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>
@@ -765,7 +708,7 @@ END_VAR
                       <l2 n="InputItems" cet="BoxTreeOperand">
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"UseSync"</v>
+                            <v n="Operand">"FALSE"</v>
                             <v n="Type">"BOOL"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -822,7 +765,7 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"ResetSync"</v>
+                            <v n="Operand">"FALSE"</v>
                             <v n="Type">"BOOL"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -958,7 +901,7 @@ END_VAR
                       <l2 n="InputItems" cet="BoxTreeOperand">
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"UseSync"</v>
+                            <v n="Operand">"FALSE"</v>
                             <v n="Type">"BOOL"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -1015,7 +958,7 @@ END_VAR
                         </o>
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"ResetSync"</v>
+                            <v n="Operand">"FALSE"</v>
                             <v n="Type">"BOOL"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -1481,8 +1424,8 @@ END_VAR
                             </o>
                             <o t="BoxTreeOperand">
                               <o n="Operand" t="Operand">
-                                <v n="Operand">"AutoIN"</v>
-                                <v n="Type">"BOOL"</v>
+                                <v n="Operand">""</v>
+                                <n n="Type" />
                                 <v n="Comment">""</v>
                                 <v n="SymbolComment">""</v>
                                 <v n="Address">""</v>
@@ -1519,8 +1462,8 @@ END_VAR
                             </o>
                             <o t="BoxTreeOperand">
                               <o n="Operand" t="Operand">
-                                <v n="Operand">"StartButton"</v>
-                                <v n="Type">"BOOL"</v>
+                                <v n="Operand">""</v>
+                                <n n="Type" />
                                 <v n="Comment">""</v>
                                 <v n="SymbolComment">""</v>
                                 <v n="Address">""</v>
@@ -1709,8 +1652,8 @@ END_VAR
                             </o>
                             <o t="BoxTreeOperand">
                               <o n="Operand" t="Operand">
-                                <v n="Operand">"RefTrigger"</v>
-                                <v n="Type">"BOOL"</v>
+                                <v n="Operand">""</v>
+                                <n n="Type" />
                                 <v n="Comment">""</v>
                                 <v n="SymbolComment">""</v>
                                 <v n="Address">""</v>
@@ -1728,8 +1671,8 @@ END_VAR
                             </o>
                             <o t="BoxTreeOperand">
                               <o n="Operand" t="Operand">
-                                <v n="Operand">"TargetPositionActivate"</v>
-                                <v n="Type">"BOOL"</v>
+                                <v n="Operand">""</v>
+                                <n n="Type" />
                                 <v n="Comment">""</v>
                                 <v n="SymbolComment">""</v>
                                 <v n="Address">""</v>
@@ -1747,8 +1690,8 @@ END_VAR
                             </o>
                             <o t="BoxTreeOperand">
                               <o n="Operand" t="Operand">
-                                <v n="Operand">"Target"</v>
-                                <v n="Type">"INT"</v>
+                                <v n="Operand">""</v>
+                                <n n="Type" />
                                 <v n="Comment">""</v>
                                 <v n="SymbolComment">""</v>
                                 <v n="Address">""</v>
@@ -2510,8 +2453,8 @@ END_VAR
                             </o>
                             <o t="BoxTreeOperand">
                               <o n="Operand" t="Operand">
-                                <v n="Operand">"AutoIN"</v>
-                                <v n="Type">"BOOL"</v>
+                                <v n="Operand">""</v>
+                                <n n="Type" />
                                 <v n="Comment">""</v>
                                 <v n="SymbolComment">""</v>
                                 <v n="Address">""</v>
@@ -2548,8 +2491,8 @@ END_VAR
                             </o>
                             <o t="BoxTreeOperand">
                               <o n="Operand" t="Operand">
-                                <v n="Operand">"StartButton"</v>
-                                <v n="Type">"BOOL"</v>
+                                <v n="Operand">""</v>
+                                <n n="Type" />
                                 <v n="Comment">""</v>
                                 <v n="SymbolComment">""</v>
                                 <v n="Address">""</v>
@@ -2738,8 +2681,8 @@ END_VAR
                             </o>
                             <o t="BoxTreeOperand">
                               <o n="Operand" t="Operand">
-                                <v n="Operand">"RefTrigger"</v>
-                                <v n="Type">"BOOL"</v>
+                                <v n="Operand">""</v>
+                                <n n="Type" />
                                 <v n="Comment">""</v>
                                 <v n="SymbolComment">""</v>
                                 <v n="Address">""</v>
@@ -2757,8 +2700,8 @@ END_VAR
                             </o>
                             <o t="BoxTreeOperand">
                               <o n="Operand" t="Operand">
-                                <v n="Operand">"TargetPositionActivate"</v>
-                                <v n="Type">"BOOL"</v>
+                                <v n="Operand">""</v>
+                                <n n="Type" />
                                 <v n="Comment">""</v>
                                 <v n="SymbolComment">""</v>
                                 <v n="Address">""</v>
@@ -2776,8 +2719,8 @@ END_VAR
                             </o>
                             <o t="BoxTreeOperand">
                               <o n="Operand" t="Operand">
-                                <v n="Operand">"Target"</v>
-                                <v n="Type">"INT"</v>
+                                <v n="Operand">""</v>
+                                <n n="Type" />
                                 <v n="Comment">""</v>
                                 <v n="SymbolComment">""</v>
                                 <v n="Address">""</v>
