@@ -123,6 +123,7 @@ VAR_GLOBAL
 	SR_CWlimit: SR;
 	RS_TurretCentre: RS;
 	SR_CCWlimit: SR;
+	bAllowTurretMovement: BOOL;
 	
 // Carriage
 	AnalogIn_LREAL_Carriage: FB_AnalogIn_LREAL;
@@ -150,6 +151,7 @@ VAR_GLOBAL
 	rCrossCutJogVelocity: REAL;
 	bCrossCutLeftLimit: BOOL;
 	bCrossCutRightLimit: BOOL;
+	bAllowCarriageMovement: BOOL;
 	
 // Z-Axis
 	bSawUpLimit: BOOL;
@@ -193,7 +195,8 @@ VAR_GLOBAL
 	bTeach: BOOL;
 	bRemote: BOOL;
 	bWaterLine: BOOL;
-
+	bCarriageMovement: BOOL;
+	bTurretMovement: BOOL;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

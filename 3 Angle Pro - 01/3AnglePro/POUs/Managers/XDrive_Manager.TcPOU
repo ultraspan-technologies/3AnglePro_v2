@@ -12,6 +12,7 @@ VAR
 	DriveCMD_1: DriveCMDShortCUT; //extra system for the FB to make it easy to read.
 	ASPshortCut_1: ASPshortCUT;  // same as above
 	FB_XDrivePotIN: FB_AnalogIn;
+	ACHSRETURN_Xdrive: TAxReturn;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -675,8 +676,8 @@ END_VAR
                             <v n="Id">104L</v>
                           </o>
                           <o>
-                            <v n="Operand">""</v>
-                            <n n="Type" />
+                            <v n="Operand">"ACHSRETURN_Xdrive"</v>
+                            <v n="Type">"TAxReturn"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>

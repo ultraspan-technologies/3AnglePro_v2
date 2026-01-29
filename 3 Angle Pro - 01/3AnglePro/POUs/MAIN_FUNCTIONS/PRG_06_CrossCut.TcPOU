@@ -25,7 +25,6 @@ VAR
 	lTeachLimit: LREAL;
 	AnalogIn_LREAL_CurrentFeedback: FB_AnalogIn_LREAL;
 	rCurrentFeedbackStart: REAL := 85;
-	
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -2365,7 +2364,7 @@ END_VAR
                             <v n="LValue">false</v>
                             <v n="Boolean">false</v>
                             <v n="IsInstance">true</v>
-                            <v n="Id">446L</v>
+                            <v n="Id">523L</v>
                           </o>
                           <o n="OutputItems" t="OutputItemList">
                             <l2 n="OutputItems">
@@ -2380,7 +2379,7 @@ END_VAR
                           <n n="InputFlags" />
                           <l2 n="InputItems">
                             <o t="BoxTreeBox">
-                              <v n="BoxType">"GT"</v>
+                              <v n="BoxType">"GE"</v>
                               <o n="Instance" t="Operand">
                                 <n n="Operand" />
                                 <v n="Type">""</v>
@@ -2395,7 +2394,7 @@ END_VAR
                                 <v n="LValue">false</v>
                                 <v n="Boolean">false</v>
                                 <v n="IsInstance">true</v>
-                                <v n="Id">452L</v>
+                                <v n="Id">543L</v>
                               </o>
                               <o n="OutputItems" t="OutputItemList">
                                 <l2 n="OutputItems">
@@ -2424,14 +2423,14 @@ END_VAR
                                     <v n="LValue">false</v>
                                     <v n="Boolean">false</v>
                                     <v n="IsInstance">false</v>
-                                    <v n="Id">434L</v>
+                                    <v n="Id">542L</v>
                                   </o>
-                                  <v n="Id">433L</v>
+                                  <v n="Id">541L</v>
                                 </o>
                                 <o>
                                   <o n="Operand" t="Operand">
-                                    <v n="Operand">"rCurrentFeedbackStart"</v>
-                                    <v n="Type">"REAL"</v>
+                                    <v n="Operand">"AnalogIn_LREAL_CurrentFeedback.MaxIn"</v>
+                                    <v n="Type">"LREAL"</v>
                                     <v n="Comment">""</v>
                                     <v n="SymbolComment">""</v>
                                     <v n="Address">""</v>
@@ -2443,9 +2442,9 @@ END_VAR
                                     <v n="LValue">false</v>
                                     <v n="Boolean">false</v>
                                     <v n="IsInstance">false</v>
-                                    <v n="Id">455L</v>
+                                    <v n="Id">546L</v>
                                   </o>
-                                  <v n="Id">454L</v>
+                                  <v n="Id">545L</v>
                                 </o>
                               </l2>
                               <o n="InputParam" t="ParamList">
@@ -2460,18 +2459,196 @@ END_VAR
                                   <v>BOOL</v>
                                 </l2>
                               </o>
-                              <v n="CallType" t="Operator">Gt</v>
+                              <v n="CallType" t="Operator">Ge</v>
                               <v n="EN">false</v>
                               <v n="ENO">false</v>
                               <n n="STSnippet" />
                               <v n="ContainsExtensibleInputs">false</v>
                               <v n="ProvidesSTSnippet">false</v>
-                              <v n="Id">453L</v>
+                              <v n="Id">544L</v>
+                            </o>
+                            <o t="BoxTreeBox">
+                              <v n="BoxType">"SEL"</v>
+                              <o n="Instance" t="Operand">
+                                <n n="Operand" />
+                                <v n="Type">""</v>
+                                <v n="Comment">""</v>
+                                <v n="SymbolComment">""</v>
+                                <v n="Address">""</v>
+                                <o n="Flags" t="Flags">
+                                  <v n="Flags">0</v>
+                                  <v n="Fixed">false</v>
+                                  <v n="Extensible">false</v>
+                                </o>
+                                <v n="LValue">false</v>
+                                <v n="Boolean">false</v>
+                                <v n="IsInstance">true</v>
+                                <v n="Id">529L</v>
+                              </o>
+                              <o n="OutputItems" t="OutputItemList">
+                                <l2 n="OutputItems">
+                                  <n />
+                                </l2>
+                              </o>
+                              <o n="Flags" t="Flags">
+                                <v n="Flags">0</v>
+                                <v n="Fixed">false</v>
+                                <v n="Extensible">false</v>
+                              </o>
+                              <n n="InputFlags" />
+                              <l2 n="InputItems">
+                                <o t="BoxTreeBox">
+                                  <v n="BoxType">"GT"</v>
+                                  <o n="Instance" t="Operand">
+                                    <n n="Operand" />
+                                    <v n="Type">""</v>
+                                    <v n="Comment">""</v>
+                                    <v n="SymbolComment">""</v>
+                                    <v n="Address">""</v>
+                                    <o n="Flags" t="Flags">
+                                      <v n="Flags">0</v>
+                                      <v n="Fixed">false</v>
+                                      <v n="Extensible">false</v>
+                                    </o>
+                                    <v n="LValue">false</v>
+                                    <v n="Boolean">false</v>
+                                    <v n="IsInstance">true</v>
+                                    <v n="Id">535L</v>
+                                  </o>
+                                  <o n="OutputItems" t="OutputItemList">
+                                    <l2 n="OutputItems">
+                                      <n />
+                                    </l2>
+                                  </o>
+                                  <o n="Flags" t="Flags">
+                                    <v n="Flags">0</v>
+                                    <v n="Fixed">false</v>
+                                    <v n="Extensible">false</v>
+                                  </o>
+                                  <n n="InputFlags" />
+                                  <l2 n="InputItems" cet="BoxTreeOperand">
+                                    <o>
+                                      <o n="Operand" t="Operand">
+                                        <v n="Operand">"fbSawCurrent.Out.rScaled"</v>
+                                        <v n="Type">"REAL"</v>
+                                        <v n="Comment">""</v>
+                                        <v n="SymbolComment">""</v>
+                                        <v n="Address">""</v>
+                                        <o n="Flags" t="Flags">
+                                          <v n="Flags">0</v>
+                                          <v n="Fixed">false</v>
+                                          <v n="Extensible">false</v>
+                                        </o>
+                                        <v n="LValue">false</v>
+                                        <v n="Boolean">false</v>
+                                        <v n="IsInstance">false</v>
+                                        <v n="Id">538L</v>
+                                      </o>
+                                      <v n="Id">537L</v>
+                                    </o>
+                                    <o>
+                                      <o n="Operand" t="Operand">
+                                        <v n="Operand">"rCurrentFeedbackStart"</v>
+                                        <v n="Type">"REAL"</v>
+                                        <v n="Comment">""</v>
+                                        <v n="SymbolComment">""</v>
+                                        <v n="Address">""</v>
+                                        <o n="Flags" t="Flags">
+                                          <v n="Flags">0</v>
+                                          <v n="Fixed">false</v>
+                                          <v n="Extensible">false</v>
+                                        </o>
+                                        <v n="LValue">false</v>
+                                        <v n="Boolean">false</v>
+                                        <v n="IsInstance">false</v>
+                                        <v n="Id">540L</v>
+                                      </o>
+                                      <v n="Id">539L</v>
+                                    </o>
+                                  </l2>
+                                  <o n="InputParam" t="ParamList">
+                                    <l2 n="Names" />
+                                    <l2 n="Types" />
+                                  </o>
+                                  <o n="OutputParam" t="ParamList">
+                                    <l2 n="Names" cet="String">
+                                      <v></v>
+                                    </l2>
+                                    <l2 n="Types" cet="String">
+                                      <v>BOOL</v>
+                                    </l2>
+                                  </o>
+                                  <v n="CallType" t="Operator">Gt</v>
+                                  <v n="EN">false</v>
+                                  <v n="ENO">false</v>
+                                  <n n="STSnippet" />
+                                  <v n="ContainsExtensibleInputs">false</v>
+                                  <v n="ProvidesSTSnippet">false</v>
+                                  <v n="Id">536L</v>
+                                </o>
+                                <o t="BoxTreeOperand">
+                                  <o n="Operand" t="Operand">
+                                    <v n="Operand">"rCurrentFeedbackStart"</v>
+                                    <v n="Type">"REAL"</v>
+                                    <v n="Comment">""</v>
+                                    <v n="SymbolComment">""</v>
+                                    <v n="Address">""</v>
+                                    <o n="Flags" t="Flags">
+                                      <v n="Flags">0</v>
+                                      <v n="Fixed">false</v>
+                                      <v n="Extensible">false</v>
+                                    </o>
+                                    <v n="LValue">false</v>
+                                    <v n="Boolean">false</v>
+                                    <v n="IsInstance">false</v>
+                                    <v n="Id">532L</v>
+                                  </o>
+                                  <v n="Id">531L</v>
+                                </o>
+                                <o t="BoxTreeOperand">
+                                  <o n="Operand" t="Operand">
+                                    <v n="Operand">"fbSawCurrent.Out.rScaled"</v>
+                                    <v n="Type">"REAL"</v>
+                                    <v n="Comment">""</v>
+                                    <v n="SymbolComment">""</v>
+                                    <v n="Address">""</v>
+                                    <o n="Flags" t="Flags">
+                                      <v n="Flags">0</v>
+                                      <v n="Fixed">false</v>
+                                      <v n="Extensible">false</v>
+                                    </o>
+                                    <v n="LValue">false</v>
+                                    <v n="Boolean">false</v>
+                                    <v n="IsInstance">false</v>
+                                    <v n="Id">534L</v>
+                                  </o>
+                                  <v n="Id">533L</v>
+                                </o>
+                              </l2>
+                              <o n="InputParam" t="ParamList">
+                                <l2 n="Names" />
+                                <l2 n="Types" />
+                              </o>
+                              <o n="OutputParam" t="ParamList">
+                                <l2 n="Names" cet="String">
+                                  <v></v>
+                                </l2>
+                                <l2 n="Types" cet="String">
+                                  <v>INT</v>
+                                </l2>
+                              </o>
+                              <v n="CallType" t="Operator">Sel</v>
+                              <v n="EN">false</v>
+                              <v n="ENO">false</v>
+                              <n n="STSnippet" />
+                              <v n="ContainsExtensibleInputs">false</v>
+                              <v n="ProvidesSTSnippet">false</v>
+                              <v n="Id">530L</v>
                             </o>
                             <o t="BoxTreeOperand">
                               <o n="Operand" t="Operand">
-                                <v n="Operand">"rCurrentFeedbackStart"</v>
-                                <v n="Type">"REAL"</v>
+                                <v n="Operand">"AnalogIn_LREAL_CurrentFeedback.MaxIn"</v>
+                                <v n="Type">"LREAL"</v>
                                 <v n="Comment">""</v>
                                 <v n="SymbolComment">""</v>
                                 <v n="Address">""</v>
@@ -2483,28 +2660,9 @@ END_VAR
                                 <v n="LValue">false</v>
                                 <v n="Boolean">false</v>
                                 <v n="IsInstance">false</v>
-                                <v n="Id">449L</v>
+                                <v n="Id">528L</v>
                               </o>
-                              <v n="Id">448L</v>
-                            </o>
-                            <o t="BoxTreeOperand">
-                              <o n="Operand" t="Operand">
-                                <v n="Operand">"fbSawCurrent.Out.rScaled"</v>
-                                <v n="Type">"REAL"</v>
-                                <v n="Comment">""</v>
-                                <v n="SymbolComment">""</v>
-                                <v n="Address">""</v>
-                                <o n="Flags" t="Flags">
-                                  <v n="Flags">0</v>
-                                  <v n="Fixed">false</v>
-                                  <v n="Extensible">false</v>
-                                </o>
-                                <v n="LValue">false</v>
-                                <v n="Boolean">false</v>
-                                <v n="IsInstance">false</v>
-                                <v n="Id">451L</v>
-                              </o>
-                              <v n="Id">450L</v>
+                              <v n="Id">527L</v>
                             </o>
                           </l2>
                           <o n="InputParam" t="ParamList">
@@ -2525,7 +2683,7 @@ END_VAR
                           <n n="STSnippet" />
                           <v n="ContainsExtensibleInputs">false</v>
                           <v n="ProvidesSTSnippet">false</v>
-                          <v n="Id">447L</v>
+                          <v n="Id">524L</v>
                         </o>
                         <o t="BoxTreeOperand">
                           <o n="Operand" t="Operand">
@@ -2686,15 +2844,17 @@ ELSIF lTeachLimitRight = 0 THEN
 END_IF
 
 // CrossCut Limits
-IF (lCrossCutEncoderValue >= (lCrossCutMedian + (lRailHypotenuse - lTeachLimit))) OR
-	(((AnalogIn_LREAL_Turret.Out.rScaled > 85 (*Degrees*)) OR (AnalogIn_LREAL_Turret.Out.rScaled < -85)) AND (AnalogIn_LREAL_CrossCut.Out.rScaled >= (AnalogIn_LREAL_CrossCut.MaxOut - 6 (*Inches*)))) OR
-	(lCrossCutEncoderValue > (lCrossCutLeftLimit - 5))
+IF (lCrossCutEncoderValue >= (lCrossCutMedian + (lRailHypotenuse - lTeachLimit)))
+	OR (((AnalogIn_LREAL_Turret.Out.rScaled > 85 (*Degrees*)) OR (AnalogIn_LREAL_Turret.Out.rScaled < -85)) AND (AnalogIn_LREAL_CrossCut.Out.rScaled >= (AnalogIn_LREAL_CrossCut.MaxOut - 6 (*Inches*))))
+	OR (lCrossCutEncoderValue > (lCrossCutLeftLimit - 5))
+	OR (bEchainCrashPosLeft AND NOT bEchainCrashPosRight)
 	THEN
 	bCrossCutLeftLimit := TRUE ;	// Left Limit
 	bCrossCutRightLimit := FALSE ;
-ELSIF (lCrossCutEncoderValue <= (lCrossCutMedian - (lRailHypotenuse - lTeachLimit))) OR
-	(((AnalogIn_LREAL_Turret.Out.rScaled > 85 (*Degrees*)) OR (AnalogIn_LREAL_Turret.Out.rScaled < -85)) AND (AnalogIn_LREAL_CrossCut.Out.rScaled <= (AnalogIn_LREAL_CrossCut.MinOut + 6 (*Inches*)))) OR
-	(lCrossCutEncoderValue < (lCrossCutRightLimit + 5))
+ELSIF (lCrossCutEncoderValue <= (lCrossCutMedian - (lRailHypotenuse - lTeachLimit)))
+	OR (((AnalogIn_LREAL_Turret.Out.rScaled > 85 (*Degrees*)) OR (AnalogIn_LREAL_Turret.Out.rScaled < -85)) AND (AnalogIn_LREAL_CrossCut.Out.rScaled <= (AnalogIn_LREAL_CrossCut.MinOut + 6 (*Inches*))))
+	OR (lCrossCutEncoderValue < (lCrossCutRightLimit + 5))
+	OR (bEchainCrashPosRight AND NOT bEchainCrashPosLeft)
 	THEN
 	bCrossCutLeftLimit := FALSE ;	
 	bCrossCutRightLimit := TRUE ;	// Right Limit
@@ -2776,6 +2936,40 @@ IF NOT bTurretEN AND NOT bCarriageEN THEN
 	bCrossCutHMIsensor := TRUE ;
 ELSE
 	bCrossCutHMIsensor := FALSE ;
+END_IF
+
+(* crash positions *)
+IF 		(AnalogIn_LREAL_Carriage.Out.rScaled <= 24 AND AnalogIn_LREAL_Turret.Out.rScaled <= -50 AND AnalogIn_LREAL_CrossCut.Out.rScaled >= 46) 	// echain @ corner #1
+	OR 	(AnalogIn_LREAL_Carriage.Out.rScaled <= 41 AND AnalogIn_LREAL_Turret.Out.rScaled <= -70 AND AnalogIn_LREAL_CrossCut.Out.rScaled >= 56)		// light bar @ side 1-2
+	OR	(AnalogIn_LREAL_Carriage.Out.rScaled <= 36 AND AnalogIn_LREAL_Turret.Out.rScaled >= 65 AND AnalogIn_LREAL_CrossCut.Out.rScaled >= 54)	// corner 4
+	OR	(AnalogIn_LREAL_Carriage.Out.rScaled <= 35 AND AnalogIn_LREAL_Turret.Out.rScaled <= -50 AND AnalogIn_LREAL_CrossCut.Out.rScaled >= 51)	// echain @ corner #1
+	OR	(AnalogIn_LREAL_Carriage.Out.rScaled >= 36 AND AnalogIn_LREAL_Turret.Out.rScaled >= 60 AND AnalogIn_LREAL_CrossCut.Out.rScaled >= 54)	// corner 4
+	OR	(AnalogIn_LREAL_Carriage.Out.rScaled >= 30 AND AnalogIn_LREAL_Turret.Out.rScaled >= 50 AND AnalogIn_LREAL_CrossCut.Out.rScaled >= 56)	// corner 4
+	OR	(AnalogIn_LREAL_Carriage.Out.rScaled <= 36 AND AnalogIn_LREAL_Turret.Out.rScaled <= -50 AND AnalogIn_LREAL_CrossCut.Out.rScaled >= 56)	// corner 1
+THEN
+	bEchainCrashPosLeft := TRUE ;		// Crosscut Left limit
+	bEchainCrashPosRight := FALSE ;
+ELSIF 	(AnalogIn_LREAL_Carriage.Out.rScaled <= 14 AND AnalogIn_LREAL_Turret.Out.rScaled >= 85 AND AnalogIn_LREAL_CrossCut.Out.rScaled <= 15) 	// echain @ corner #1
+	OR	(AnalogIn_LREAL_Carriage.Out.rScaled <= 17.5 AND AnalogIn_LREAL_Turret.Out.rScaled <= -75 AND AnalogIn_LREAL_CrossCut.Out.rScaled <= 10.5)	// echain @ corner #3
+	OR  (AnalogIn_LREAL_Carriage.Out.rScaled <= 30 AND AnalogIn_LREAL_Turret.Out.rScaled >= 65 AND AnalogIn_LREAL_CrossCut.Out.rScaled <= 7)		// light bar @ side 1-2
+	OR  (AnalogIn_LREAL_Carriage.Out.rScaled <= 10 AND AnalogIn_LREAL_Turret.Out.rScaled >= 70 AND AnalogIn_LREAL_CrossCut.Out.rScaled <= 16)	// echain @ corner #1
+	OR  (AnalogIn_LREAL_Carriage.Out.rScaled >= 21 AND AnalogIn_LREAL_Turret.Out.rScaled <= -60 AND AnalogIn_LREAL_CrossCut.Out.rScaled <= 7)		// corner #4
+	OR  (AnalogIn_LREAL_Carriage.Out.rScaled <= 21 AND AnalogIn_LREAL_Turret.Out.rScaled <= -60 AND AnalogIn_LREAL_CrossCut.Out.rScaled <= 7)		// servomotor side #3-4
+	OR  (AnalogIn_LREAL_Carriage.Out.rScaled <= 16 AND AnalogIn_LREAL_Turret.Out.rScaled <= -60 AND AnalogIn_LREAL_CrossCut.Out.rScaled <= 17)		// horizontal echain @ corner #3
+	OR  (AnalogIn_LREAL_Carriage.Out.rScaled >= 16 AND AnalogIn_LREAL_Turret.Out.rScaled <= -65 AND AnalogIn_LREAL_CrossCut.Out.rScaled <= 5)		// spray bar side #3-4
+THEN
+	bEchainCrashPosLeft := FALSE ;		// Crosscut Right limit
+	bEchainCrashPosRight := TRUE ;
+ELSE
+	bEchainCrashPosLeft := FALSE ;
+	bEchainCrashPosRight := FALSE ;
+END_IF
+
+(* Crosscut position to allow Carriage movement *)
+IF 		AnalogIn_LREAL_CrossCut.Out.rScaled <= ((AnalogIn_LREAL_CrossCut.MaxOut / 2) + 12)
+	AND AnalogIn_LREAL_CrossCut.Out.rScaled >= ((AnalogIn_LREAL_CrossCut.MaxOut / 2) - 12)
+THEN bAllowCarriageMovement := TRUE ;
+ELSE bAllowCarriageMovement := FALSE ;	
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -2802,8 +2996,8 @@ ELSIF ((bSawCutEN AND bApproachingLimitLeft) OR (bSawReturnEN AND bApproachingLi
 	
 ELSIF ((bSawCutEN AND NOT bApproachingLimitLeft) OR (bSawReturnEN AND NOT bApproachingLimitRight)) AND NOT OUT_bSawON THEN // Cut and Return speed if Saw blade OFF
 	rCrossCutJogVelocity := rSawOFFSpeed ;
-(*ELSE
-	rCrossCutJogVelocity := 0 ;*)
+ELSE
+	rCrossCutJogVelocity := rBufferSpeed ;
 END_IF]]></ST>
       </Implementation>
     </Action>
@@ -2820,7 +3014,11 @@ END_IF]]></ST>
       <LineId Id="166" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="4" Count="0" />
-      <LineId Id="216" Count="14" />
+      <LineId Id="216" Count="2" />
+      <LineId Id="270" Count="0" />
+      <LineId Id="219" Count="5" />
+      <LineId Id="271" Count="0" />
+      <LineId Id="225" Count="5" />
       <LineId Id="215" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="17" Count="0" />
@@ -2859,6 +3057,15 @@ END_IF]]></ST>
       <LineId Id="266" Count="0" />
       <LineId Id="269" Count="0" />
       <LineId Id="267" Count="0" />
+      <LineId Id="273" Count="7" />
+      <LineId Id="298" Count="0" />
+      <LineId Id="281" Count="16" />
+      <LineId Id="272" Count="0" />
+      <LineId Id="301" Count="0" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="302" Count="0" />
+      <LineId Id="305" Count="2" />
+      <LineId Id="304" Count="0" />
     </LineIds>
     <LineIds Name="PRG_06_CrossCut.ACT_06_2_CrossCutSpeed">
       <LineId Id="18" Count="4" />
