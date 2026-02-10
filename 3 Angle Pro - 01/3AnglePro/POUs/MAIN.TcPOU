@@ -48,7 +48,8 @@ PRG_07_ZAxis();
 PRG_08_AutoCrossCut();
 	PRG_08_AutoCrossCut.ACT_08_1_AutoCrossCut();
 PRG_09_HomePosition();
-PRG_10_Persistent();
+PRG_10_CrossCutPosition();
+PRG_99_Persistent();
 
 
 
@@ -1072,7 +1073,9 @@ END_IF
       <LineId Id="225" Count="0" />
       <LineId Id="251" Count="0" />
       <LineId Id="254" Count="0" />
-      <LineId Id="252" Count="1" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="308" Count="0" />
+      <LineId Id="253" Count="0" />
       <LineId Id="113" Count="0" />
       <LineId Id="117" Count="0" />
       <LineId Id="186" Count="0" />

@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="PRG_10_CrossCutPosition" Id="{01508e5e-1a94-4304-b7d0-0ea935e17fc2}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_10_CrossCutPosition
+VAR
+	iStepCrossCut: INT;
+	R_TRIG_CrossCutPosition: R_TRIG;
+	SR_CrossCutPosition: SR;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// bAnyServoError
+
+	IF		NOT bSafetyOK OR IN_FaultReset OR bAutoCrossCut OR bMachineHoming OR NOT SR_CrossCutPosition.Q1
+	THEN	iStepCrossCut	:=	0;
+			bCrossCutPosition := FALSE;
+	END_IF
+	
+			R_TRIG_CrossCutPosition(CLK:= bCrossCutPositionActivate AND NOT bMachineHoming AND NOT bAutoCrossCut AND NOT OUT_bSawOn,
+									Q=> );	
+			SR_CrossCutPosition(SET1:= R_TRIG_CrossCutPosition.Q AND NOT SR_CrossCutPosition.Q1,
+								RESET:= (R_TRIG_CrossCutPosition.Q AND SR_CrossCutPosition.Q1) OR NOT bSafetyOK OR IN_FaultReset, 
+								Q1=> );
+(* HMI Indicators *)
+IF bCrossCutPosition THEN
+	bCrossCutPositionInProgress := TRUE ;
+ELSE
+	bCrossCutPositionInProgress := FALSE ;
+END_IF
+
+IF NOT bCrossCutPosition
+	AND bSawUpLimit
+	AND bCarriageCentreRef
+	AND bTurretMedianRange
+	AND ((lCrossCutEncoderValue > ((lRailLimitLeft + lRailLimitRight)/2) - 40) AND (lCrossCutEncoderValue < ((lRailLimitLeft + lRailLimitRight)/2) + 40))
+THEN bCrossCutPositionActive := TRUE ;
+ELSE bCrossCutPositionActive := FALSE ;
+END_IF
+
+CASE iStepCrossCut OF
+	0:	// Init step
+		bTurretCuttingPosCW		:= FALSE; 
+		bTurretCuttingPosCCW	:= FALSE;
+	    bCarriageCuttingPosLH	:= FALSE;
+	    bCarriageCuttingPosRH	:= FALSE;
+	    bCrossCutCuttingPosLH	:= FALSE;
+	    bCrossCutCuttingPosRH	:= FALSE;
+		bZAxisCuttingPos 		:= FALSE;
+	
+		IF R_TRIG_CrossCutPosition.Q AND bSafetyOK AND NOT OUT_bSawOn THEN
+			bCrossCutPosition := TRUE ;
+			iStepCrossCut := 10 ;
+		ELSE
+			bCrossCutPosition := FALSE ;
+		END_IF
+		
+	10:	// Raise Z-axis all the way up
+	
+		IF NOT bSawUpLimit AND bSafetyOK AND bCrossCutPosition THEN
+			bZAxisCuttingPos := TRUE ;
+		ELSE
+			bZAxisCuttingPos := FALSE ; 
+			iStepCrossCut := 20 ;
+		END_IF
+		
+	20:	// Move crosscut motor to centre
+	 
+		IF lCrossCutEncoderValue < ((lRailLimitLeft + lRailLimitRight)/2) - 20 AND bSafetyOK AND bCrossCutPosition THEN
+			bCrossCutCuttingPosLH := TRUE ;
+			bCrossCutCuttingPosRH := FALSE ;
+		ELSIF lCrossCutEncoderValue > ((lRailLimitLeft + lRailLimitRight)/2) + 20 AND bSafetyOK AND bCrossCutPosition THEN
+			bCrossCutCuttingPosRH := TRUE ;
+			bCrossCutCuttingPosLH := FALSE ;
+		ELSIF (lCrossCutEncoderValue > ((lRailLimitLeft + lRailLimitRight)/2) - 20) OR (lCrossCutEncoderValue < ((lRailLimitLeft + lRailLimitRight)/2) + 20) AND bSafetyOK AND bCrossCutPosition THEN
+			bCrossCutCuttingPosLH := FALSE ;
+			bCrossCutCuttingPosRH := FALSE ;
+			iStepCrossCut := 30 ;
+		END_IF
+	
+	30: // Move Carriage to centre	
+	
+		IF NOT bCarriageCentreRef AND AnalogIn_LREAL_Carriage.Out.rScaled > 20.48 AND bCrossCutPosition AND bSafetyOK THEN
+			bCarriageCuttingPosLH := TRUE ;
+			bCarriageCuttingPosRH := FALSE ;
+		ELSIF NOT bCarriageCentreRef AND AnalogIn_LREAL_Carriage.Out.rScaled < 20.52 AND bCrossCutPosition AND bSafetyOK THEN
+			bCarriageCuttingPosRH := TRUE ;
+			bCarriageCuttingPosLH := FALSE ;
+		ELSIF bCarriageCentreRef AND bCrossCutPosition AND bSafetyOK THEN
+			bCarriageCuttingPosRH := FALSE ;
+			bCarriageCuttingPosLH := FALSE ;
+			iStepCrossCut := 40 ;
+		END_IF
+
+	40:	// Rotate turret to Centre
+	
+		IF NOT bTurretMedianRange AND GVL.Turret_Axis.AchsIn.IstPos > lTurretMedian AND bSafetyOK AND bCrossCutPosition THEN
+			bTurretCuttingPosCCW := TRUE ;
+			bTurretCuttingPosCW := FALSE ;
+		ELSIF NOT bTurretMedianRange AND GVL.Turret_Axis.AchsIn.IstPos < lTurretMedian AND bSafetyOK AND bCrossCutPosition THEN
+			bTurretCuttingPosCW := TRUE ;
+			bTurretCuttingPosCCW := FALSE ;
+		ELSIF bTurretMedianRange AND bSafetyOK AND bCrossCutPosition THEN
+			bTurretCuttingPosCW := FALSE ;
+			bTurretCuttingPosCCW := FALSE ;
+			iStepCrossCut := 0 ;
+		END_IF
+	
+
+	
+(*	50: //Crosscut offset towards the control panel (CUT direction)		// 55.5 < CrosscutHome < 55.75
+	
+		IF (AnalogIn_LREAL_CrossCut.Out.rScaled < 7) AND bCrossCutPosition AND bSafetyOK THEN
+			bCrossCutCuttingPosLH := TRUE ;
+			bCrossCutCuttingPosRH := FALSE ;
+		ELSIF (AnalogIn_LREAL_CrossCut.Out.rScaled > 8) AND bCrossCutPosition AND bSafetyOK THEN
+			bCrossCutCuttingPosRH := TRUE ;
+			bCrossCutCuttingPosLH := FALSE ;
+		ELSIF (AnalogIn_LREAL_CrossCut.Out.rScaled > 7) AND (AnalogIn_LREAL_CrossCut.Out.rScaled < 8) THEN
+			bCrossCutCuttingPosLH := FALSE ;
+			bCrossCutCuttingPosRH := FALSE ;
+			iStepCrossCut := 0 ;
+		END_IF
+*)		
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_10_CrossCutPosition">
+      <LineId Id="6" Count="16" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="158" Count="1" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="30" Count="3" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="34" Count="4" />
+      <LineId Id="40" Count="30" />
+      <LineId Id="141" Count="11" />
+      <LineId Id="139" Count="1" />
+      <LineId Id="71" Count="1" />
+      <LineId Id="74" Count="1" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="76" Count="1" />
+      <LineId Id="135" Count="3" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="83" Count="1" />
+      <LineId Id="97" Count="15" />
+      <LineId Id="28" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

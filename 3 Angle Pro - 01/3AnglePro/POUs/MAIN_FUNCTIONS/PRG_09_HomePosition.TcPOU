@@ -22,12 +22,22 @@ END_VAR
 			SR_MachineHoming(	SET1:= R_TRIG_MachineHoming.Q AND NOT SR_MachineHoming.Q1,
 								RESET:= (R_TRIG_MachineHoming.Q AND SR_MachineHoming.Q1) OR NOT bSafetyOK OR IN_FaultReset, 
 								Q1=> );
-	
-(*IF bMachineHoming THEN
-	OUT_bLiftingPositionLED := TRUE ;
+(* HMI Indicators *)
+IF bMachineHoming THEN
+	bLiftingPositionInProgress := TRUE ;
 ELSE
-	OUT_bLiftingPositionLED := FALSE ;
-END_IF*)
+	bLiftingPositionInProgress := FALSE ;
+END_IF
+
+IF 	NOT bMAchineHoming
+	AND bSawUpLimit
+	AND SR_CCWlimit.Q1
+	AND ((AnalogIn_LREAL_Carriage.Out.rScaled > 32.3) AND (AnalogIn_LREAL_Carriage.Out.rScaled < 32.5))
+	AND ((AnalogIn_LREAL_CrossCut.Out.rScaled > 7) AND (AnalogIn_LREAL_CrossCut.Out.rScaled < 8))
+THEN
+	bLiftingPositionActive := TRUE;
+ELSE bLiftingPositionActive := FALSE;
+END_IF
 
 CASE iStepHome OF
 	0:	// Init step
@@ -72,9 +82,9 @@ CASE iStepHome OF
 	30:	// Rotate turret to max -90°
 	
 			TON_HomingStep30(IN:= , PT:= T#1S, Q=> , ET=> );
-		IF NOT SR_CCWlimit.Q1 AND bSafetyOK AND bMachineHoming THEN
+		IF NOT bTurretCCWHomeLimit AND NOT SR_CCWlimit.Q1 AND bSafetyOK AND bMachineHoming THEN
 			bTurretHome := TRUE ;
-		ELSIF SR_CCWlimit.Q1 AND bSafetyOK AND bMachineHoming THEN
+		ELSIF bTurretCCWHomeLimit AND SR_CCWlimit.Q1 AND bSafetyOK AND bMachineHoming THEN
 			TON_HomingStep30.IN := TRUE ;
 			bTurretHome := FALSE ;
 			IF TON_HomingStep30.Q THEN
@@ -115,7 +125,12 @@ END_CASE]]></ST>
     </Implementation>
     <LineIds Name="PRG_09_HomePosition">
       <LineId Id="5" Count="0" />
-      <LineId Id="10" Count="87" />
+      <LineId Id="10" Count="16" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="141" Count="6" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="27" Count="70" />
       <LineId Id="119" Count="9" />
       <LineId Id="117" Count="0" />
       <LineId Id="109" Count="0" />

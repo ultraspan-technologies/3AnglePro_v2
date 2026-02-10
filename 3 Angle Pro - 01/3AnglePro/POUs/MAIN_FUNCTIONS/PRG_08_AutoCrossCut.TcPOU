@@ -17,11 +17,11 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[	IF		NOT bSafetyOK OR IN_FaultReset OR NOT OUT_bSawON OR bAnyServoError
+      <ST><![CDATA[	IF		NOT bSafetyOK OR IN_FaultReset OR (*NOT*) OUT_bSawON OR bAnyServoError
 	THEN	iStep	:=	0;
 	END_IF
 
-	TON_DownDelay(IN:= , PT:= T#3S, Q=> , ET=> );
+	TON_DownDelay(IN:= , PT:= T#0.5S, Q=> , ET=> );
 	IF		iStep <> 30 THEN
 			TON_DownDelay.IN	:= FALSE ;
 	END_IF
@@ -43,7 +43,7 @@ CASE iStep OF
 		IF
 				bSafetyOK
 				AND bTurret045Range
-				AND OUT_bSawON
+				AND (**) NOT OUT_bSawON
 				AND (bAutoCrossCutReady AND IN_bAutoCrossCut AND NOT bRemote)
 				AND NOT bMachineHoming
 				AND bCarriageCentreRef
@@ -79,7 +79,7 @@ CASE iStep OF
 		IF
 				bAutoCrossCut
 				AND bSafetyOK
-				AND ((bAutoCrossCutDouble (*AND IN_bDoublePassReference*) AND bDoublePassCountUp) 
+				AND ((bAutoCrossCutDoublePass AND NOT bDoublePassReference AND bDoublePassCountUp) 
 					OR ( NOT RS_DownLimit.Q1 AND (bDoublePassQ OR NOT bDoublePassCountUp)))
 		THEN	
 				bAutoDown	:=	TRUE	;
@@ -118,7 +118,7 @@ CASE iStep OF
 	50:		// Step 50	:	Saw UP movement		(* for double pass: only lift slightly, RETURN, then plunge all the way down *)
 	ctu_DoublePass.CV;	
 		IF
-				bAutoCrossCutDouble AND bDoublePassCountUp AND NOT bDoublePassQ
+				bAutoCrossCutDoublePass AND bDoublePassCountUp AND NOT bDoublePassQ
 			THEN
 				bTON_AutoUp	:=	TRUE	;
 				bAutoUp		:=	NOT TON_bAutoUp.Q	;
@@ -132,7 +132,7 @@ CASE iStep OF
 				bAutoCrossCut
 				AND bSafetyOK
 				AND NOT bSawUpLimit
-				AND ((bDoublePassQ AND NOT bDoublePassCountUp AND bAutoCrossCutDouble) OR (NOT bAutoCrossCutDouble))
+				AND ((bDoublePassQ AND NOT bDoublePassCountUp AND bAutoCrossCutDoublePass) OR (NOT bAutoCrossCutDoublePass))
 			THEN
 				bAutoUp		:=	TRUE	;
 		ELSE
@@ -148,7 +148,7 @@ CASE iStep OF
 	
 	60:		// Step 60	:	Saw RETURN movement (loop back to step 20 if double pass)
 		IF
-				bAutoCrossCutDouble
+				bAutoCrossCutDoublePass
 				AND bDoublePassCountUp
 		THEN
 				iStep		:=	20		;
@@ -655,7 +655,7 @@ END_CASE]]></ST>
                                   <l2 n="InputItems">
                                     <o t="BoxTreeOperand">
                                       <o n="Operand" t="Operand">
-                                        <v n="Operand">"bAutoCrossCutDouble"</v>
+                                        <v n="Operand">"bAutoCrossCutDoublePass"</v>
                                         <v n="Type">"BOOL"</v>
                                         <v n="Comment">""</v>
                                         <v n="SymbolComment">""</v>
@@ -1374,13 +1374,13 @@ END_CASE]]></ST>
                     <v n="Comment">""</v>
                     <v n="Title">""</v>
                     <v n="Label">""</v>
-                    <v n="OutCommented">true</v>
+                    <v n="OutCommented">false</v>
                     <l2 n="NetworkItems" cet="BoxTreeAssign">
                       <o>
                         <o n="OutputItems" t="OutputItemList">
                           <l2 n="OutputItems" cet="Operand">
                             <o>
-                              <v n="Operand">"OUT_bAutoCrosscutLED"</v>
+                              <v n="Operand">"bAutoCrossCutInProgress"</v>
                               <v n="Type">"BOOL"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>
@@ -1453,7 +1453,9 @@ END_CASE]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="PRG_08_AutoCrossCut">
-      <LineId Id="6" Count="145" />
+      <LineId Id="6" Count="12" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="20" Count="131" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

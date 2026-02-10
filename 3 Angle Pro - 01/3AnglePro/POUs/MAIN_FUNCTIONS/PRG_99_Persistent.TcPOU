@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="PRG_10_Persistent" Id="{f3a92364-9450-458d-9c21-d9eea605a570}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM PRG_10_Persistent
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="PRG_99_Persistent" Id="{f3a92364-9450-458d-9c21-d9eea605a570}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_99_Persistent
 VAR
 	fb_UPS: FB_S_UPS_CX51x0;
 END_VAR

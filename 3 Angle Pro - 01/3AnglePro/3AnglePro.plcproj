@@ -283,7 +283,10 @@
     <Compile Include="POUs\MAIN_FUNCTIONS\PRG_09_HomePosition.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\MAIN_FUNCTIONS\PRG_10_Persistent.TcPOU">
+    <Compile Include="POUs\MAIN_FUNCTIONS\PRG_10_CrossCutPosition.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\MAIN_FUNCTIONS\PRG_99_Persistent.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Managers\Carriage_Manager.TcPOU">

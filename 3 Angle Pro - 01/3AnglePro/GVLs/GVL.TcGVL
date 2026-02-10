@@ -115,6 +115,7 @@ VAR_GLOBAL
 // Turret
 	AnalogIn_LREAL_Turret: FB_AnalogIn_LREAL;
 	bTurretMedianRange: BOOL;
+	lTurretMedian: LREAL;
 	bTurret045Range: BOOL;
 	bLostTurretRetainValues: BOOL;
 	bTurretCWEN: BOOL;
@@ -125,6 +126,7 @@ VAR_GLOBAL
 	SR_CCWlimit: SR;
 	bAllowTurretMovement: BOOL;
 	FB_Blinker_TurretMovement: FB_Blinker;
+	bTurretCCWHomeLimit: BOOL;
 	
 // Carriage
 	AnalogIn_LREAL_Carriage: FB_AnalogIn_LREAL;
@@ -167,12 +169,12 @@ VAR_GLOBAL
 // Automatic Cycles
 		// Auto CrossCut
 	bAutoCrossCut	: BOOL ;
-	bAutoCrossCutDouble: BOOL;
 	bAutoCrossCutReady: BOOL;
 	bAutoUp: BOOL;
 	bAutoDown: BOOL;
 	bAutoCut: BOOL;
 	bAutoReturn: BOOL;
+	bDoublePassReference: BOOL;
 	
 		// Home Position
 	bMachineHoming: BOOL;
@@ -182,6 +184,16 @@ VAR_GLOBAL
 	bCrossCutHomeLH: BOOL;
 	bCrossCutHomeRH: BOOL;
 	bZAxisHome: BOOL;
+	
+		// CrossCut Position
+	bCrossCutPosition: BOOL;
+	bCarriageCuttingPosLH: BOOL;
+	bCarriageCuttingPosRH: BOOL;
+	bCrossCutCuttingPosLH: BOOL;
+	bCrossCutCuttingPosRH: BOOL;
+	bZAxisCuttingPos: BOOL;
+	bTurretCuttingPosCW: BOOL;
+	bTurretCuttingPosCCW: BOOL;
 	
 	
 (* ########## HMI Controls ########## *)
@@ -202,6 +214,17 @@ VAR_GLOBAL
 	bTurretMovement: BOOL;
 	bAutoCrossCutEnabled: BOOL;
 	iRipCutSpeed: INT;
+	bHMIup: BOOL;
+	bHMIdown: BOOL;
+	bHMIcut: BOOL;
+	bHMIreturn: BOOL;
+	bLiftingPositionInProgress: BOOL;
+	bLiftingPositionActive: BOOL;
+	bCrossCutPositionInProgress: BOOL;
+	bCrossCutPositionActive: BOOL;
+	bCrossCutPositionActivate: BOOL;
+	bAutoCrossCutDoublePass: BOOL;
+	bAutoCrossCutInProgress: BOOL;
 	
 	iTestGauge: REAL;
 	iTestVar: INT;
