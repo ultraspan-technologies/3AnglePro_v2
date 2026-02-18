@@ -465,7 +465,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{EC4FCDEB-9459-4E90-8A05-406BDFCA72DC}" Name="3AnglePro" PrjFilePath="3AnglePro\3AnglePro.plcproj" TmcFilePath="3AnglePro\3AnglePro.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="3AnglePro\3AnglePro.tmc" TmcHash="{9209135B-28BA-E912-72FB-21F3C3E0F6A9}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="3AnglePro\3AnglePro.tmc" TmcHash="{ABE41DD2-BC77-2FB9-2BE6-B98ABB1F24BE}">
 					<Name>3AnglePro Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -475,15 +475,15 @@
 							<Type GUID="{EDB600AE-4732-3C7C-6932-2197761BC4DC}">stPDO_SI6_IN</Type>
 						</Var>
 						<Var>
-							<Name>.PDO_XDRIVEax_IN</Name>
-							<Type GUID="{EDB600AE-4732-3C7C-6932-2197761BC4DC}">stPDO_SI6_IN</Type>
-						</Var>
-						<Var>
 							<Name>.PDO_TURRETax_IN</Name>
 							<Type GUID="{EDB600AE-4732-3C7C-6932-2197761BC4DC}">stPDO_SI6_IN</Type>
 						</Var>
 						<Var>
 							<Name>.PDO_CROSSCUTax_IN</Name>
+							<Type GUID="{EDB600AE-4732-3C7C-6932-2197761BC4DC}">stPDO_SI6_IN</Type>
+						</Var>
+						<Var>
+							<Name>.PDO_XDRIVEax_IN</Name>
 							<Type GUID="{EDB600AE-4732-3C7C-6932-2197761BC4DC}">stPDO_SI6_IN</Type>
 						</Var>
 						<Var>
@@ -541,22 +541,6 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>IO.ID1</Name>
-							<Type GUID="{5C79D7CC-37A6-A491-275F-7EE65BB92534}">ST_IOcard</Type>
-						</Var>
-						<Var>
-							<Name>IO.BC1</Name>
-							<Type GUID="{5C79D7CC-37A6-A491-275F-7EE65BB92534}">ST_IOcard</Type>
-						</Var>
-						<Var>
-							<Name>IO.ID3</Name>
-							<Type GUID="{5C79D7CC-37A6-A491-275F-7EE65BB92534}">ST_IOcard</Type>
-						</Var>
-						<Var>
-							<Name>IO.ID4</Name>
-							<Type GUID="{5C79D7CC-37A6-A491-275F-7EE65BB92534}">ST_IOcard</Type>
-						</Var>
-						<Var>
 							<Name>TwinSAFE.butonACK</Name>
 							<Type>BOOL</Type>
 						</Var>
@@ -571,6 +555,22 @@
 						<Var>
 							<Name>TwinSAFE.OUT_STO</Name>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.ID1</Name>
+							<Type GUID="{5C79D7CC-37A6-A491-275F-7EE65BB92534}">ST_IOcard</Type>
+						</Var>
+						<Var>
+							<Name>IO.BC1</Name>
+							<Type GUID="{5C79D7CC-37A6-A491-275F-7EE65BB92534}">ST_IOcard</Type>
+						</Var>
+						<Var>
+							<Name>IO.ID3</Name>
+							<Type GUID="{5C79D7CC-37A6-A491-275F-7EE65BB92534}">ST_IOcard</Type>
+						</Var>
+						<Var>
+							<Name>IO.ID4</Name>
+							<Type GUID="{5C79D7CC-37A6-A491-275F-7EE65BB92534}">ST_IOcard</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2" ContextId="1" AreaNo="17">
@@ -630,20 +630,20 @@
 							<Type>REAL</Type>
 						</Var>
 						<Var>
-							<Name>IO.OD1</Name>
-							<Type GUID="{5C79D7CC-37A6-A491-275F-7EE65BB92534}">ST_IOcard</Type>
-						</Var>
-						<Var>
-							<Name>IO.OD2</Name>
-							<Type GUID="{5C79D7CC-37A6-A491-275F-7EE65BB92534}">ST_IOcard</Type>
-						</Var>
-						<Var>
 							<Name>TwinSAFE.SafeRUN</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>TwinSAFE.SafeErrAck</Name>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>IO.OD1</Name>
+							<Type GUID="{5C79D7CC-37A6-A491-275F-7EE65BB92534}">ST_IOcard</Type>
+						</Var>
+						<Var>
+							<Name>IO.OD2</Name>
+							<Type GUID="{5C79D7CC-37A6-A491-275F-7EE65BB92534}">ST_IOcard</Type>
 						</Var>
 					</Vars>
 					<Contexts>

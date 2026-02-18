@@ -46,6 +46,7 @@ CASE iStep OF
 				AND (**) NOT OUT_bSawON
 				AND (bAutoCrossCutReady AND IN_bAutoCrossCut AND NOT bRemote)
 				AND NOT bMachineHoming
+				AND NOT bCrossCutPosition
 				AND bCarriageCentreRef
 		THEN
 				bAutoCrossCut := TRUE	;
@@ -1455,7 +1456,9 @@ END_CASE]]></ST>
     <LineIds Name="PRG_08_AutoCrossCut">
       <LineId Id="6" Count="12" />
       <LineId Id="166" Count="0" />
-      <LineId Id="20" Count="131" />
+      <LineId Id="20" Count="14" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="35" Count="116" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

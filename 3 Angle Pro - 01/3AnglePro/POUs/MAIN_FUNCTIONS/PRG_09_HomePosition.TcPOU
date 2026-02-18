@@ -29,7 +29,7 @@ ELSE
 	bLiftingPositionInProgress := FALSE ;
 END_IF
 
-IF 	NOT bMAchineHoming
+IF 	NOT bMachineHoming
 	AND bSawUpLimit
 	AND SR_CCWlimit.Q1
 	AND ((AnalogIn_LREAL_Carriage.Out.rScaled > 32.3) AND (AnalogIn_LREAL_Carriage.Out.rScaled < 32.5))
@@ -49,7 +49,12 @@ CASE iStepHome OF
 		bZAxisHome := FALSE;
 		TON_HomingStep30.IN := FALSE;
 	
-		IF R_TRIG_MachineHoming.Q AND bSafetyOK AND NOT OUT_bSawOn THEN
+		IF R_TRIG_MachineHoming.Q
+			AND bSafetyOK 
+			AND NOT OUT_bSawOn 
+			AND NOT bAutoCrossCut
+			AND NOT bCrossCutPosition
+		THEN
 			bMachineHoming := TRUE ;
 			iStepHome := 10 ;
 		ELSE
@@ -130,7 +135,11 @@ END_CASE]]></ST>
       <LineId Id="136" Count="0" />
       <LineId Id="141" Count="6" />
       <LineId Id="139" Count="0" />
-      <LineId Id="27" Count="70" />
+      <LineId Id="27" Count="11" />
+      <LineId Id="155" Count="1" />
+      <LineId Id="158" Count="1" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="39" Count="58" />
       <LineId Id="119" Count="9" />
       <LineId Id="117" Count="0" />
       <LineId Id="109" Count="0" />

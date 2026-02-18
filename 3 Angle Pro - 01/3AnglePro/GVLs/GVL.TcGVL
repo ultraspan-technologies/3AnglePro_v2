@@ -191,6 +191,8 @@ VAR_GLOBAL
 	bZAxisCuttingPos: BOOL;
 	bTurretCuttingPosCW: BOOL;
 	bTurretCuttingPosCCW: BOOL;
+	bTeachLeftTriggerOff: BOOL;
+	bTeachRightTriggerOff: BOOL;
 	
 	
 (* ########## HMI Controls ########## *)
@@ -222,6 +224,9 @@ VAR_GLOBAL
 	bAutoCrossCutDoublePass: BOOL;
 	bAutoCrossCutInProgress: BOOL;
 	bDriveFast: BOOL;
+	bTeachLeftIndicator: BOOL;
+	bTeachRightIndicator: BOOL;
+	iTeachSuccessLabel: INT;
 	
 END_VAR]]></Declaration>
   </GVL>

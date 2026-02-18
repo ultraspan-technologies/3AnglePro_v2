@@ -49,6 +49,7 @@ PRG_08_AutoCrossCut();
 	PRG_08_AutoCrossCut.ACT_08_1_AutoCrossCut();
 PRG_09_HomePosition();
 PRG_10_CrossCutPosition();
+PRG_11_ScreenButtons();
 PRG_99_Persistent();
 
 
@@ -1075,6 +1076,7 @@ END_IF
       <LineId Id="254" Count="0" />
       <LineId Id="252" Count="0" />
       <LineId Id="308" Count="0" />
+      <LineId Id="326" Count="0" />
       <LineId Id="253" Count="0" />
       <LineId Id="113" Count="0" />
       <LineId Id="117" Count="0" />
