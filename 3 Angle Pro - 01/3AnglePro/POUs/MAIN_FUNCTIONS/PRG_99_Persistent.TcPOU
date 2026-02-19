@@ -72,8 +72,8 @@ END_VAR
                       <l2 n="InputItems" cet="BoxTreeOperand">
                         <o>
                           <o n="Operand" t="Operand">
-                            <v n="Operand">"'10.1.176.102.1.1'"</v>
-                            <v n="Type">"STRING(INT#16)"</v>
+                            <v n="Operand">"''"</v>
+                            <v n="Type">"STRING(INT#0)"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
                             <v n="Address">""</v>

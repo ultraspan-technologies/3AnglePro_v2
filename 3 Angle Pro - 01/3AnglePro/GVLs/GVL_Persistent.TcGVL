@@ -1,12 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <GVL Name="GVL_Persistent" Id="{14440726-a52a-4e9b-b498-089c0f0ea337}">
-    <Declaration><![CDATA[VAR_GLOBAL PERSISTENT
+    <Declaration><![CDATA[{attribute 'Tc2GvlVarNames'}
+VAR_GLOBAL PERSISTENT
 
 	iZAxisUpperLimitValue: DINT;
 	iZAxisLowerLimitValue: DINT;
 	lTeachLimitRight: LREAL;
 	lTeachLimitLeft: LREAL;
+	
+	iMachineTotalCut: UDINT;
+	iMachineCrossCutCount: UDINT;
+	iMachineAngleCutCount: UDINT;
+	iMachineRipCutCount: UDINT;
+	iBladeTotalCut: UDINT;
+	iBladeCrossCutCount: UDINT;
+	iBladeAngleCutCount: UDINT;
+	iBladeRipCutCount: UDINT;
+	rSawAverageCurrent: REAL;
+	rSawHours: REAL;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

@@ -195,7 +195,7 @@ END_VAR
                               </o>
                               <o>
                                 <o n="Operand" t="Operand">
-                                  <v n="Operand">"T#30s"</v>
+                                  <v n="Operand">"T#120s"</v>
                                   <v n="Type">"TIME"</v>
                                   <v n="Comment">""</v>
                                   <v n="SymbolComment">""</v>
@@ -582,7 +582,7 @@ END_VAR
                               </o>
                               <o>
                                 <o n="Operand" t="Operand">
-                                  <v n="Operand">"T#15s"</v>
+                                  <v n="Operand">"T#60s"</v>
                                   <v n="Type">"TIME"</v>
                                   <v n="Comment">""</v>
                                   <v n="SymbolComment">""</v>

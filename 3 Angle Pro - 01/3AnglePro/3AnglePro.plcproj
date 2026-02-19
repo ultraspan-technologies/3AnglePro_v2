@@ -289,6 +289,9 @@
     <Compile Include="POUs\MAIN_FUNCTIONS\PRG_11_ScreenButtons.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\MAIN_FUNCTIONS\PRG_12_ProductionReport.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\MAIN_FUNCTIONS\PRG_99_Persistent.TcPOU">
       <SubType>Code</SubType>
     </Compile>

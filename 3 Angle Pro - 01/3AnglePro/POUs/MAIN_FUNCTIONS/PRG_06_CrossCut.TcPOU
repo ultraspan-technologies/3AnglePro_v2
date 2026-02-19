@@ -22,7 +22,6 @@ VAR
 	lCrossCutMedian: LREAL;
 	lRailHypotenuse: LREAL;
 	lTeachLimit: LREAL;
-	AnalogIn_LREAL_CurrentFeedback: FB_AnalogIn_LREAL;
 	rCurrentFeedbackStart: REAL := 85;
 END_VAR
 ]]></Declaration>

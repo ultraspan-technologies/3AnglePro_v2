@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="PRG_12_ProductionReport" Id="{c6a9d88a-9873-4cc6-9b40-99a952b8b199}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_12_ProductionReport
+VAR
+	Rtrig_MachineCrossCutCount: R_TRIG;
+	Rtrig_MachineAngleCutCount: R_TRIG;
+	Rtrig_MachineRipCutCount: R_TRIG;
+	Ton_MachineRipCutCount: TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Machine Total Cut Count
+iMachineTotalCut := iMachineCrossCutCount + iMachineAngleCutCount + iMachineRipCutCount;
+
+// Machine CrossCut Count
+IF	Out_bSawOn 
+	AND fbSawCurrent.Out.rScaled > 35
+	AND bTurretMedianRange
+	AND bSawDownLimit
+	AND bCrossCutLeftLimit
+THEN Rtrig_MachineCrossCutCount.CLK := TRUE;
+ELSE Rtrig_MachineCrossCutCount.CLK := FALSE;	
+END_IF
+
+IF Rtrig_MachineCrossCutCount.Q THEN
+	iMachineCrossCutCount := iMachineCrossCutCount + 1;
+END_IF
+
+// Machine Angle Cut Count
+IF	Out_bSawOn 
+	AND fbSawCurrent.Out.rScaled > 35
+	AND NOT bTurretMedianRange
+	AND ABS(AnalogIn_LREAL_Turret.Out.rScaled) < 85
+	AND bSawDownLimit
+	AND bCrossCutLeftLimit
+THEN Rtrig_MachineAngleCutCount.CLK := TRUE;
+ELSE Rtrig_MachineAngleCutCount.CLK := FALSE;	
+END_IF
+
+IF Rtrig_MachineAngleCutCount.Q THEN
+	iMachineAngleCutCount := iMachineAngleCutCount + 1;
+END_IF
+
+// Machine Rip Cut Count
+IF	Out_bSawOn 
+	AND fbSawCurrent.Out.rScaled > 35
+	AND NOT bTurretMedianRange
+	AND ABS(AnalogIn_LREAL_Turret.Out.rScaled) > 85
+	AND bSawDownLimit
+THEN Ton_MachineRipCutCount.IN := TRUE;
+ELSE Ton_MachineRipCutCount.IN := FALSE;	
+END_IF
+
+Ton_MachineRipCutCount(IN:= , PT:= T#10S, Q=> Rtrig_MachineRipCutCount.CLK, ET=> );
+
+IF Rtrig_MachineRipCutCount.Q THEN
+	iMachineRipCutCount := iMachineRipCutCount + 1;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_12_ProductionReport">
+      <LineId Id="71" Count="0" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="21" Count="4" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="38" Count="2" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="41" Count="7" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="53" Count="4" />
+      <LineId Id="59" Count="2" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="62" Count="2" />
+      <LineId Id="52" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

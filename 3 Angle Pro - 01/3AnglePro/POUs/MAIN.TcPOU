@@ -3,9 +3,6 @@
   <POU Name="MAIN" Id="{802b1616-ec6a-40b9-9874-ea9048ad0dda}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-
-//	SawBladeSR: SR;
-	
 	TON_UP: TON;
 	TON_DOWN: TON;
 	HalfCycle: TIME := T#50MS;
@@ -50,20 +47,14 @@ PRG_08_AutoCrossCut();
 PRG_09_HomePosition();
 PRG_10_CrossCutPosition();
 PRG_11_ScreenButtons();
+PRG_12_ProductionReport();
 PRG_99_Persistent();
 
 
 
 OUT_bFieldLight	:=	bFieldLight;
 
-	
-(*
-IF OUT_STO AND TestSawBladeIN THEN
-	TestSawBladeOUT := TRUE;
-ELSE
-	TestSawBladeOUT := FALSE;
-END_IF
-*)]]></ST>
+]]></ST>
     </Implementation>
     <Action Name="LifeBeat" Id="{83e498b2-7847-4ce9-95b4-c99e760d3c4a}">
       <Implementation>
@@ -1077,6 +1068,7 @@ END_IF
       <LineId Id="252" Count="0" />
       <LineId Id="308" Count="0" />
       <LineId Id="326" Count="0" />
+      <LineId Id="344" Count="0" />
       <LineId Id="253" Count="0" />
       <LineId Id="113" Count="0" />
       <LineId Id="117" Count="0" />
@@ -1084,12 +1076,6 @@ END_IF
       <LineId Id="185" Count="0" />
       <LineId Id="188" Count="0" />
       <LineId Id="114" Count="0" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="42" Count="1" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="58" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

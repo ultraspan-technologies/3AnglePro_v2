@@ -108,6 +108,7 @@ VAR_GLOBAL
 	
 // Saw blade
 	fbSawCurrent: FB_AnalogIn;
+	AnalogIn_LREAL_CurrentFeedback: FB_AnalogIn_LREAL;
 	
 // Turret
 	AnalogIn_LREAL_Turret: FB_AnalogIn_LREAL;
@@ -227,6 +228,8 @@ VAR_GLOBAL
 	bTeachLeftIndicator: BOOL;
 	bTeachRightIndicator: BOOL;
 	iTeachSuccessLabel: INT;
+	
+	rTestScreenAngle: REAL;
 	
 END_VAR]]></Declaration>
   </GVL>
