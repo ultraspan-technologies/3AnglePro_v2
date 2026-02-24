@@ -162,7 +162,7 @@ VAR_GLOBAL
 	bZAxisUpEN: BOOL;
 	bZAxisDownEN: BOOL;
 	rZAxisSpeed: REAL;
-	RS_DownLimit: RS;
+	SR_DownLimit: SR;
 	
 // Automatic Cycles
 		// Auto CrossCut
@@ -228,6 +228,11 @@ VAR_GLOBAL
 	bTeachLeftIndicator: BOOL;
 	bTeachRightIndicator: BOOL;
 	iTeachSuccessLabel: INT;
+	bDownLimitCaptureReady: BOOL;
+	bDownLimitCapture: BOOL;
+	bDoublePassCapture: BOOL;
+	bDownLimitCaptureAllowed: BOOL;
+	iCaptureSuccessLabel: INT;
 	
 	rTestScreenAngle: REAL;
 	

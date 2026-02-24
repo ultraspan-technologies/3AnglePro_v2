@@ -4,8 +4,9 @@
     <Declaration><![CDATA[{attribute 'Tc2GvlVarNames'}
 VAR_GLOBAL PERSISTENT
 
-	iZAxisUpperLimitValue: DINT;
-	iZAxisLowerLimitValue: DINT;
+	lSawUpLimitValue: LREAL;
+	lSawDownLimitValue: LREAL;
+	lSawDoublePassValue: LREAL;
 	lTeachLimitRight: LREAL;
 	lTeachLimitLeft: LREAL;
 	

@@ -4218,16 +4218,34 @@ lCrossCutRightLimit := lRailLimitRight - 120.0;
 GVL.CrossCut_Axis.AchsIn.IstPos;
 
 // Teach Limits left and right		left 4938.23987
-IF bTeachReadyLeft AND bTeach AND bCarriageCentreRef AND bTurretMedianRange AND (AnalogIn_LREAL_CrossCut.Out.rScaled > (AnalogIn_LREAL_CrossCut.MaxOut / 2)+12) AND NOT (bAutoCrossCut AND bMachineHoming AND bCrossCutPosition) THEN
+IF bTeachReadyLeft 
+	AND bTeach 
+	AND bCarriageCentreRef 
+	AND bTurretMedianRange 
+	AND (AnalogIn_LREAL_CrossCut.Out.rScaled > (AnalogIn_LREAL_CrossCut.MaxOut / 2)+12) 
+	AND NOT (bAutoCrossCut AND bMachineHoming AND bCrossCutPosition) 
+THEN
 	lTeachLimitLeft := GVL.CrossCut_Axis.AchsIn.IstPos;
 	bTeachLeftTriggerOff := TRUE ;
-ELSIF lTeachLimitLeft = 0 THEN
+	
+ELSIF lTeachLimitLeft = 0 
+THEN
 	lTeachLimitLeft := lRailLimitLeft - 114.64 ;
-ELSIF bTeachReadyRight AND bTeach AND bCarriageCentreRef AND bTurretMedianRange AND (AnalogIn_LREAL_CrossCut.Out.rScaled < (AnalogIn_LREAL_CrossCut.MaxOut / 2)-12) AND NOT (bAutoCrossCut AND bMachineHoming AND bCrossCutPosition) THEN
+	
+ELSIF bTeachReadyRight 
+	AND bTeach 
+	AND bCarriageCentreRef 
+	AND bTurretMedianRange 
+	AND (AnalogIn_LREAL_CrossCut.Out.rScaled < (AnalogIn_LREAL_CrossCut.MaxOut / 2)-12) 
+	AND NOT (bAutoCrossCut AND bMachineHoming AND bCrossCutPosition) 
+THEN
 	lTeachLimitRight := GVL.CrossCut_Axis.AchsIn.IstPos; 
 	bTeachRightTriggerOff := TRUE ;
-ELSIF lTeachLimitRight = 0 THEN
+	
+ELSIF lTeachLimitRight = 0 
+THEN
 	lTeachLimitRight := lRailLimitRight + 114.64 ;
+	
 ELSE
 	bTeachLeftTriggerOff := FALSE ;
 	bTeachRightTriggerOff := FALSE ;
@@ -4396,12 +4414,24 @@ END_IF]]></ST>
       <LineId Id="162" Count="0" />
       <LineId Id="158" Count="0" />
       <LineId Id="42" Count="1" />
-      <LineId Id="167" Count="1" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="323" Count="5" />
+      <LineId Id="168" Count="0" />
       <LineId Id="308" Count="0" />
-      <LineId Id="261" Count="1" />
-      <LineId Id="169" Count="1" />
+      <LineId Id="329" Count="0" />
+      <LineId Id="261" Count="0" />
+      <LineId Id="330" Count="0" />
+      <LineId Id="262" Count="0" />
+      <LineId Id="331" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="332" Count="5" />
+      <LineId Id="170" Count="0" />
       <LineId Id="309" Count="0" />
-      <LineId Id="263" Count="1" />
+      <LineId Id="338" Count="0" />
+      <LineId Id="263" Count="0" />
+      <LineId Id="339" Count="0" />
+      <LineId Id="264" Count="0" />
+      <LineId Id="340" Count="0" />
       <LineId Id="310" Count="2" />
       <LineId Id="166" Count="0" />
       <LineId Id="15" Count="0" />

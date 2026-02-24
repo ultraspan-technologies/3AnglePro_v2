@@ -17,7 +17,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[	IF		NOT bSafetyOK OR IN_FaultReset OR OUT_bSawON OR bAnyServoError
+      <ST><![CDATA[	IF		NOT bSafetyOK OR IN_FaultReset OR NOT OUT_bSawON OR bAnyServoError
 	THEN	iStep	:=	0;
 	END_IF
 
@@ -43,7 +43,7 @@ CASE iStep OF
 		IF
 				bSafetyOK
 				AND bTurret045Range
-				AND NOT OUT_bSawON
+				AND OUT_bSawON
 				AND (bAutoCrossCutReady AND IN_bAutoCrossCut AND NOT bRemote)
 				AND NOT bMachineHoming
 				AND NOT bCrossCutPosition
@@ -81,7 +81,7 @@ CASE iStep OF
 				bAutoCrossCut
 				AND bSafetyOK
 				AND ((bAutoCrossCutDoublePass AND NOT bDoublePassReference AND bDoublePassCountUp) 
-					OR ( NOT RS_DownLimit.Q1 AND (bDoublePassQ OR NOT bDoublePassCountUp)))
+					OR ( NOT SR_DownLimit.Q1 AND (bDoublePassQ OR NOT bDoublePassCountUp)))
 		THEN	
 				bAutoDown	:=	TRUE	;
 		ELSE
