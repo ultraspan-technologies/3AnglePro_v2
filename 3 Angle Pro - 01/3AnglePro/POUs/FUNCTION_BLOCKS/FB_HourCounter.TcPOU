@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_HourCounter" Id="{fff54ed1-7431-4e2d-862e-b306e05177ee}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_HourCounter
+(*	Function block for Hour Counters, As long as Enable = TRUE the counter counts.
+	Reset will reset the countervalue
+	Output is plain Hours or in Hours:Minutes
+	TotalSeconds is total counted minutes, these can be linked to the NOVRAM or PERSISTANT
+	Author Jo Nijs for Echo Precast Engineering @ Houthallen *)
+VAR_INPUT
+	Enable			: BOOL;
+	Reset			: BOOL	:= FALSE;
+END_VAR
+VAR_OUTPUT
+	Hours			: STRING;
+	Hr_Min			: STRING;
+	Hr_seconds		: STRING;
+END_VAR
+VAR
+	Tr				: F_TRIG;
+	TrReset		: R_TRIG;
+	strMinutes		: STRING;
+	strHours		: STRING;
+	Blinker			:FB_Blinker;
+END_VAR
+VAR_IN_OUT
+	TotalSeconds	: DWORD;
+END_VAR
+(*VAR PERSISTENT
+	TotalSeconds	: DWORD;
+END_VAR*)]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Blinker(IN:= TRUE, blink_time:= T#0.5S, OUT=> );
+Tr(CLK:= Blinker.OUT);
+TrReset(CLK:= Reset);
+
+(* Counter *)
+IF Enable AND Tr.Q THEN
+	TotalSeconds	:= TotalSeconds + 1;
+ELSIF TrReset.Q THEN
+	TotalSeconds	:= 0;
+END_IF
+
+(* Convert seconds in to hours and minutes *)
+Hr_seconds := DWORD_TO_STRING(TotalSeconds);
+strHours	:= DWORD_TO_STRING((TotalSeconds/60) / 60);
+
+strMinutes	:= DWORD_TO_STRING((TotalSeconds/60) MOD 60);
+
+(* Full Output STRING *)
+Hours		:= strHours;
+Hr_Min		:= CONCAT(strHours, ':');
+Hr_Min		:= CONCAT(Hr_Min, strMinutes);]]></ST>
+    </Implementation>
+    <LineIds Name="FB_HourCounter">
+      <LineId Id="83" Count="0" />
+      <LineId Id="63" Count="18" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

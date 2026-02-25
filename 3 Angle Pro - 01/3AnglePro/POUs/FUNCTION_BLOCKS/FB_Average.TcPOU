@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_Average" Id="{7bb4f288-0194-4348-b79b-bb05197c2c59}" SpecialFunc="None">
+    <Declaration><![CDATA[//This function block will calculate an Average of values
+FUNCTION_BLOCK FB_Average
+VAR_INPUT
+	rInput			: REAL;		//Input
+	iAmount			: INT;		//Max 100
+	bTrigger		: BOOL;		//Trigger signal on positive flank
+END_VAR
+
+
+VAR_OUTPUT
+	rOut			: REAL ;
+END_VAR
+VAR
+	i: INT;
+	Values			: ARRAY[0..100] OF REAL;
+	trig_Trigger	: R_TRIG;
+	rTotal			: REAL;
+	t				: INT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[trig_Trigger(CLK:=bTrigger );
+
+IF trig_Trigger.Q THEN
+	rTotal := 0;
+	FOR i := iAmount - 1 TO 1  BY -1 DO
+		Values[i] := Values[i - 1];
+	END_FOR
+	values[0] := rInput;
+
+	FOR t := 0 TO iAmount -1 BY 1 DO
+		rTotal := rTotal + Values[t];
+	END_FOR
+	rOut := rTotal/(INT_TO_REAL(iAmount));
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Average">
+      <LineId Id="29" Count="13" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

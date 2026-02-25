@@ -20,6 +20,9 @@ VAR_GLOBAL PERSISTENT
 	iBladeRipCutCount: UDINT;
 	rSawAverageCurrent: REAL;
 	rSawHours: REAL;
+	rHours_SawMotor: STRING;
+	dwSawMotorHours: DWORD;
+	rMins_SawMotor: STRING;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

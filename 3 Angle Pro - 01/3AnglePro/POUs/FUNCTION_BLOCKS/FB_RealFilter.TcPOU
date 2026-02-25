@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="FB_RealFilter" Id="{1c757683-197c-428d-aa20-9b0e150ff2ca}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_RealFilter
+VAR_INPUT
+	ValueIn: REAL := 0;
+	Cycles: INT;
+END_VAR
+VAR_OUTPUT
+	ValueOut: REAL;
+END_VAR
+VAR
+	CycleCounter: INT := 0;
+	ValueSum: REAL := 0;
+	ValueAverage: REAL := 0;
+	LoopReset: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF CycleCounter < Cycles THEN
+	ValueSum := ValueSum + ValueIn ;
+	CycleCounter := CycleCounter + 1;
+ELSE
+	ValueAverage := ValueSum / INT_TO_REAL(Cycles) ;
+	ValueOut := ValueAverage;
+	ValueSum := 0 ;
+	CycleCounter := 0 ;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_RealFilter">
+      <LineId Id="22" Count="7" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

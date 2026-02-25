@@ -238,10 +238,19 @@
     <Compile Include="POUs\FUNCTION_BLOCKS\FB_AnalogIn_LREAL.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FUNCTION_BLOCKS\FB_Average.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FUNCTION_BLOCKS\FB_Blinker.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FUNCTION_BLOCKS\FB_HourCounter.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FUNCTION_BLOCKS\FB_IntFilter.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FUNCTION_BLOCKS\FB_RealFilter.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FUNCTION_BLOCKS\FB_SSI_Encoder.TcPOU">

@@ -7,6 +7,14 @@ VAR
 	Rtrig_MachineAngleCutCount: R_TRIG;
 	Rtrig_MachineRipCutCount: R_TRIG;
 	Ton_MachineRipCutCount: TON;
+	Rtrig_BladeCrossCutCount: R_TRIG;
+	Rtrig_BladeAngleCutCount: R_TRIG;
+	Ton_BladeRipCutCount: TON;
+	Rtrig_BladeRipCutCount: R_TRIG;
+	fb_AverageCurrent: FB_Average;
+	fb_SawBladeOnHours: FB_HourCounter;
+	rSecs_SawMotor: STRING;
+	fb_SawCurrent: FB_RealFilter;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -56,7 +64,89 @@ Ton_MachineRipCutCount(IN:= , PT:= T#10S, Q=> Rtrig_MachineRipCutCount.CLK, ET=>
 
 IF Rtrig_MachineRipCutCount.Q THEN
 	iMachineRipCutCount := iMachineRipCutCount + 1;
-END_IF]]></ST>
+END_IF
+
+// Saw Blade Total Cut Count
+iBladeTotalCut := iBladeCrossCutCount + iBladeAngleCutCount + iBladeRipCutCount;
+
+// Saw Blade CrossCut Count
+IF	Out_bSawOn 
+	AND fbSawCurrent.Out.rScaled > 35
+	AND bTurretMedianRange
+	AND bSawDownLimit
+	AND bCrossCutLeftLimit
+THEN Rtrig_BladeCrossCutCount.CLK := TRUE;
+ELSE Rtrig_BladeCrossCutCount.CLK := FALSE;	
+END_IF
+
+IF Rtrig_BladeCrossCutCount.Q THEN
+	iBladeCrossCutCount := iBladeCrossCutCount + 1;
+ELSIF bBladeCutCountReset THEN
+	iBladeCrossCutCount := 0 ;
+END_IF
+
+// Saw Blade Angle Cut Count
+IF	Out_bSawOn 
+	AND fbSawCurrent.Out.rScaled > 35
+	AND NOT bTurretMedianRange
+	AND ABS(AnalogIn_LREAL_Turret.Out.rScaled) < 85
+	AND bSawDownLimit
+	AND bCrossCutLeftLimit
+THEN Rtrig_BladeAngleCutCount.CLK := TRUE;
+ELSE Rtrig_BladeAngleCutCount.CLK := FALSE;	
+END_IF
+
+IF Rtrig_BladeAngleCutCount.Q THEN
+	iBladeAngleCutCount := iBladeAngleCutCount + 1;
+ELSIF bBladeCutCountReset THEN
+	iBladeAngleCutCount := 0 ;
+END_IF
+
+// Blade Rip Cut Count
+IF	Out_bSawOn 
+	AND fbSawCurrent.Out.rScaled > 35
+	AND NOT bTurretMedianRange
+	AND ABS(AnalogIn_LREAL_Turret.Out.rScaled) > 85
+	AND bSawDownLimit
+THEN Ton_BladeRipCutCount.IN := TRUE;
+ELSE Ton_BladeRipCutCount.IN := FALSE;	
+END_IF
+
+Ton_BladeRipCutCount(IN:= , PT:= T#10S, Q=> Rtrig_BladeRipCutCount.CLK, ET=> );
+
+IF Rtrig_BladeRipCutCount.Q THEN
+	iBladeRipCutCount := iBladeRipCutCount + 1;
+ELSIF bBladeCutCountReset THEN
+	iBladeRipCutCount := 0 ;
+END_IF
+
+
+// Saw Blade motor average current
+fb_AverageCurrent(	rInput:= fbSawCurrent.Out.rScaled, 
+					iAmount:= 10, 
+					bTrigger:= Out_bSawOn, 
+					rOut=> );
+					
+IF NOT Out_bSawOn THEN
+	rSawAverageCurrent := rSawAverageCurrent ;
+ELSIF Out_bSawOn THEN
+	rSawAverageCurrent := fb_AverageCurrent.rOut ;
+END_IF
+
+fb_SawCurrent(	ValueIn:= fbSawCurrent.Out.rScaled, 
+				Cycles:= 50, 
+				ValueOut=> );
+
+// Saw blade ON hours
+fb_SawBladeOnHours(
+	Enable:= Out_bSawOn, 
+	Reset:= FALSE, 
+	Hours=> rHours_SawMotor, 
+	Hr_Min=> rMins_SawMotor, 
+	Hr_seconds=> rSecs_SawMotor, 
+	TotalSeconds:= dwSawMotorHours);
+	
+]]></ST>
     </Implementation>
     <LineIds Name="PRG_12_ProductionReport">
       <LineId Id="71" Count="0" />
@@ -83,6 +173,33 @@ END_IF]]></ST>
       <LineId Id="67" Count="0" />
       <LineId Id="62" Count="2" />
       <LineId Id="52" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="84" Count="11" />
+      <LineId Id="97" Count="1" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="100" Count="13" />
+      <LineId Id="115" Count="1" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="118" Count="14" />
+      <LineId Id="135" Count="1" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="142" Count="1" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="147" Count="5" />
+      <LineId Id="154" Count="1" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="195" Count="1" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="169" Count="5" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="190" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

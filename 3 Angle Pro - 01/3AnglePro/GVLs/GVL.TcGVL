@@ -233,6 +233,7 @@ VAR_GLOBAL
 	bDoublePassCapture: BOOL;
 	bDownLimitCaptureAllowed: BOOL;
 	iCaptureSuccessLabel: INT;
+	bBladeCutCountReset: BOOL;
 	
 	rTestScreenAngle: REAL;
 	
