@@ -32,7 +32,7 @@ END_IF
 IF 	NOT bMachineHoming
 	AND bSawUpLimit
 	AND SR_CCWlimit.Q1
-	AND ((AnalogIn_LREAL_Carriage.Out.rScaled > 32.3) AND (AnalogIn_LREAL_Carriage.Out.rScaled < 32.5))
+	AND ((AnalogIn_LREAL_Carriage.Out.rScaled > 32.3) AND (AnalogIn_LREAL_Carriage.Out.rScaled < 33.5))
 	AND ((AnalogIn_LREAL_CrossCut.Out.rScaled > 7) AND (AnalogIn_LREAL_CrossCut.Out.rScaled < 8))
 THEN
 	bLiftingPositionActive := TRUE;

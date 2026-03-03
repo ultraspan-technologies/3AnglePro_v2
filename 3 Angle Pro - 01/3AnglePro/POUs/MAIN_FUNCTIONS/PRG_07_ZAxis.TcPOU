@@ -2095,6 +2095,8 @@ END_VAR
 // Z-Axis Down Limit capture
 IF bDownLimitCaptureReady
 	AND bDownLimitCapture
+	AND bCarriageCentreRef 
+	AND bTurretMedianRange
 	AND NOT (bAutoCrossCut AND bMAchineHoming AND bCrossCutPosition)
 THEN
 	lSawDownLimitValue := GVL.Z2_Axis.AchsIn.IstPos ;
@@ -2143,7 +2145,9 @@ ELSE bDoublePassReference := FALSE ;
 END_IF
 
 // Down limit capture allowed indicator
-IF GVL.Z2_Axis.AchsIn.IstPos > lSawDownLimitValue/2 THEN
+IF GVL.Z2_Axis.AchsIn.IstPos > lSawDownLimitValue/2 
+	AND NOT (bAutoCrossCut OR bMAchineHoming OR bCrossCutPosition)
+THEN
 	bDownLimitCaptureAllowed := TRUE ;
 ELSE bDownLimitCaptureAllowed := FALSE ;
 END_IF]]></ST>
@@ -2154,7 +2158,10 @@ END_IF]]></ST>
       <LineId Id="48" Count="0" />
       <LineId Id="35" Count="0" />
       <LineId Id="49" Count="0" />
-      <LineId Id="52" Count="5" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="53" Count="4" />
       <LineId Id="51" Count="0" />
       <LineId Id="59" Count="0" />
       <LineId Id="58" Count="0" />
@@ -2190,7 +2197,9 @@ END_IF]]></ST>
       <LineId Id="45" Count="0" />
       <LineId Id="68" Count="0" />
       <LineId Id="13" Count="0" />
-      <LineId Id="69" Count="1" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="74" Count="1" />
+      <LineId Id="70" Count="0" />
       <LineId Id="72" Count="1" />
     </LineIds>
   </POU>

@@ -127,15 +127,22 @@ fb_AverageCurrent(	rInput:= fbSawCurrent.Out.rScaled,
 					bTrigger:= Out_bSawOn, 
 					rOut=> );
 					
-IF NOT Out_bSawOn THEN
+(*IF NOT Out_bSawOn THEN
 	rSawAverageCurrent := rSawAverageCurrent ;
 ELSIF Out_bSawOn THEN
 	rSawAverageCurrent := fb_AverageCurrent.rOut ;
-END_IF
+END_IF*)
 
 fb_SawCurrent(	ValueIn:= fbSawCurrent.Out.rScaled, 
-				Cycles:= 50, 
+				Cycles:= 500, 
 				ValueOut=> );
+fb_SawCurrent.ValueOut;
+
+IF NOT Out_bSawOn OR fbSawCurrent.Out.rScaled < 20 OR fbSawCurrent.Out.rScaled > 120 THEN
+	rSawAverageCurrent := rSawAverageCurrent ;
+ELSIF Out_bSawOn AND fbSawCurrent.Out.rScaled > 20 AND fbSawCurrent.Out.rScaled < 120 THEN
+	rSawAverageCurrent := fb_SawCurrent.ValueOut ;
+END_IF
 
 // Saw blade ON hours
 fb_SawBladeOnHours(
@@ -195,6 +202,10 @@ fb_SawBladeOnHours(
       <LineId Id="193" Count="0" />
       <LineId Id="192" Count="0" />
       <LineId Id="195" Count="1" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="216" Count="3" />
+      <LineId Id="215" Count="0" />
       <LineId Id="157" Count="0" />
       <LineId Id="156" Count="0" />
       <LineId Id="169" Count="5" />

@@ -2,13 +2,20 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <GVL Name="TwinSAFE" Id="{1d37246e-691e-4a70-bc5e-13efdf4989c6}">
     <Declaration><![CDATA[VAR_GLOBAL
-	SafeRUN		AT%Q*: BOOL := TRUE ;
-	SafeErrAck	AT%Q*	: BOOL ;
-	butonACK 	AT %I* :BOOL;
+	SafeRUN			AT%Q*	: BOOL := TRUE ;
+	SafeErrAck		AT%Q*	: BOOL ;
+	butonACK 		AT%I* 	: BOOL ;
 		
 	IN_FaultReset	AT%I*	: BOOL ;
 	IN_EDM			AT%I*	: BOOL ;
 	OUT_STO			AT%I*	: BOOL ;
+	
+	IN_EstopPanel1  AT%I*	: BOOL ;
+	IN_EstopPanel2	AT%I*	: BOOL ;
+	IN_EstopLeft1 	AT%I*	: BOOL ;
+	IN_EstopLeft2 	AT%I*	: BOOL ;
+	IN_EstopRight1	AT%I*	: BOOL ;
+	IN_EstopRight2	AT%I*	: BOOL ;
 	
 END_VAR]]></Declaration>
   </GVL>

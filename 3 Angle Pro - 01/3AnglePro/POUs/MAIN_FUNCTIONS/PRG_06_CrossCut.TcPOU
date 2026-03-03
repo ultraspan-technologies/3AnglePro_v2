@@ -4375,6 +4375,7 @@ END_IF
 (* Crosscut position to allow Carriage movement *)
 IF 		AnalogIn_LREAL_CrossCut.Out.rScaled <= ((AnalogIn_LREAL_CrossCut.MaxOut / 2) + 12)
 	AND AnalogIn_LREAL_CrossCut.Out.rScaled >= ((AnalogIn_LREAL_CrossCut.MaxOut / 2) - 12)
+	AND NOT (bAutoCrossCut AND bMachineHoming AND bCrossCutPosition)
 THEN bAllowCarriageMovement := TRUE ;
 ELSE bAllowCarriageMovement := FALSE ;	
 END_IF]]></ST>
@@ -4485,7 +4486,9 @@ END_IF]]></ST>
       <LineId Id="301" Count="0" />
       <LineId Id="300" Count="0" />
       <LineId Id="302" Count="0" />
-      <LineId Id="305" Count="2" />
+      <LineId Id="305" Count="0" />
+      <LineId Id="341" Count="0" />
+      <LineId Id="306" Count="1" />
       <LineId Id="304" Count="0" />
     </LineIds>
     <LineIds Name="PRG_06_CrossCut.ACT_06_2_CrossCutSpeed">

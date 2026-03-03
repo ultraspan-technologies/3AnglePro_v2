@@ -123,7 +123,6 @@ VAR_GLOBAL
 	RS_TurretCentre: RS;
 	SR_CCWlimit: SR;
 	bAllowTurretMovement: BOOL;
-	FB_Blinker_TurretMovement: FB_Blinker;
 	bTurretCCWHomeLimit: BOOL;
 	
 // Carriage
@@ -133,7 +132,6 @@ VAR_GLOBAL
 	lCarriageMedian: LREAL;
 	bCarriageJogFast: BOOL;
 	bCarriageCentreRef: BOOL;
-	FB_Blinker_CarriageMovement: FB_Blinker;
 	
 // CrossCut
 	AnalogIn_LREAL_CrossCut: FB_AnalogIn_LREAL;
@@ -209,8 +207,6 @@ VAR_GLOBAL
 	bTeach: BOOL;
 	bRemote: BOOL;
 	bWaterLine: BOOL;
-	bCarriageMovement: BOOL;
-	bTurretMovement: BOOL;
 	bAutoCrossCutEnabled: BOOL;
 	iRipCutSpeed: INT;
 	bHMIup: BOOL;
@@ -234,6 +230,9 @@ VAR_GLOBAL
 	bDownLimitCaptureAllowed: BOOL;
 	iCaptureSuccessLabel: INT;
 	bBladeCutCountReset: BOOL;
+	bEstopPanel: BOOL;
+	bEstopLeft: BOOL;
+	bEstopRight: BOOL;
 	
 	rTestScreenAngle: REAL;
 	

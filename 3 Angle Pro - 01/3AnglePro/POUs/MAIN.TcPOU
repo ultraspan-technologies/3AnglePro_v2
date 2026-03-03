@@ -369,7 +369,7 @@ OUT_bFieldLight	:=	bFieldLight;
                     <v n="Comment">""</v>
                     <v n="Title">""</v>
                     <v n="Label">""</v>
-                    <v n="OutCommented">true</v>
+                    <v n="OutCommented">false</v>
                     <l2 n="NetworkItems" cet="BoxTreeBox">
                       <o>
                         <v n="BoxType">"NT_StartProcess"</v>
@@ -798,7 +798,7 @@ OUT_bFieldLight	:=	bFieldLight;
                           </o>
                           <o t="BoxTreeOperand">
                             <o n="Operand" t="Operand">
-                              <v n="Operand">"T#90s"</v>
+                              <v n="Operand">"T#60s"</v>
                               <v n="Type">"TIME"</v>
                               <v n="Comment">""</v>
                               <v n="SymbolComment">""</v>

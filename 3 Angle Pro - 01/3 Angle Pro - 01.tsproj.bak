@@ -338,7 +338,7 @@
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000006}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..5] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000006}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..5] OF BIT</Name>
 			<BitSize>6</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -465,7 +465,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{EC4FCDEB-9459-4E90-8A05-406BDFCA72DC}" Name="3AnglePro" PrjFilePath="3AnglePro\3AnglePro.plcproj" TmcFilePath="3AnglePro\3AnglePro.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="3AnglePro\3AnglePro.tmc" TmcHash="{DC86B1C9-374D-E45E-6CBE-4C6380EBACC5}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="3AnglePro\3AnglePro.tmc" TmcHash="{0156A225-30C0-E25D-8C35-2A4B01BDD7BA}">
 					<Name>3AnglePro Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -541,7 +541,31 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
+							<Name>TwinSAFE.IN_EstopPanel1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>TwinSAFE.IN_EstopPanel2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>TwinSAFE.butonACK</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>TwinSAFE.IN_EstopLeft1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>TwinSAFE.IN_EstopLeft2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>TwinSAFE.IN_EstopRight1</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>TwinSAFE.IN_EstopRight2</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -804,8 +828,23 @@
 								<Entry Name="Standard Out Var 7" Index="#x7000" Sub="#x02">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry>
-									<Type GUID="{18071995-0000-0000-0000-002000000006}">ARRAY [0..5] OF BIT</Type>
+								<Entry Name="Standard Out Var 14" Index="#x7000" Sub="#x03">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Standard Out Var 15" Index="#x7000" Sub="#x04">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Standard Out Var 16" Index="#x7000" Sub="#x05">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Standard Out Var 17" Index="#x7000" Sub="#x06">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Standard Out Var 18" Index="#x7000" Sub="#x07">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="Standard Out Var 19" Index="#x7000" Sub="#x08">
+									<Type>BIT</Type>
 								</Entry>
 							</Pdo>
 							<Pdo Name="StandardOutputs" Index="#x17f0" InOut="1" Flags="#x2011" SyncMan="2">
@@ -2579,31 +2618,27 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 		<MappingInfo Identifier="{03040060-0010-0304-6000-040310000403}" Id="#x02030010" Watchdog="28000000040000000400000004000000"/>
 		<OwnerA Name="TIID^Device 1 (EtherCAT)">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^AK1 (EK1200)^IS2 (EL1904)">
-				<Link VarA="AK1 (EK1200)^SI1 (EL6910)^ConnectionInputs^Message_4 TxPDO" VarB="Module 1 (FSOES)^RxPDO^FSOE"/>
 				<Link VarA="AK1 (EK1200)^SI1 (EL6910)^ConnectionOutputs^Message_4 RxPDO" VarB="Module 1 (FSOES)^TxPDO^FSOE"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^AK1 (EK1200)^OS1 (EL2904)">
-				<Link VarA="AK1 (EK1200)^SI1 (EL6910)^ConnectionInputs^Message_5 TxPDO" VarB="Module 1 (FSOES)^RxPDO^FSOE"/>
 				<Link VarA="AK1 (EK1200)^SI1 (EL6910)^ConnectionOutputs^Message_5 RxPDO" VarB="Module 1 (FSOES)^TxPDO^FSOE"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^AK1 (EK1200)^SI1 (EL6910)">
 				<Link VarA="AK1 (EK1200)^IS1 (EL1904)^Module 1 (FSOES)^RxPDO^FSOE" VarB="ConnectionInputs^Message_3 TxPDO"/>
 				<Link VarA="AK1 (EK1200)^IS1 (EL1904)^Module 1 (FSOES)^TxPDO^FSOE" VarB="ConnectionOutputs^Message_3 RxPDO"/>
+				<Link VarA="AK1 (EK1200)^IS2 (EL1904)^Module 1 (FSOES)^RxPDO^FSOE" VarB="ConnectionInputs^Message_4 TxPDO"/>
+				<Link VarA="AK1 (EK1200)^OS1 (EL2904)^Module 1 (FSOES)^RxPDO^FSOE" VarB="ConnectionInputs^Message_5 TxPDO"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT)^192 Carriage/Turret">
 				<Link VarA="AK1 (EK1200)^SI1 (EL6910)^ConnectionInputs^Message_11 TxPDO" VarB="Module 3 (Safety FSoE)^Safety to Slave^FSOE"/>
 				<Link VarA="AK1 (EK1200)^SI1 (EL6910)^ConnectionOutputs^Message_11 RxPDO" VarB="Module 3 (Safety FSoE)^Safety to Master^FSOE"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 2 (EtherCAT)^T2 (SI6/SC6 2Ax Y)">
-				<Link VarA="AK1 (EK1200)^SI1 (EL6910)^ConnectionOutputs^Message_12 RxPDO" VarB="Module 3 (Safety FSoE)^Safety to Master^FSOE"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 2 (EtherCAT)^T3 (SI6/SC6 2Ax Y)">
-				<Link VarA="AK1 (EK1200)^SI1 (EL6910)^ConnectionOutputs^Message_13 RxPDO" VarB="Module 3 (Safety FSoE)^Safety to Master^FSOE"/>
-			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TIID^Device 2 (EtherCAT)">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^AK1 (EK1200)^SI1 (EL6910)">
+				<Link VarA="T2 (SI6/SC6 2Ax Y)^Module 3 (Safety FSoE)^Safety to Master^FSOE" VarB="ConnectionOutputs^Message_12 RxPDO"/>
 				<Link VarA="T2 (SI6/SC6 2Ax Y)^Module 3 (Safety FSoE)^Safety to Slave^FSOE" VarB="ConnectionInputs^Message_12 TxPDO"/>
+				<Link VarA="T3 (SI6/SC6 2Ax Y)^Module 3 (Safety FSoE)^Safety to Master^FSOE" VarB="ConnectionOutputs^Message_13 RxPDO"/>
 				<Link VarA="T3 (SI6/SC6 2Ax Y)^Module 3 (Safety FSoE)^Safety to Slave^FSOE" VarB="ConnectionInputs^Message_13 TxPDO"/>
 			</OwnerB>
 		</OwnerA>
@@ -2677,6 +2712,12 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^IO.OD2^Ch8" VarB="Channel 8^Output"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^AK1 (EK1200)^SI1 (EL6910)">
+				<Link VarA="PlcTask Inputs^TwinSAFE.IN_EstopLeft1" VarB="StandardInputs^Standard Out Var 16"/>
+				<Link VarA="PlcTask Inputs^TwinSAFE.IN_EstopLeft2" VarB="StandardInputs^Standard Out Var 17"/>
+				<Link VarA="PlcTask Inputs^TwinSAFE.IN_EstopPanel1" VarB="StandardInputs^Standard Out Var 14"/>
+				<Link VarA="PlcTask Inputs^TwinSAFE.IN_EstopPanel2" VarB="StandardInputs^Standard Out Var 15"/>
+				<Link VarA="PlcTask Inputs^TwinSAFE.IN_EstopRight1" VarB="StandardInputs^Standard Out Var 18"/>
+				<Link VarA="PlcTask Inputs^TwinSAFE.IN_EstopRight2" VarB="StandardInputs^Standard Out Var 19"/>
 				<Link VarA="PlcTask Inputs^TwinSAFE.IN_FaultReset" VarB="StandardInputs^Standard Out Var 6"/>
 				<Link VarA="PlcTask Inputs^TwinSAFE.OUT_STO" VarB="StandardInputs^Standard Out Var 7"/>
 				<Link VarA="PlcTask Outputs^TwinSAFE.SafeErrAck" VarB="StandardOutputs^Standard In Var 1"/>
