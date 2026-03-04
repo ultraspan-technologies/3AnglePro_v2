@@ -221,6 +221,7 @@ VAR_GLOBAL
 	bAutoCrossCutDoublePass: BOOL;
 	bAutoCrossCutInProgress: BOOL;
 	bDriveFast: BOOL;
+	bDriveAllowed: BOOL;
 	bTeachLeftIndicator: BOOL;
 	bTeachRightIndicator: BOOL;
 	iTeachSuccessLabel: INT;
@@ -233,9 +234,8 @@ VAR_GLOBAL
 	bEstopPanel: BOOL;
 	bEstopLeft: BOOL;
 	bEstopRight: BOOL;
-	
-	rTestScreenAngle: REAL;
-	
+	bCrossCutEnabled: BOOL;
+
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
