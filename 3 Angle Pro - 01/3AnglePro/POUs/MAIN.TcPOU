@@ -48,6 +48,8 @@ PRG_09_HomePosition();
 PRG_10_CrossCutPosition();
 PRG_11_ScreenButtons();
 PRG_12_ProductionReport();
+PRG_90_GeneralConditions();
+PRG_91_TwinSAFE();
 PRG_99_Persistent();
 
 
@@ -1069,6 +1071,8 @@ OUT_bFieldLight	:=	bFieldLight;
       <LineId Id="308" Count="0" />
       <LineId Id="326" Count="0" />
       <LineId Id="344" Count="0" />
+      <LineId Id="359" Count="0" />
+      <LineId Id="374" Count="0" />
       <LineId Id="253" Count="0" />
       <LineId Id="113" Count="0" />
       <LineId Id="117" Count="0" />

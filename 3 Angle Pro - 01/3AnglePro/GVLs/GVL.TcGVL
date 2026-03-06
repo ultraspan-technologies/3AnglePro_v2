@@ -165,7 +165,7 @@ VAR_GLOBAL
 // Automatic Cycles
 		// Auto CrossCut
 	bAutoCrossCut	: BOOL ;
-	bAutoCrossCutReady: BOOL;
+	bAutoCrossCutEnable: BOOL;
 	bAutoUp: BOOL;
 	bAutoDown: BOOL;
 	bAutoCut: BOOL;

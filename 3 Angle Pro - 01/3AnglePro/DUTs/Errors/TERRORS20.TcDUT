@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="TERRORS20" Id="{a8326d08-902d-4fdf-8129-523dcfd6476b}">
+    <Declaration><![CDATA[TYPE TERRORS20 :
+STRUCT
+	ERRORS		: ARRAY [0..20] OF  WORD;		(* 	Depending on configuration in the database it's a bit error or an axis error *)
+	QuitReq_Err	: ARRAY [0..20] OF  WORD;		(* 	Whit Bit Errors: For every ERRORS.Bit the corresponding QuitReq_Err.Bit will be set by the PLC.
+										If the error should be reset explicitly on the pc, and the pc errases the bit after confirmation on the pc, the PLC must set the error only with a positive edge.
+										Whit Axis Errors: For every Word 0 to 15 the corresponding QuitReq_Err.0 will be set by the PLC.
+										If the error should be reset explicitly on the pc, and the pc errases the bit after confirmation on the pc, the PLC must set the error only with a positive edge. *)
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

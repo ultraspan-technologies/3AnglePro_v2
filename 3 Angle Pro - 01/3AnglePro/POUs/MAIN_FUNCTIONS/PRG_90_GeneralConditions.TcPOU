@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="PRG_90_GeneralConditions" Id="{b8d55638-6e09-4e51-9ff3-9cbb2bc10f26}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_90_GeneralConditions
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Errors Cabinet *)
+Errors_Cabinet.ERRORS[0].0 := NOT IN_bSawMOLReady ;
+//Errors_Cabinet.ERRORS[0].1 := NOT IN_bCableReelMOLReady ;
+//Errors_Cabinet.ERRORS[0].2 := NOT IN_bHoseReelMOLReady ;
+
+(* Errors TwinSAFE *)
+Errors_TwinSAFE.ERRORS[0].0 := SR_EstopPanel.Q1 ;
+Errors_TwinSAFE.ERRORS[0].1 := SR_EstopLeft.Q1 ;
+Errors_TwinSAFE.ERRORS[0].2 := SR_EstopRight.Q1 ;
+
+(* Warnings Saw *)
+Warnings_Saw.ERRORS[0].0 := NOT bAllowCarriageMovement ;
+Warnings_Saw.ERRORS[0].1 := NOT bAllowTurretMovement ;
+Warnings_Saw.ERRORS[0].2 := PRG_11_ScreenButtons.TON_CarriageEnable.Q ;
+Warnings_Saw.ERRORS[0].3 := PRG_11_ScreenButtons.TON_TurretEnable.Q ;
+Warnings_Saw.ERRORS[0].4 := PRG_11_ScreenButtons.TON_DriveFast.Q ;
+Warnings_Saw.ERRORS[0].5 := NOT bDriveAllowed ;
+Warnings_Saw.ERRORS[0].6 := NOT (OUT_bSawON AND bTurret045Range AND bCarriageCentreRef) ;
+Warnings_Saw.ERRORS[0].7 := NOT OUT_bSawON AND NOT bSawUpLimit ;
+Warnings_Saw.ERRORS[0].8 := FALSE ;
+]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_90_GeneralConditions">
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="17" Count="5" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="30" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

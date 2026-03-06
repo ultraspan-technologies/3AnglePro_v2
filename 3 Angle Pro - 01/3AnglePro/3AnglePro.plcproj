@@ -27,6 +27,21 @@
     <Compile Include="DUTs\AnalogSignal_LREAL.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Errors\TERRORS10.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Errors\TERRORS15.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Errors\TERRORS2.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Errors\TERRORS20.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Errors\TERRORS5.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\SSI_Encoder.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -222,6 +237,10 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="GVLs\PLCStudio.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="GVLs\TwinSAFE.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -301,6 +320,12 @@
     <Compile Include="POUs\MAIN_FUNCTIONS\PRG_12_ProductionReport.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\MAIN_FUNCTIONS\PRG_90_GeneralConditions.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\MAIN_FUNCTIONS\PRG_91_TwinSAFE.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\MAIN_FUNCTIONS\PRG_99_Persistent.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -325,6 +350,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />
+    <Folder Include="DUTs\Errors" />
     <Folder Include="DUTs\_Tools" />
     <Folder Include="DUTs\_Tools\AchsManager" />
     <Folder Include="DUTs\_Tools\AchsManager\Adapter" />

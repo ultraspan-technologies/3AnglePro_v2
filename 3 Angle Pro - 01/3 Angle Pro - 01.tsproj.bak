@@ -465,7 +465,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{EC4FCDEB-9459-4E90-8A05-406BDFCA72DC}" Name="3AnglePro" PrjFilePath="3AnglePro\3AnglePro.plcproj" TmcFilePath="3AnglePro\3AnglePro.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="3AnglePro\3AnglePro.tmc" TmcHash="{8F1BC298-C082-64D0-C690-91526291DD2F}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="3AnglePro\3AnglePro.tmc" TmcHash="{C94F851A-A47E-C014-AC4C-F30389B30CCD}">
 					<Name>3AnglePro Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">

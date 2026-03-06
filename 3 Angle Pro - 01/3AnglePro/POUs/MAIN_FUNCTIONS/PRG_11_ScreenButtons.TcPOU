@@ -1810,7 +1810,7 @@ END_VAR
                       <o n="OutputItems" t="OutputItemList">
                         <l2 n="OutputItems" cet="Operand">
                           <o>
-                            <v n="Operand">"bAutoCrossCutReady"</v>
+                            <v n="Operand">"bAutoCrossCutEnable"</v>
                             <v n="Type">"BOOL"</v>
                             <v n="Comment">""</v>
                             <v n="SymbolComment">""</v>
@@ -1936,7 +1936,7 @@ END_VAR
                             <l2 n="InputItems" cet="BoxTreeOperand">
                               <o>
                                 <o n="Operand" t="Operand">
-                                  <v n="Operand">"bAutoCrossCutReady"</v>
+                                  <v n="Operand">"bAutoCrossCutEnable"</v>
                                   <v n="Type">"BOOL"</v>
                                   <v n="Comment">""</v>
                                   <v n="SymbolComment">""</v>

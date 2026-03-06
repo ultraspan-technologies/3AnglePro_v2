@@ -44,7 +44,7 @@ CASE iStep OF
 				bSafetyOK
 				AND bTurret045Range
 				AND OUT_bSawON
-				AND (bAutoCrossCutReady AND IN_bAutoCrossCut AND NOT bRemote)
+				AND (bAutoCrossCutEnable AND IN_bAutoCrossCut AND NOT bRemote)
 				AND NOT bMachineHoming
 				AND NOT bCrossCutPosition
 				AND bCarriageCentreRef

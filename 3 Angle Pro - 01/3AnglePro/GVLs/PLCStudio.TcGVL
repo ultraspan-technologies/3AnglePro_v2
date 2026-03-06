@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <GVL Name="PLCStudio" Id="{68d4e592-69bb-456b-bcdd-6a325933713f}">
+    <Declaration><![CDATA[{attribute 'Tc2GvlVarNames'}
+{attribute 'pack_mode' := '1'}
+VAR_GLOBAL
+	
+(* ########## Errors ########## *)
+	Errors_Cabinet			: TERRORS2;		(* Errors from inside the cabinet *)
+	Errors_TwinSAFE			: TERRORS2;		(* TwinSAFE errors *)
+	Errors_AutoCycle		: TERRORS2;		(* Errors from the automatic cycles *)
+	Errors_Axes				: TERRORS2;		(* Errors from Stober drive axes *)
+	
+(* ########## Warnings ########## *)
+	Warnings_Saw			: TERRORS2;		(* Warnings *)
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>
