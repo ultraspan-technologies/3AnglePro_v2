@@ -4,24 +4,24 @@
     <Declaration><![CDATA[PROGRAM PRG_09_HomePosition
 VAR
 	iStepHome: INT;
-	R_TRIG_MachineHoming: R_TRIG;
-	SR_MachineHoming: SR;
+//	R_TRIG_MachineHoming: R_TRIG;
+//	SR_MachineHoming: SR;
 	TON_HomingStep30: TON;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[// bAnyServoError
 
-	IF		NOT bSafetyOK OR IN_FaultReset OR bAutoCrossCut  OR NOT SR_MachineHoming.Q1
+	IF		NOT bSafetyOK OR IN_FaultReset OR bAutoCrossCut OR bCrossCutPosition	//OR NOT SR_MachineHoming.Q1
 	THEN	iStepHome	:=	0;
 			bMachineHoming := FALSE;
 	END_IF
 	
-			R_TRIG_MachineHoming(	CLK:= bLiftingPosition AND NOT bAutoCrossCut AND NOT OUT_bSawOn,
+(*			R_TRIG_MachineHoming(	CLK:= bLiftingPositionEnable AND NOT bAutoCrossCut AND NOT bCrossCutPosition AND NOT OUT_bSawOn,
 									Q=> );	
 			SR_MachineHoming(	SET1:= R_TRIG_MachineHoming.Q AND NOT SR_MachineHoming.Q1,
 								RESET:= (R_TRIG_MachineHoming.Q AND SR_MachineHoming.Q1) OR NOT bSafetyOK OR IN_FaultReset, 
-								Q1=> );
+								Q1=> );		*)
 (* HMI Indicators *)
 IF bMachineHoming THEN
 	bLiftingPositionInProgress := TRUE ;
@@ -35,8 +35,8 @@ IF 	NOT bMachineHoming
 	AND ((AnalogIn_LREAL_Carriage.Out.rScaled > 32.3) AND (AnalogIn_LREAL_Carriage.Out.rScaled < 33.5))
 	AND ((AnalogIn_LREAL_CrossCut.Out.rScaled > 7) AND (AnalogIn_LREAL_CrossCut.Out.rScaled < 8))
 THEN
-	bLiftingPositionActive := TRUE;
-ELSE bLiftingPositionActive := FALSE;
+	bLiftingPositionInPosition := TRUE;
+ELSE bLiftingPositionInPosition := FALSE;
 END_IF
 
 CASE iStepHome OF
@@ -49,7 +49,8 @@ CASE iStepHome OF
 		bZAxisHome := FALSE;
 		TON_HomingStep30.IN := FALSE;
 	
-		IF R_TRIG_MachineHoming.Q
+		IF 	IN_bAutoCycleStart	//R_TRIG_MachineHoming.Q
+			AND bLiftingPositionEnable
 			AND bSafetyOK 
 			AND NOT OUT_bSawOn 
 			AND NOT bAutoCrossCut
@@ -136,6 +137,7 @@ END_CASE]]></ST>
       <LineId Id="141" Count="6" />
       <LineId Id="139" Count="0" />
       <LineId Id="27" Count="11" />
+      <LineId Id="167" Count="0" />
       <LineId Id="155" Count="1" />
       <LineId Id="158" Count="1" />
       <LineId Id="157" Count="0" />

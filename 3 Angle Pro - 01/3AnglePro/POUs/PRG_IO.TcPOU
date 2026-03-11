@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="PRG_IO" Id="{d36f4d4f-0390-4c81-a0be-a6634af3cb53}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PRG_IO
 VAR
@@ -42,7 +42,7 @@ END_VAR
 	IN_bRemoteDrvRev			:= IO.ID4.Ch2 ;
 	IN_bRemoteSawON				:= IO.ID4.Ch3 ;
 	IN_bDownLimit				:= IO.ID4.Ch4 ;			// IN_bRemoteStop
-	IN_bAutoCrossCut			:= IO.ID4.Ch5 ;
+	IN_bAutoCycleStart			:= IO.ID4.Ch5 ;
 	IN_bSawMOLReady				:= IO.ID4.Ch6 ;
 	IN_bCableReelMOLReady		:= IO.ID4.Ch7 ;
 	IN_bHoseReelMOLReady		:= IO.ID4.Ch8 ;

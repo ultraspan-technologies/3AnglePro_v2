@@ -7,26 +7,33 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Errors Cabinet *)
-Errors_Cabinet.ERRORS[0].0 := NOT IN_bSawMOLReady ;
-//Errors_Cabinet.ERRORS[0].1 := NOT IN_bCableReelMOLReady ;
-//Errors_Cabinet.ERRORS[0].2 := NOT IN_bHoseReelMOLReady ;
+Errors_Cabinet.ERRORS[0].0 := NOT IN_bSawMOLReady ;		// Saw blade motor overload
+//Errors_Cabinet.ERRORS[0].1 := NOT IN_bCableReelMOLReady ;		// Cable reel motor overload
+//Errors_Cabinet.ERRORS[0].2 := NOT IN_bHoseReelMOLReady ;		// Hose reel motor overload
 
 (* Errors TwinSAFE *)
-Errors_TwinSAFE.ERRORS[0].0 := SR_EstopPanel.Q1 ;
-Errors_TwinSAFE.ERRORS[0].1 := SR_EstopLeft.Q1 ;
-Errors_TwinSAFE.ERRORS[0].2 := SR_EstopRight.Q1 ;
+Errors_TwinSAFE.ERRORS[0].0 := SR_EstopPanel.Q1 ;		// E-stop control panel
+Errors_TwinSAFE.ERRORS[0].1 := SR_EstopLeft.Q1 ;		// E-stop left side
+Errors_TwinSAFE.ERRORS[0].2 := SR_EstopRight.Q1 ;		// E-stop right side
 
 (* Warnings Saw *)
-Warnings_Saw.ERRORS[0].0 := NOT bAllowCarriageMovement ;
-Warnings_Saw.ERRORS[0].1 := NOT bAllowTurretMovement ;
-Warnings_Saw.ERRORS[0].2 := PRG_11_ScreenButtons.TON_CarriageEnable.Q ;
-Warnings_Saw.ERRORS[0].3 := PRG_11_ScreenButtons.TON_TurretEnable.Q ;
-Warnings_Saw.ERRORS[0].4 := PRG_11_ScreenButtons.TON_DriveFast.Q ;
-Warnings_Saw.ERRORS[0].5 := NOT bDriveAllowed ;
-Warnings_Saw.ERRORS[0].6 := NOT (OUT_bSawON AND bTurret045Range AND bCarriageCentreRef) ;
-Warnings_Saw.ERRORS[0].7 := NOT OUT_bSawON AND NOT bSawUpLimit ;
+Warnings_Saw.ERRORS[0].0 := NOT bAllowCarriageMovement ;		// Carriage movement not allowed
+Warnings_Saw.ERRORS[0].1 := NOT bAllowTurretMovement ;		// Turret movement not allowed
+Warnings_Saw.ERRORS[0].2 := PRG_11_ScreenButtons.SR_CarriageEnableTimeout.Q1 ;		// Carriage enable button timed out
+Warnings_Saw.ERRORS[0].3 := PRG_11_ScreenButtons.SR_TurretEnableTimeout.Q1 ;		// Turret enable button timed out
+Warnings_Saw.ERRORS[0].4 := PRG_11_ScreenButtons.SR_DriveFastTimeout.Q1 ;		// Drive fast button timed out
+Warnings_Saw.ERRORS[0].5 := NOT bDriveAllowed ;		// X-Drive not allowed
+Warnings_Saw.ERRORS[0].6 := NOT (OUT_bSawON AND bTurret045Range AND bCarriageCentreRef) ;		// Auto CrossCut not ready
+Warnings_Saw.ERRORS[0].7 := NOT OUT_bSawON AND NOT bSawUpLimit ;		// Saw blade not ready to turn on
 Warnings_Saw.ERRORS[0].8 := FALSE ;
-]]></ST>
+
+(* Errors Axes *)
+Errors_Axes.ERRORS[0].0 := fbCarriage_manager.Error ;		// Carriage axis manager error
+Errors_Axes.ERRORS[0].1 := fbCrossCut_manager.Error ;		// CrossCut axis manager error
+Errors_Axes.ERRORS[0].2 := fbTurret_manager.Error ;		// Turret axis manager error
+Errors_Axes.ERRORS[0].3 := fbXDrive_manager.Error ;		// X-Drive axis manager error
+Errors_Axes.ERRORS[0].4 := fbZ1_manager.Error ;		// Z1 (panel side) axis manager error
+Errors_Axes.ERRORS[0].5 := fbZ2_manager.Error ;		// Z2 (reel side) axis manager error]]></ST>
     </Implementation>
     <LineIds Name="PRG_90_GeneralConditions">
       <LineId Id="13" Count="0" />
@@ -42,7 +49,9 @@ Warnings_Saw.ERRORS[0].8 := FALSE ;
       <LineId Id="14" Count="0" />
       <LineId Id="29" Count="0" />
       <LineId Id="31" Count="0" />
+      <LineId Id="35" Count="0" />
       <LineId Id="30" Count="0" />
+      <LineId Id="36" Count="5" />
     </LineIds>
   </POU>
 </TcPlcObject>

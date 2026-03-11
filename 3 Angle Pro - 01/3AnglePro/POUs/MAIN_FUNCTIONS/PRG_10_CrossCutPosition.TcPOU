@@ -4,23 +4,23 @@
     <Declaration><![CDATA[PROGRAM PRG_10_CrossCutPosition
 VAR
 	iStepCrossCut: INT;
-	R_TRIG_CrossCutPosition: R_TRIG;
-	SR_CrossCutPosition: SR;
+//	R_TRIG_CrossCutPosition: R_TRIG;
+//	SR_CrossCutPosition: SR;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[// bAnyServoError
 
-	IF		NOT bSafetyOK OR IN_FaultReset OR bAutoCrossCut OR bMachineHoming OR NOT SR_CrossCutPosition.Q1
+	IF		NOT bSafetyOK OR IN_FaultReset OR bAutoCrossCut OR bMachineHoming	//OR NOT SR_CrossCutPosition.Q1
 	THEN	iStepCrossCut	:=	0;
 			bCrossCutPosition := FALSE;
 	END_IF
 	
-			R_TRIG_CrossCutPosition(CLK:= bCrossCutPositionActivate AND NOT bMachineHoming AND NOT bAutoCrossCut AND NOT OUT_bSawOn,
+(*			R_TRIG_CrossCutPosition(CLK:= bCrossCutPositionEnable AND NOT bMachineHoming AND NOT bAutoCrossCut AND NOT OUT_bSawOn,
 									Q=> );	
 			SR_CrossCutPosition(SET1:= R_TRIG_CrossCutPosition.Q AND NOT SR_CrossCutPosition.Q1,
 								RESET:= (R_TRIG_CrossCutPosition.Q AND SR_CrossCutPosition.Q1) OR NOT bSafetyOK OR IN_FaultReset, 
-								Q1=> );
+								Q1=> );		*)
 (* HMI Indicators *)
 IF bCrossCutPosition THEN
 	bCrossCutPositionInProgress := TRUE ;
@@ -33,8 +33,8 @@ IF NOT bCrossCutPosition
 	AND bCarriageCentreRef
 	AND bTurretMedianRange
 	AND ((lCrossCutEncoderValue > ((lRailLimitLeft + lRailLimitRight)/2) - 40) AND (lCrossCutEncoderValue < ((lRailLimitLeft + lRailLimitRight)/2) + 40))
-THEN bCrossCutPositionActive := TRUE ;
-ELSE bCrossCutPositionActive := FALSE ;
+THEN bCrossCutPositionInPosition := TRUE ;
+ELSE bCrossCutPositionInPosition := FALSE ;
 END_IF
 
 CASE iStepCrossCut OF
@@ -47,7 +47,8 @@ CASE iStepCrossCut OF
 	    bCrossCutCuttingPosRH	:= FALSE;
 		bZAxisCuttingPos 		:= FALSE;
 	
-		IF R_TRIG_CrossCutPosition.Q 
+		IF 	IN_bAutoCycleStart		//R_TRIG_CrossCutPosition.Q 
+			AND bCrossCutPositionEnable
 			AND bSafetyOK 
 			AND NOT OUT_bSawOn 
 			AND NOT bAutoCrossCut
@@ -143,6 +144,7 @@ END_CASE]]></ST>
       <LineId Id="119" Count="0" />
       <LineId Id="34" Count="4" />
       <LineId Id="40" Count="1" />
+      <LineId Id="179" Count="0" />
       <LineId Id="168" Count="1" />
       <LineId Id="171" Count="1" />
       <LineId Id="170" Count="0" />

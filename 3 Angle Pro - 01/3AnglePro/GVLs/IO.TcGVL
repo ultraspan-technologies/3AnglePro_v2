@@ -50,7 +50,7 @@
 	IN_bRemoteDrvRev			: BOOL;
 	IN_bRemoteSawON				: BOOL;
 	IN_bDownLimit				: BOOL;		// IN_bRemoteStop
-	IN_bAutoCrossCut			: BOOL;		
+	IN_bAutoCycleStart			: BOOL;		
 	IN_bSawMOLReady				: BOOL;
 	IN_bCableReelMOLReady		: BOOL;
 	IN_bHoseReelMOLReady		: BOOL;

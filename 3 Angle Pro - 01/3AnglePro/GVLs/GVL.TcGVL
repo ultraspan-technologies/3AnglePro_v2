@@ -199,7 +199,7 @@ VAR_GLOBAL
 	bFieldLight: BOOL;
 	bCarriageEN: BOOL;
 	bTurretEN: BOOL;
-	bLiftingPosition: BOOL;
+	bLiftingPositionEnable: BOOL;
 	bHoseReel: BOOL;
 	bCableReel: BOOL;
 	bTeachReadyLeft: BOOL;
@@ -214,10 +214,10 @@ VAR_GLOBAL
 	bHMIcut: BOOL;
 	bHMIreturn: BOOL;
 	bLiftingPositionInProgress: BOOL;
-	bLiftingPositionActive: BOOL;
+	bLiftingPositionInPosition: BOOL;
 	bCrossCutPositionInProgress: BOOL;
-	bCrossCutPositionActive: BOOL;
-	bCrossCutPositionActivate: BOOL;
+	bCrossCutPositionInPosition: BOOL;
+	bCrossCutPositionEnable: BOOL;
 	bAutoCrossCutDoublePass: BOOL;
 	bAutoCrossCutInProgress: BOOL;
 	bDriveFast: BOOL;
@@ -235,6 +235,7 @@ VAR_GLOBAL
 	bEstopLeft: BOOL;
 	bEstopRight: BOOL;
 	bCrossCutEnabled: BOOL;
+	bAutoCrossCutReady: BOOL;
 
 END_VAR]]></Declaration>
   </GVL>
