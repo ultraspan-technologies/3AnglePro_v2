@@ -6,13 +6,30 @@ VAR
 	iStepCrossCut: INT;
 //	R_TRIG_CrossCutPosition: R_TRIG;
 //	SR_CrossCutPosition: SR;
+	R_TRIG_91: R_TRIG;
+	R_TRIG_92: R_TRIG;
+	R_TRIG_93: R_TRIG;
+	R_TRIG_94: R_TRIG;
+	R_TRIG_95: R_TRIG;
+	R_TRIG_96: R_TRIG;
+	R_TRIG_97: R_TRIG;
+	SR_watchdog: SR;
+	TON_CrossCutPositionWatchdog: TON;
+	SR_WatchdogTriggered: SR;
+	bWatchdogReset: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[// bAnyServoError
 
-	IF		NOT bSafetyOK OR IN_FaultReset OR bAutoCrossCut OR bMachineHoming	//OR NOT SR_CrossCutPosition.Q1
+	IF		NOT bSafetyOK 
+			OR IN_FaultReset 
+			OR bAutoCrossCut 
+			OR bMachineHoming	//OR NOT SR_CrossCutPosition.Q1
+			OR SR_WatchdogTriggered.Q1
+			OR bRemote
 	THEN	iStepCrossCut	:=	0;
+			bWatchdogReset := TRUE ;
 			bCrossCutPosition := FALSE;
 	END_IF
 	
@@ -46,6 +63,7 @@ CASE iStepCrossCut OF
 	    bCrossCutCuttingPosLH	:= FALSE;
 	    bCrossCutCuttingPosRH	:= FALSE;
 		bZAxisCuttingPos 		:= FALSE;
+		bWatchdogReset			:= TRUE;
 	
 		IF 	IN_bAutoCycleStart		//R_TRIG_CrossCutPosition.Q 
 			AND bCrossCutPositionEnable
@@ -53,19 +71,24 @@ CASE iStepCrossCut OF
 			AND NOT OUT_bSawOn 
 			AND NOT bAutoCrossCut
 			AND NOT bMachineHoming
+			AND NOT bRemote
 		THEN
 			bCrossCutPosition := TRUE ;
+			bWatchdogReset := TRUE ;
 			iStepCrossCut := 10 ;
 		ELSE
 			bCrossCutPosition := FALSE ;
+			bWatchdogReset := FALSE ;
 		END_IF
 		
 	10:	// Raise Z-axis all the way up
 	
 		IF NOT bSawUpLimit AND bSafetyOK AND bCrossCutPosition THEN
 			bZAxisCuttingPos := TRUE ;
+			bWatchdogReset := FALSE ;
 		ELSE
 			bZAxisCuttingPos := FALSE ; 
+			bWatchdogReset := TRUE ;
 			iStepCrossCut := 20 ;
 		END_IF
 		
@@ -74,12 +97,15 @@ CASE iStepCrossCut OF
 		IF lCrossCutEncoderValue < ((lRailLimitLeft + lRailLimitRight)/2) - 20 AND bSafetyOK AND bCrossCutPosition THEN
 			bCrossCutCuttingPosLH := TRUE ;
 			bCrossCutCuttingPosRH := FALSE ;
+			bWatchdogReset := FALSE ;
 		ELSIF lCrossCutEncoderValue > ((lRailLimitLeft + lRailLimitRight)/2) + 20 AND bSafetyOK AND bCrossCutPosition THEN
 			bCrossCutCuttingPosRH := TRUE ;
 			bCrossCutCuttingPosLH := FALSE ;
+			bWatchdogReset := FALSE ;
 		ELSIF (lCrossCutEncoderValue > ((lRailLimitLeft + lRailLimitRight)/2) - 20) OR (lCrossCutEncoderValue < ((lRailLimitLeft + lRailLimitRight)/2) + 20) AND bSafetyOK AND bCrossCutPosition THEN
 			bCrossCutCuttingPosLH := FALSE ;
 			bCrossCutCuttingPosRH := FALSE ;
+			bWatchdogReset := TRUE ;
 			iStepCrossCut := 30 ;
 		END_IF
 	
@@ -88,12 +114,15 @@ CASE iStepCrossCut OF
 		IF NOT bCarriageCentreRef AND AnalogIn_LREAL_Carriage.Out.rScaled > 20.48 AND bCrossCutPosition AND bSafetyOK THEN
 			bCarriageCuttingPosLH := TRUE ;
 			bCarriageCuttingPosRH := FALSE ;
+			bWatchdogReset := FALSE ;
 		ELSIF NOT bCarriageCentreRef AND AnalogIn_LREAL_Carriage.Out.rScaled < 20.52 AND bCrossCutPosition AND bSafetyOK THEN
 			bCarriageCuttingPosRH := TRUE ;
 			bCarriageCuttingPosLH := FALSE ;
+			bWatchdogReset := FALSE ;
 		ELSIF bCarriageCentreRef AND bCrossCutPosition AND bSafetyOK THEN
 			bCarriageCuttingPosRH := FALSE ;
 			bCarriageCuttingPosLH := FALSE ;
+			bWatchdogReset := TRUE ;
 			iStepCrossCut := 40 ;
 		END_IF
 
@@ -102,35 +131,1319 @@ CASE iStepCrossCut OF
 		IF NOT bTurretMedianRange AND GVL.Turret_Axis.AchsIn.IstPos > lTurretMedian AND bSafetyOK AND bCrossCutPosition THEN
 			bTurretCuttingPosCCW := TRUE ;
 			bTurretCuttingPosCW := FALSE ;
+			bWatchdogReset := FALSE ;
 		ELSIF NOT bTurretMedianRange AND GVL.Turret_Axis.AchsIn.IstPos < lTurretMedian AND bSafetyOK AND bCrossCutPosition THEN
 			bTurretCuttingPosCW := TRUE ;
 			bTurretCuttingPosCCW := FALSE ;
+			bWatchdogReset := FALSE ;
 		ELSIF bTurretMedianRange AND bSafetyOK AND bCrossCutPosition THEN
 			bTurretCuttingPosCW := FALSE ;
 			bTurretCuttingPosCCW := FALSE ;
+			bWatchdogReset := TRUE ;
 			iStepCrossCut := 0 ;
 		END_IF
 	
-
-	
-(*	50: //Crosscut offset towards the control panel (CUT direction)		// 55.5 < CrosscutHome < 55.75
-	
-		IF (AnalogIn_LREAL_CrossCut.Out.rScaled < 7) AND bCrossCutPosition AND bSafetyOK THEN
-			bCrossCutCuttingPosLH := TRUE ;
-			bCrossCutCuttingPosRH := FALSE ;
-		ELSIF (AnalogIn_LREAL_CrossCut.Out.rScaled > 8) AND bCrossCutPosition AND bSafetyOK THEN
-			bCrossCutCuttingPosRH := TRUE ;
-			bCrossCutCuttingPosLH := FALSE ;
-		ELSIF (AnalogIn_LREAL_CrossCut.Out.rScaled > 7) AND (AnalogIn_LREAL_CrossCut.Out.rScaled < 8) THEN
-			bCrossCutCuttingPosLH := FALSE ;
-			bCrossCutCuttingPosRH := FALSE ;
-			iStepCrossCut := 0 ;
-		END_IF
-*)		
 END_CASE]]></ST>
     </Implementation>
+    <Action Name="ACT_10_CrossCutPosition" Id="{1543bd4e-3c7b-42c7-9f63-098072817eb8}">
+      <Implementation>
+        <NWL>
+          <XmlArchive>
+            <Data>
+              <o xml:space="preserve" t="NWLImplementationObject">
+                <v n="NetworkListComment">""</v>
+                <v n="DefaultViewMode">"Fbd"</v>
+                <l2 n="NetworkList" cet="Network">
+                  <o>
+                    <v n="ILActive">false</v>
+                    <v n="FBDValid">false</v>
+                    <v n="ILValid">false</v>
+                    <l2 n="ILLines" />
+                    <v n="Comment">""</v>
+                    <v n="Title">""</v>
+                    <v n="Label">""</v>
+                    <v n="OutCommented">false</v>
+                    <l2 n="NetworkItems" cet="BoxTreeBox">
+                      <o>
+                        <v n="BoxType">"SR"</v>
+                        <o n="Instance" t="Operand">
+                          <v n="Operand">"SR_WatchdogTriggered"</v>
+                          <v n="Type">"SR"</v>
+                          <v n="Comment">""</v>
+                          <v n="SymbolComment">""</v>
+                          <v n="Address">""</v>
+                          <o n="Flags" t="Flags">
+                            <v n="Flags">0</v>
+                            <v n="Fixed">false</v>
+                            <v n="Extensible">false</v>
+                          </o>
+                          <v n="LValue">false</v>
+                          <v n="Boolean">false</v>
+                          <v n="IsInstance">true</v>
+                          <v n="Id">3L</v>
+                        </o>
+                        <o n="OutputItems" t="OutputItemList">
+                          <l2 n="OutputItems">
+                            <n />
+                          </l2>
+                        </o>
+                        <o n="Flags" t="Flags">
+                          <v n="Flags">0</v>
+                          <v n="Fixed">false</v>
+                          <v n="Extensible">false</v>
+                        </o>
+                        <n n="InputFlags" />
+                        <l2 n="InputItems">
+                          <o t="BoxTreeBox">
+                            <v n="BoxType">"R_TRIG"</v>
+                            <o n="Instance" t="Operand">
+                              <v n="Operand">"R_TRIG_97"</v>
+                              <v n="Type">"R_TRIG"</v>
+                              <v n="Comment">""</v>
+                              <v n="SymbolComment">""</v>
+                              <v n="Address">""</v>
+                              <o n="Flags" t="Flags">
+                                <v n="Flags">0</v>
+                                <v n="Fixed">false</v>
+                                <v n="Extensible">false</v>
+                              </o>
+                              <v n="LValue">false</v>
+                              <v n="Boolean">false</v>
+                              <v n="IsInstance">true</v>
+                              <v n="Id">5L</v>
+                            </o>
+                            <o n="OutputItems" t="OutputItemList">
+                              <l2 n="OutputItems">
+                                <n />
+                              </l2>
+                            </o>
+                            <o n="Flags" t="Flags">
+                              <v n="Flags">0</v>
+                              <v n="Fixed">false</v>
+                              <v n="Extensible">false</v>
+                            </o>
+                            <n n="InputFlags" />
+                            <l2 n="InputItems" cet="BoxTreeBox">
+                              <o>
+                                <v n="BoxType">"TON"</v>
+                                <o n="Instance" t="Operand">
+                                  <v n="Operand">"TON_CrossCutPositionWatchdog"</v>
+                                  <v n="Type">"TON"</v>
+                                  <v n="Comment">""</v>
+                                  <v n="SymbolComment">""</v>
+                                  <v n="Address">""</v>
+                                  <o n="Flags" t="Flags">
+                                    <v n="Flags">0</v>
+                                    <v n="Fixed">false</v>
+                                    <v n="Extensible">false</v>
+                                  </o>
+                                  <v n="LValue">false</v>
+                                  <v n="Boolean">false</v>
+                                  <v n="IsInstance">true</v>
+                                  <v n="Id">7L</v>
+                                </o>
+                                <o n="OutputItems" t="OutputItemList">
+                                  <l2 n="OutputItems" cet="Operand">
+                                    <n />
+                                    <o>
+                                      <v n="Operand">""</v>
+                                      <n n="Type" />
+                                      <v n="Comment">""</v>
+                                      <v n="SymbolComment">""</v>
+                                      <v n="Address">""</v>
+                                      <o n="Flags" t="Flags">
+                                        <v n="Flags">0</v>
+                                        <v n="Fixed">false</v>
+                                        <v n="Extensible">false</v>
+                                      </o>
+                                      <v n="LValue">true</v>
+                                      <v n="Boolean">false</v>
+                                      <v n="IsInstance">false</v>
+                                      <v n="Id">9L</v>
+                                    </o>
+                                  </l2>
+                                </o>
+                                <o n="Flags" t="Flags">
+                                  <v n="Flags">0</v>
+                                  <v n="Fixed">false</v>
+                                  <v n="Extensible">false</v>
+                                </o>
+                                <n n="InputFlags" />
+                                <l2 n="InputItems">
+                                  <o t="BoxTreeBox">
+                                    <v n="BoxType">"SR"</v>
+                                    <o n="Instance" t="Operand">
+                                      <v n="Operand">"SR_watchdog"</v>
+                                      <v n="Type">"SR"</v>
+                                      <v n="Comment">""</v>
+                                      <v n="SymbolComment">""</v>
+                                      <v n="Address">""</v>
+                                      <o n="Flags" t="Flags">
+                                        <v n="Flags">0</v>
+                                        <v n="Fixed">false</v>
+                                        <v n="Extensible">false</v>
+                                      </o>
+                                      <v n="LValue">false</v>
+                                      <v n="Boolean">false</v>
+                                      <v n="IsInstance">true</v>
+                                      <v n="Id">10L</v>
+                                    </o>
+                                    <o n="OutputItems" t="OutputItemList">
+                                      <l2 n="OutputItems">
+                                        <n />
+                                      </l2>
+                                    </o>
+                                    <o n="Flags" t="Flags">
+                                      <v n="Flags">0</v>
+                                      <v n="Fixed">false</v>
+                                      <v n="Extensible">false</v>
+                                    </o>
+                                    <n n="InputFlags" />
+                                    <l2 n="InputItems" cet="BoxTreeBox">
+                                      <o>
+                                        <v n="BoxType">"OR"</v>
+                                        <o n="Instance" t="Operand">
+                                          <n n="Operand" />
+                                          <v n="Type">""</v>
+                                          <v n="Comment">""</v>
+                                          <v n="SymbolComment">""</v>
+                                          <v n="Address">""</v>
+                                          <o n="Flags" t="Flags">
+                                            <v n="Flags">0</v>
+                                            <v n="Fixed">false</v>
+                                            <v n="Extensible">false</v>
+                                          </o>
+                                          <v n="LValue">false</v>
+                                          <v n="Boolean">false</v>
+                                          <v n="IsInstance">true</v>
+                                          <v n="Id">12L</v>
+                                        </o>
+                                        <o n="OutputItems" t="OutputItemList">
+                                          <l2 n="OutputItems">
+                                            <n />
+                                          </l2>
+                                        </o>
+                                        <o n="Flags" t="Flags">
+                                          <v n="Flags">0</v>
+                                          <v n="Fixed">false</v>
+                                          <v n="Extensible">false</v>
+                                        </o>
+                                        <n n="InputFlags" />
+                                        <l2 n="InputItems" cet="BoxTreeBox">
+                                          <o>
+                                            <v n="BoxType">"R_TRIG"</v>
+                                            <o n="Instance" t="Operand">
+                                              <v n="Operand">"R_TRIG_91"</v>
+                                              <v n="Type">"R_TRIG"</v>
+                                              <v n="Comment">""</v>
+                                              <v n="SymbolComment">""</v>
+                                              <v n="Address">""</v>
+                                              <o n="Flags" t="Flags">
+                                                <v n="Flags">0</v>
+                                                <v n="Fixed">false</v>
+                                                <v n="Extensible">false</v>
+                                              </o>
+                                              <v n="LValue">false</v>
+                                              <v n="Boolean">false</v>
+                                              <v n="IsInstance">true</v>
+                                              <v n="Id">14L</v>
+                                            </o>
+                                            <o n="OutputItems" t="OutputItemList">
+                                              <l2 n="OutputItems">
+                                                <n />
+                                              </l2>
+                                            </o>
+                                            <o n="Flags" t="Flags">
+                                              <v n="Flags">0</v>
+                                              <v n="Fixed">false</v>
+                                              <v n="Extensible">false</v>
+                                            </o>
+                                            <n n="InputFlags" />
+                                            <l2 n="InputItems" cet="BoxTreeBox">
+                                              <o>
+                                                <v n="BoxType">"EQ"</v>
+                                                <o n="Instance" t="Operand">
+                                                  <n n="Operand" />
+                                                  <v n="Type">""</v>
+                                                  <v n="Comment">""</v>
+                                                  <v n="SymbolComment">""</v>
+                                                  <v n="Address">""</v>
+                                                  <o n="Flags" t="Flags">
+                                                    <v n="Flags">0</v>
+                                                    <v n="Fixed">false</v>
+                                                    <v n="Extensible">false</v>
+                                                  </o>
+                                                  <v n="LValue">false</v>
+                                                  <v n="Boolean">false</v>
+                                                  <v n="IsInstance">true</v>
+                                                  <v n="Id">16L</v>
+                                                </o>
+                                                <o n="OutputItems" t="OutputItemList">
+                                                  <l2 n="OutputItems">
+                                                    <n />
+                                                  </l2>
+                                                </o>
+                                                <o n="Flags" t="Flags">
+                                                  <v n="Flags">0</v>
+                                                  <v n="Fixed">true</v>
+                                                  <v n="Extensible">false</v>
+                                                </o>
+                                                <n n="InputFlags" />
+                                                <l2 n="InputItems" cet="BoxTreeOperand">
+                                                  <o>
+                                                    <o n="Operand" t="Operand">
+                                                      <v n="Operand">"iStepCrossCut"</v>
+                                                      <v n="Type">"INT"</v>
+                                                      <v n="Comment">""</v>
+                                                      <v n="SymbolComment">""</v>
+                                                      <v n="Address">""</v>
+                                                      <o n="Flags" t="Flags">
+                                                        <v n="Flags">0</v>
+                                                        <v n="Fixed">false</v>
+                                                        <v n="Extensible">false</v>
+                                                      </o>
+                                                      <v n="LValue">false</v>
+                                                      <v n="Boolean">false</v>
+                                                      <v n="IsInstance">false</v>
+                                                      <v n="Id">19L</v>
+                                                    </o>
+                                                    <v n="Id">18L</v>
+                                                  </o>
+                                                  <o>
+                                                    <o n="Operand" t="Operand">
+                                                      <v n="Operand">"10"</v>
+                                                      <v n="Type">"INT"</v>
+                                                      <v n="Comment">""</v>
+                                                      <v n="SymbolComment">""</v>
+                                                      <v n="Address">""</v>
+                                                      <o n="Flags" t="Flags">
+                                                        <v n="Flags">0</v>
+                                                        <v n="Fixed">false</v>
+                                                        <v n="Extensible">false</v>
+                                                      </o>
+                                                      <v n="LValue">false</v>
+                                                      <v n="Boolean">false</v>
+                                                      <v n="IsInstance">false</v>
+                                                      <v n="Id">21L</v>
+                                                    </o>
+                                                    <v n="Id">20L</v>
+                                                  </o>
+                                                </l2>
+                                                <o n="InputParam" t="ParamList">
+                                                  <l2 n="Names" />
+                                                  <l2 n="Types" />
+                                                </o>
+                                                <o n="OutputParam" t="ParamList">
+                                                  <l2 n="Names" cet="String">
+                                                    <v></v>
+                                                  </l2>
+                                                  <l2 n="Types" cet="String">
+                                                    <v>BOOL</v>
+                                                  </l2>
+                                                </o>
+                                                <v n="CallType" t="Operator">Eq</v>
+                                                <v n="EN">false</v>
+                                                <v n="ENO">false</v>
+                                                <n n="STSnippet" />
+                                                <v n="ContainsExtensibleInputs">false</v>
+                                                <v n="ProvidesSTSnippet">false</v>
+                                                <v n="Id">17L</v>
+                                              </o>
+                                            </l2>
+                                            <o n="InputParam" t="ParamList">
+                                              <l2 n="Names" cet="String">
+                                                <v>CLK</v>
+                                              </l2>
+                                              <l2 n="Types" cet="String">
+                                                <v>BOOL</v>
+                                              </l2>
+                                            </o>
+                                            <o n="OutputParam" t="ParamList">
+                                              <l2 n="Names" cet="String">
+                                                <v>Q</v>
+                                              </l2>
+                                              <l2 n="Types" cet="String">
+                                                <v>BOOL</v>
+                                              </l2>
+                                            </o>
+                                            <v n="CallType" t="Operator">FunctionBlock</v>
+                                            <v n="EN">false</v>
+                                            <v n="ENO">false</v>
+                                            <n n="STSnippet" />
+                                            <v n="ContainsExtensibleInputs">false</v>
+                                            <v n="ProvidesSTSnippet">false</v>
+                                            <v n="Id">15L</v>
+                                          </o>
+                                          <o>
+                                            <v n="BoxType">"R_TRIG"</v>
+                                            <o n="Instance" t="Operand">
+                                              <v n="Operand">"R_TRIG_92"</v>
+                                              <v n="Type">"R_TRIG"</v>
+                                              <v n="Comment">""</v>
+                                              <v n="SymbolComment">""</v>
+                                              <v n="Address">""</v>
+                                              <o n="Flags" t="Flags">
+                                                <v n="Flags">0</v>
+                                                <v n="Fixed">false</v>
+                                                <v n="Extensible">false</v>
+                                              </o>
+                                              <v n="LValue">false</v>
+                                              <v n="Boolean">false</v>
+                                              <v n="IsInstance">true</v>
+                                              <v n="Id">22L</v>
+                                            </o>
+                                            <o n="OutputItems" t="OutputItemList">
+                                              <l2 n="OutputItems">
+                                                <n />
+                                              </l2>
+                                            </o>
+                                            <o n="Flags" t="Flags">
+                                              <v n="Flags">0</v>
+                                              <v n="Fixed">false</v>
+                                              <v n="Extensible">false</v>
+                                            </o>
+                                            <n n="InputFlags" />
+                                            <l2 n="InputItems" cet="BoxTreeBox">
+                                              <o>
+                                                <v n="BoxType">"EQ"</v>
+                                                <o n="Instance" t="Operand">
+                                                  <n n="Operand" />
+                                                  <v n="Type">""</v>
+                                                  <v n="Comment">""</v>
+                                                  <v n="SymbolComment">""</v>
+                                                  <v n="Address">""</v>
+                                                  <o n="Flags" t="Flags">
+                                                    <v n="Flags">0</v>
+                                                    <v n="Fixed">false</v>
+                                                    <v n="Extensible">false</v>
+                                                  </o>
+                                                  <v n="LValue">false</v>
+                                                  <v n="Boolean">false</v>
+                                                  <v n="IsInstance">true</v>
+                                                  <v n="Id">24L</v>
+                                                </o>
+                                                <o n="OutputItems" t="OutputItemList">
+                                                  <l2 n="OutputItems">
+                                                    <n />
+                                                  </l2>
+                                                </o>
+                                                <o n="Flags" t="Flags">
+                                                  <v n="Flags">0</v>
+                                                  <v n="Fixed">false</v>
+                                                  <v n="Extensible">false</v>
+                                                </o>
+                                                <n n="InputFlags" />
+                                                <l2 n="InputItems" cet="BoxTreeOperand">
+                                                  <o>
+                                                    <o n="Operand" t="Operand">
+                                                      <v n="Operand">"iStepCrossCut"</v>
+                                                      <v n="Type">"INT"</v>
+                                                      <v n="Comment">""</v>
+                                                      <v n="SymbolComment">""</v>
+                                                      <v n="Address">""</v>
+                                                      <o n="Flags" t="Flags">
+                                                        <v n="Flags">0</v>
+                                                        <v n="Fixed">false</v>
+                                                        <v n="Extensible">false</v>
+                                                      </o>
+                                                      <v n="LValue">false</v>
+                                                      <v n="Boolean">false</v>
+                                                      <v n="IsInstance">false</v>
+                                                      <v n="Id">27L</v>
+                                                    </o>
+                                                    <v n="Id">26L</v>
+                                                  </o>
+                                                  <o>
+                                                    <o n="Operand" t="Operand">
+                                                      <v n="Operand">"20"</v>
+                                                      <v n="Type">"INT"</v>
+                                                      <v n="Comment">""</v>
+                                                      <v n="SymbolComment">""</v>
+                                                      <v n="Address">""</v>
+                                                      <o n="Flags" t="Flags">
+                                                        <v n="Flags">0</v>
+                                                        <v n="Fixed">false</v>
+                                                        <v n="Extensible">false</v>
+                                                      </o>
+                                                      <v n="LValue">false</v>
+                                                      <v n="Boolean">false</v>
+                                                      <v n="IsInstance">false</v>
+                                                      <v n="Id">29L</v>
+                                                    </o>
+                                                    <v n="Id">28L</v>
+                                                  </o>
+                                                </l2>
+                                                <o n="InputParam" t="ParamList">
+                                                  <l2 n="Names" />
+                                                  <l2 n="Types" />
+                                                </o>
+                                                <o n="OutputParam" t="ParamList">
+                                                  <l2 n="Names" cet="String">
+                                                    <v></v>
+                                                  </l2>
+                                                  <l2 n="Types" cet="String">
+                                                    <v>BOOL</v>
+                                                  </l2>
+                                                </o>
+                                                <v n="CallType" t="Operator">Eq</v>
+                                                <v n="EN">false</v>
+                                                <v n="ENO">false</v>
+                                                <n n="STSnippet" />
+                                                <v n="ContainsExtensibleInputs">false</v>
+                                                <v n="ProvidesSTSnippet">false</v>
+                                                <v n="Id">25L</v>
+                                              </o>
+                                            </l2>
+                                            <o n="InputParam" t="ParamList">
+                                              <l2 n="Names" cet="String">
+                                                <v>CLK</v>
+                                              </l2>
+                                              <l2 n="Types" cet="String">
+                                                <v>BOOL</v>
+                                              </l2>
+                                            </o>
+                                            <o n="OutputParam" t="ParamList">
+                                              <l2 n="Names" cet="String">
+                                                <v>Q</v>
+                                              </l2>
+                                              <l2 n="Types" cet="String">
+                                                <v>BOOL</v>
+                                              </l2>
+                                            </o>
+                                            <v n="CallType" t="Operator">FunctionBlock</v>
+                                            <v n="EN">false</v>
+                                            <v n="ENO">false</v>
+                                            <n n="STSnippet" />
+                                            <v n="ContainsExtensibleInputs">false</v>
+                                            <v n="ProvidesSTSnippet">false</v>
+                                            <v n="Id">23L</v>
+                                          </o>
+                                          <o>
+                                            <v n="BoxType">"R_TRIG"</v>
+                                            <o n="Instance" t="Operand">
+                                              <v n="Operand">"R_TRIG_93"</v>
+                                              <v n="Type">"R_TRIG"</v>
+                                              <v n="Comment">""</v>
+                                              <v n="SymbolComment">""</v>
+                                              <v n="Address">""</v>
+                                              <o n="Flags" t="Flags">
+                                                <v n="Flags">0</v>
+                                                <v n="Fixed">false</v>
+                                                <v n="Extensible">false</v>
+                                              </o>
+                                              <v n="LValue">false</v>
+                                              <v n="Boolean">false</v>
+                                              <v n="IsInstance">true</v>
+                                              <v n="Id">30L</v>
+                                            </o>
+                                            <o n="OutputItems" t="OutputItemList">
+                                              <l2 n="OutputItems">
+                                                <n />
+                                              </l2>
+                                            </o>
+                                            <o n="Flags" t="Flags">
+                                              <v n="Flags">0</v>
+                                              <v n="Fixed">false</v>
+                                              <v n="Extensible">false</v>
+                                            </o>
+                                            <n n="InputFlags" />
+                                            <l2 n="InputItems" cet="BoxTreeBox">
+                                              <o>
+                                                <v n="BoxType">"EQ"</v>
+                                                <o n="Instance" t="Operand">
+                                                  <n n="Operand" />
+                                                  <v n="Type">""</v>
+                                                  <v n="Comment">""</v>
+                                                  <v n="SymbolComment">""</v>
+                                                  <v n="Address">""</v>
+                                                  <o n="Flags" t="Flags">
+                                                    <v n="Flags">0</v>
+                                                    <v n="Fixed">false</v>
+                                                    <v n="Extensible">false</v>
+                                                  </o>
+                                                  <v n="LValue">false</v>
+                                                  <v n="Boolean">false</v>
+                                                  <v n="IsInstance">true</v>
+                                                  <v n="Id">32L</v>
+                                                </o>
+                                                <o n="OutputItems" t="OutputItemList">
+                                                  <l2 n="OutputItems">
+                                                    <n />
+                                                  </l2>
+                                                </o>
+                                                <o n="Flags" t="Flags">
+                                                  <v n="Flags">0</v>
+                                                  <v n="Fixed">false</v>
+                                                  <v n="Extensible">false</v>
+                                                </o>
+                                                <n n="InputFlags" />
+                                                <l2 n="InputItems" cet="BoxTreeOperand">
+                                                  <o>
+                                                    <o n="Operand" t="Operand">
+                                                      <v n="Operand">"iStepCrossCut"</v>
+                                                      <v n="Type">"INT"</v>
+                                                      <v n="Comment">""</v>
+                                                      <v n="SymbolComment">""</v>
+                                                      <v n="Address">""</v>
+                                                      <o n="Flags" t="Flags">
+                                                        <v n="Flags">0</v>
+                                                        <v n="Fixed">false</v>
+                                                        <v n="Extensible">false</v>
+                                                      </o>
+                                                      <v n="LValue">false</v>
+                                                      <v n="Boolean">false</v>
+                                                      <v n="IsInstance">false</v>
+                                                      <v n="Id">35L</v>
+                                                    </o>
+                                                    <v n="Id">34L</v>
+                                                  </o>
+                                                  <o>
+                                                    <o n="Operand" t="Operand">
+                                                      <v n="Operand">"30"</v>
+                                                      <v n="Type">"INT"</v>
+                                                      <v n="Comment">""</v>
+                                                      <v n="SymbolComment">""</v>
+                                                      <v n="Address">""</v>
+                                                      <o n="Flags" t="Flags">
+                                                        <v n="Flags">0</v>
+                                                        <v n="Fixed">false</v>
+                                                        <v n="Extensible">false</v>
+                                                      </o>
+                                                      <v n="LValue">false</v>
+                                                      <v n="Boolean">false</v>
+                                                      <v n="IsInstance">false</v>
+                                                      <v n="Id">37L</v>
+                                                    </o>
+                                                    <v n="Id">36L</v>
+                                                  </o>
+                                                </l2>
+                                                <o n="InputParam" t="ParamList">
+                                                  <l2 n="Names" />
+                                                  <l2 n="Types" />
+                                                </o>
+                                                <o n="OutputParam" t="ParamList">
+                                                  <l2 n="Names" cet="String">
+                                                    <v></v>
+                                                  </l2>
+                                                  <l2 n="Types" cet="String">
+                                                    <v>BOOL</v>
+                                                  </l2>
+                                                </o>
+                                                <v n="CallType" t="Operator">Eq</v>
+                                                <v n="EN">false</v>
+                                                <v n="ENO">false</v>
+                                                <n n="STSnippet" />
+                                                <v n="ContainsExtensibleInputs">false</v>
+                                                <v n="ProvidesSTSnippet">false</v>
+                                                <v n="Id">33L</v>
+                                              </o>
+                                            </l2>
+                                            <o n="InputParam" t="ParamList">
+                                              <l2 n="Names" cet="String">
+                                                <v>CLK</v>
+                                              </l2>
+                                              <l2 n="Types" cet="String">
+                                                <v>BOOL</v>
+                                              </l2>
+                                            </o>
+                                            <o n="OutputParam" t="ParamList">
+                                              <l2 n="Names" cet="String">
+                                                <v>Q</v>
+                                              </l2>
+                                              <l2 n="Types" cet="String">
+                                                <v>BOOL</v>
+                                              </l2>
+                                            </o>
+                                            <v n="CallType" t="Operator">FunctionBlock</v>
+                                            <v n="EN">false</v>
+                                            <v n="ENO">false</v>
+                                            <n n="STSnippet" />
+                                            <v n="ContainsExtensibleInputs">false</v>
+                                            <v n="ProvidesSTSnippet">false</v>
+                                            <v n="Id">31L</v>
+                                          </o>
+                                          <o>
+                                            <v n="BoxType">"R_TRIG"</v>
+                                            <o n="Instance" t="Operand">
+                                              <v n="Operand">"R_TRIG_94"</v>
+                                              <v n="Type">"R_TRIG"</v>
+                                              <v n="Comment">""</v>
+                                              <v n="SymbolComment">""</v>
+                                              <v n="Address">""</v>
+                                              <o n="Flags" t="Flags">
+                                                <v n="Flags">0</v>
+                                                <v n="Fixed">false</v>
+                                                <v n="Extensible">false</v>
+                                              </o>
+                                              <v n="LValue">false</v>
+                                              <v n="Boolean">false</v>
+                                              <v n="IsInstance">true</v>
+                                              <v n="Id">38L</v>
+                                            </o>
+                                            <o n="OutputItems" t="OutputItemList">
+                                              <l2 n="OutputItems">
+                                                <n />
+                                              </l2>
+                                            </o>
+                                            <o n="Flags" t="Flags">
+                                              <v n="Flags">0</v>
+                                              <v n="Fixed">false</v>
+                                              <v n="Extensible">false</v>
+                                            </o>
+                                            <n n="InputFlags" />
+                                            <l2 n="InputItems" cet="BoxTreeBox">
+                                              <o>
+                                                <v n="BoxType">"EQ"</v>
+                                                <o n="Instance" t="Operand">
+                                                  <n n="Operand" />
+                                                  <v n="Type">""</v>
+                                                  <v n="Comment">""</v>
+                                                  <v n="SymbolComment">""</v>
+                                                  <v n="Address">""</v>
+                                                  <o n="Flags" t="Flags">
+                                                    <v n="Flags">0</v>
+                                                    <v n="Fixed">false</v>
+                                                    <v n="Extensible">false</v>
+                                                  </o>
+                                                  <v n="LValue">false</v>
+                                                  <v n="Boolean">false</v>
+                                                  <v n="IsInstance">true</v>
+                                                  <v n="Id">40L</v>
+                                                </o>
+                                                <o n="OutputItems" t="OutputItemList">
+                                                  <l2 n="OutputItems">
+                                                    <n />
+                                                  </l2>
+                                                </o>
+                                                <o n="Flags" t="Flags">
+                                                  <v n="Flags">0</v>
+                                                  <v n="Fixed">false</v>
+                                                  <v n="Extensible">false</v>
+                                                </o>
+                                                <n n="InputFlags" />
+                                                <l2 n="InputItems" cet="BoxTreeOperand">
+                                                  <o>
+                                                    <o n="Operand" t="Operand">
+                                                      <v n="Operand">"iStepCrossCut"</v>
+                                                      <v n="Type">"INT"</v>
+                                                      <v n="Comment">""</v>
+                                                      <v n="SymbolComment">""</v>
+                                                      <v n="Address">""</v>
+                                                      <o n="Flags" t="Flags">
+                                                        <v n="Flags">0</v>
+                                                        <v n="Fixed">false</v>
+                                                        <v n="Extensible">false</v>
+                                                      </o>
+                                                      <v n="LValue">false</v>
+                                                      <v n="Boolean">false</v>
+                                                      <v n="IsInstance">false</v>
+                                                      <v n="Id">43L</v>
+                                                    </o>
+                                                    <v n="Id">42L</v>
+                                                  </o>
+                                                  <o>
+                                                    <o n="Operand" t="Operand">
+                                                      <v n="Operand">"40"</v>
+                                                      <v n="Type">"INT"</v>
+                                                      <v n="Comment">""</v>
+                                                      <v n="SymbolComment">""</v>
+                                                      <v n="Address">""</v>
+                                                      <o n="Flags" t="Flags">
+                                                        <v n="Flags">0</v>
+                                                        <v n="Fixed">false</v>
+                                                        <v n="Extensible">false</v>
+                                                      </o>
+                                                      <v n="LValue">false</v>
+                                                      <v n="Boolean">false</v>
+                                                      <v n="IsInstance">false</v>
+                                                      <v n="Id">45L</v>
+                                                    </o>
+                                                    <v n="Id">44L</v>
+                                                  </o>
+                                                </l2>
+                                                <o n="InputParam" t="ParamList">
+                                                  <l2 n="Names" />
+                                                  <l2 n="Types" />
+                                                </o>
+                                                <o n="OutputParam" t="ParamList">
+                                                  <l2 n="Names" cet="String">
+                                                    <v></v>
+                                                  </l2>
+                                                  <l2 n="Types" cet="String">
+                                                    <v>BOOL</v>
+                                                  </l2>
+                                                </o>
+                                                <v n="CallType" t="Operator">Eq</v>
+                                                <v n="EN">false</v>
+                                                <v n="ENO">false</v>
+                                                <n n="STSnippet" />
+                                                <v n="ContainsExtensibleInputs">false</v>
+                                                <v n="ProvidesSTSnippet">false</v>
+                                                <v n="Id">41L</v>
+                                              </o>
+                                            </l2>
+                                            <o n="InputParam" t="ParamList">
+                                              <l2 n="Names" cet="String">
+                                                <v>CLK</v>
+                                              </l2>
+                                              <l2 n="Types" cet="String">
+                                                <v>BOOL</v>
+                                              </l2>
+                                            </o>
+                                            <o n="OutputParam" t="ParamList">
+                                              <l2 n="Names" cet="String">
+                                                <v>Q</v>
+                                              </l2>
+                                              <l2 n="Types" cet="String">
+                                                <v>BOOL</v>
+                                              </l2>
+                                            </o>
+                                            <v n="CallType" t="Operator">FunctionBlock</v>
+                                            <v n="EN">false</v>
+                                            <v n="ENO">false</v>
+                                            <n n="STSnippet" />
+                                            <v n="ContainsExtensibleInputs">false</v>
+                                            <v n="ProvidesSTSnippet">false</v>
+                                            <v n="Id">39L</v>
+                                          </o>
+                                          <o>
+                                            <v n="BoxType">"R_TRIG"</v>
+                                            <o n="Instance" t="Operand">
+                                              <v n="Operand">"R_TRIG_95"</v>
+                                              <v n="Type">"R_TRIG"</v>
+                                              <v n="Comment">""</v>
+                                              <v n="SymbolComment">""</v>
+                                              <v n="Address">""</v>
+                                              <o n="Flags" t="Flags">
+                                                <v n="Flags">0</v>
+                                                <v n="Fixed">false</v>
+                                                <v n="Extensible">false</v>
+                                              </o>
+                                              <v n="LValue">false</v>
+                                              <v n="Boolean">false</v>
+                                              <v n="IsInstance">true</v>
+                                              <v n="Id">46L</v>
+                                            </o>
+                                            <o n="OutputItems" t="OutputItemList">
+                                              <l2 n="OutputItems">
+                                                <n />
+                                              </l2>
+                                            </o>
+                                            <o n="Flags" t="Flags">
+                                              <v n="Flags">0</v>
+                                              <v n="Fixed">false</v>
+                                              <v n="Extensible">false</v>
+                                            </o>
+                                            <n n="InputFlags" />
+                                            <l2 n="InputItems" cet="BoxTreeBox">
+                                              <o>
+                                                <v n="BoxType">"EQ"</v>
+                                                <o n="Instance" t="Operand">
+                                                  <n n="Operand" />
+                                                  <v n="Type">""</v>
+                                                  <v n="Comment">""</v>
+                                                  <v n="SymbolComment">""</v>
+                                                  <v n="Address">""</v>
+                                                  <o n="Flags" t="Flags">
+                                                    <v n="Flags">0</v>
+                                                    <v n="Fixed">false</v>
+                                                    <v n="Extensible">false</v>
+                                                  </o>
+                                                  <v n="LValue">false</v>
+                                                  <v n="Boolean">false</v>
+                                                  <v n="IsInstance">true</v>
+                                                  <v n="Id">48L</v>
+                                                </o>
+                                                <o n="OutputItems" t="OutputItemList">
+                                                  <l2 n="OutputItems">
+                                                    <n />
+                                                  </l2>
+                                                </o>
+                                                <o n="Flags" t="Flags">
+                                                  <v n="Flags">0</v>
+                                                  <v n="Fixed">false</v>
+                                                  <v n="Extensible">false</v>
+                                                </o>
+                                                <n n="InputFlags" />
+                                                <l2 n="InputItems" cet="BoxTreeOperand">
+                                                  <o>
+                                                    <o n="Operand" t="Operand">
+                                                      <v n="Operand">"iStepCrossCut"</v>
+                                                      <v n="Type">"INT"</v>
+                                                      <v n="Comment">""</v>
+                                                      <v n="SymbolComment">""</v>
+                                                      <v n="Address">""</v>
+                                                      <o n="Flags" t="Flags">
+                                                        <v n="Flags">0</v>
+                                                        <v n="Fixed">false</v>
+                                                        <v n="Extensible">false</v>
+                                                      </o>
+                                                      <v n="LValue">false</v>
+                                                      <v n="Boolean">false</v>
+                                                      <v n="IsInstance">false</v>
+                                                      <v n="Id">51L</v>
+                                                    </o>
+                                                    <v n="Id">50L</v>
+                                                  </o>
+                                                  <o>
+                                                    <o n="Operand" t="Operand">
+                                                      <v n="Operand">"50"</v>
+                                                      <v n="Type">"INT"</v>
+                                                      <v n="Comment">""</v>
+                                                      <v n="SymbolComment">""</v>
+                                                      <v n="Address">""</v>
+                                                      <o n="Flags" t="Flags">
+                                                        <v n="Flags">0</v>
+                                                        <v n="Fixed">false</v>
+                                                        <v n="Extensible">false</v>
+                                                      </o>
+                                                      <v n="LValue">false</v>
+                                                      <v n="Boolean">false</v>
+                                                      <v n="IsInstance">false</v>
+                                                      <v n="Id">53L</v>
+                                                    </o>
+                                                    <v n="Id">52L</v>
+                                                  </o>
+                                                </l2>
+                                                <o n="InputParam" t="ParamList">
+                                                  <l2 n="Names" />
+                                                  <l2 n="Types" />
+                                                </o>
+                                                <o n="OutputParam" t="ParamList">
+                                                  <l2 n="Names" cet="String">
+                                                    <v></v>
+                                                  </l2>
+                                                  <l2 n="Types" cet="String">
+                                                    <v>BOOL</v>
+                                                  </l2>
+                                                </o>
+                                                <v n="CallType" t="Operator">Eq</v>
+                                                <v n="EN">false</v>
+                                                <v n="ENO">false</v>
+                                                <n n="STSnippet" />
+                                                <v n="ContainsExtensibleInputs">false</v>
+                                                <v n="ProvidesSTSnippet">false</v>
+                                                <v n="Id">49L</v>
+                                              </o>
+                                            </l2>
+                                            <o n="InputParam" t="ParamList">
+                                              <l2 n="Names" cet="String">
+                                                <v>CLK</v>
+                                              </l2>
+                                              <l2 n="Types" cet="String">
+                                                <v>BOOL</v>
+                                              </l2>
+                                            </o>
+                                            <o n="OutputParam" t="ParamList">
+                                              <l2 n="Names" cet="String">
+                                                <v>Q</v>
+                                              </l2>
+                                              <l2 n="Types" cet="String">
+                                                <v>BOOL</v>
+                                              </l2>
+                                            </o>
+                                            <v n="CallType" t="Operator">FunctionBlock</v>
+                                            <v n="EN">false</v>
+                                            <v n="ENO">false</v>
+                                            <n n="STSnippet" />
+                                            <v n="ContainsExtensibleInputs">false</v>
+                                            <v n="ProvidesSTSnippet">false</v>
+                                            <v n="Id">47L</v>
+                                          </o>
+                                        </l2>
+                                        <o n="InputParam" t="ParamList">
+                                          <l2 n="Names" />
+                                          <l2 n="Types" />
+                                        </o>
+                                        <o n="OutputParam" t="ParamList">
+                                          <l2 n="Names" cet="String">
+                                            <v></v>
+                                          </l2>
+                                          <l2 n="Types" cet="String">
+                                            <v>BOOL</v>
+                                          </l2>
+                                        </o>
+                                        <v n="CallType" t="Operator">Or</v>
+                                        <v n="EN">false</v>
+                                        <v n="ENO">false</v>
+                                        <n n="STSnippet" />
+                                        <v n="ContainsExtensibleInputs">false</v>
+                                        <v n="ProvidesSTSnippet">false</v>
+                                        <v n="Id">13L</v>
+                                      </o>
+                                      <o>
+                                        <v n="BoxType">"OR"</v>
+                                        <o n="Instance" t="Operand">
+                                          <n n="Operand" />
+                                          <v n="Type">""</v>
+                                          <v n="Comment">""</v>
+                                          <v n="SymbolComment">""</v>
+                                          <v n="Address">""</v>
+                                          <o n="Flags" t="Flags">
+                                            <v n="Flags">0</v>
+                                            <v n="Fixed">false</v>
+                                            <v n="Extensible">false</v>
+                                          </o>
+                                          <v n="LValue">false</v>
+                                          <v n="Boolean">false</v>
+                                          <v n="IsInstance">true</v>
+                                          <v n="Id">54L</v>
+                                        </o>
+                                        <o n="OutputItems" t="OutputItemList">
+                                          <l2 n="OutputItems">
+                                            <n />
+                                          </l2>
+                                        </o>
+                                        <o n="Flags" t="Flags">
+                                          <v n="Flags">0</v>
+                                          <v n="Fixed">false</v>
+                                          <v n="Extensible">false</v>
+                                        </o>
+                                        <l2 n="InputFlags" cet="Flags">
+                                          <o>
+                                            <v n="Flags">1</v>
+                                            <v n="Fixed">true</v>
+                                            <v n="Extensible">false</v>
+                                          </o>
+                                          <o>
+                                            <v n="Flags">0</v>
+                                            <v n="Fixed">false</v>
+                                            <v n="Extensible">false</v>
+                                          </o>
+                                          <o>
+                                            <v n="Flags">0</v>
+                                            <v n="Fixed">false</v>
+                                            <v n="Extensible">false</v>
+                                          </o>
+                                        </l2>
+                                        <l2 n="InputItems">
+                                          <o t="BoxTreeOperand">
+                                            <o n="Operand" t="Operand">
+                                              <v n="Operand">"bSafetyOK"</v>
+                                              <v n="Type">"BOOL"</v>
+                                              <v n="Comment">""</v>
+                                              <v n="SymbolComment">""</v>
+                                              <v n="Address">""</v>
+                                              <o n="Flags" t="Flags">
+                                                <v n="Flags">0</v>
+                                                <v n="Fixed">false</v>
+                                                <v n="Extensible">false</v>
+                                              </o>
+                                              <v n="LValue">false</v>
+                                              <v n="Boolean">false</v>
+                                              <v n="IsInstance">false</v>
+                                              <v n="Id">57L</v>
+                                            </o>
+                                            <v n="Id">56L</v>
+                                          </o>
+                                          <o t="BoxTreeOperand">
+                                            <o n="Operand" t="Operand">
+                                              <v n="Operand">"IN_FaultReset"</v>
+                                              <v n="Type">"BOOL"</v>
+                                              <v n="Comment">""</v>
+                                              <v n="SymbolComment">""</v>
+                                              <v n="Address">""</v>
+                                              <o n="Flags" t="Flags">
+                                                <v n="Flags">0</v>
+                                                <v n="Fixed">false</v>
+                                                <v n="Extensible">false</v>
+                                              </o>
+                                              <v n="LValue">false</v>
+                                              <v n="Boolean">false</v>
+                                              <v n="IsInstance">false</v>
+                                              <v n="Id">59L</v>
+                                            </o>
+                                            <v n="Id">58L</v>
+                                          </o>
+                                          <o t="BoxTreeBox">
+                                            <v n="BoxType">"R_TRIG"</v>
+                                            <o n="Instance" t="Operand">
+                                              <v n="Operand">"R_TRIG_96"</v>
+                                              <v n="Type">"R_TRIG"</v>
+                                              <v n="Comment">""</v>
+                                              <v n="SymbolComment">""</v>
+                                              <v n="Address">""</v>
+                                              <o n="Flags" t="Flags">
+                                                <v n="Flags">0</v>
+                                                <v n="Fixed">false</v>
+                                                <v n="Extensible">false</v>
+                                              </o>
+                                              <v n="LValue">false</v>
+                                              <v n="Boolean">false</v>
+                                              <v n="IsInstance">true</v>
+                                              <v n="Id">60L</v>
+                                            </o>
+                                            <o n="OutputItems" t="OutputItemList">
+                                              <l2 n="OutputItems">
+                                                <n />
+                                              </l2>
+                                            </o>
+                                            <o n="Flags" t="Flags">
+                                              <v n="Flags">0</v>
+                                              <v n="Fixed">false</v>
+                                              <v n="Extensible">false</v>
+                                            </o>
+                                            <n n="InputFlags" />
+                                            <l2 n="InputItems" cet="BoxTreeOperand">
+                                              <o>
+                                                <o n="Operand" t="Operand">
+                                                  <v n="Operand">"bWatchdogReset"</v>
+                                                  <v n="Type">"BOOL"</v>
+                                                  <v n="Comment">""</v>
+                                                  <v n="SymbolComment">""</v>
+                                                  <v n="Address">""</v>
+                                                  <o n="Flags" t="Flags">
+                                                    <v n="Flags">0</v>
+                                                    <v n="Fixed">false</v>
+                                                    <v n="Extensible">false</v>
+                                                  </o>
+                                                  <v n="LValue">false</v>
+                                                  <v n="Boolean">false</v>
+                                                  <v n="IsInstance">false</v>
+                                                  <v n="Id">63L</v>
+                                                </o>
+                                                <v n="Id">62L</v>
+                                              </o>
+                                            </l2>
+                                            <o n="InputParam" t="ParamList">
+                                              <l2 n="Names" cet="String">
+                                                <v>CLK</v>
+                                              </l2>
+                                              <l2 n="Types" cet="String">
+                                                <v>BOOL</v>
+                                              </l2>
+                                            </o>
+                                            <o n="OutputParam" t="ParamList">
+                                              <l2 n="Names" cet="String">
+                                                <v>Q</v>
+                                              </l2>
+                                              <l2 n="Types" cet="String">
+                                                <v>BOOL</v>
+                                              </l2>
+                                            </o>
+                                            <v n="CallType" t="Operator">FunctionBlock</v>
+                                            <v n="EN">false</v>
+                                            <v n="ENO">false</v>
+                                            <n n="STSnippet" />
+                                            <v n="ContainsExtensibleInputs">false</v>
+                                            <v n="ProvidesSTSnippet">false</v>
+                                            <v n="Id">61L</v>
+                                          </o>
+                                        </l2>
+                                        <o n="InputParam" t="ParamList">
+                                          <l2 n="Names" />
+                                          <l2 n="Types" />
+                                        </o>
+                                        <o n="OutputParam" t="ParamList">
+                                          <l2 n="Names" cet="String">
+                                            <v></v>
+                                          </l2>
+                                          <l2 n="Types" cet="String">
+                                            <v>BOOL</v>
+                                          </l2>
+                                        </o>
+                                        <v n="CallType" t="Operator">Or</v>
+                                        <v n="EN">false</v>
+                                        <v n="ENO">false</v>
+                                        <n n="STSnippet" />
+                                        <v n="ContainsExtensibleInputs">false</v>
+                                        <v n="ProvidesSTSnippet">false</v>
+                                        <v n="Id">55L</v>
+                                      </o>
+                                    </l2>
+                                    <o n="InputParam" t="ParamList">
+                                      <l2 n="Names" cet="String">
+                                        <v>SET1</v>
+                                        <v>RESET</v>
+                                      </l2>
+                                      <l2 n="Types" cet="String">
+                                        <v>BOOL</v>
+                                        <v>BOOL</v>
+                                      </l2>
+                                    </o>
+                                    <o n="OutputParam" t="ParamList">
+                                      <l2 n="Names" cet="String">
+                                        <v>Q1</v>
+                                      </l2>
+                                      <l2 n="Types" cet="String">
+                                        <v>BOOL</v>
+                                      </l2>
+                                    </o>
+                                    <v n="CallType" t="Operator">FunctionBlock</v>
+                                    <v n="EN">false</v>
+                                    <v n="ENO">false</v>
+                                    <n n="STSnippet" />
+                                    <v n="ContainsExtensibleInputs">false</v>
+                                    <v n="ProvidesSTSnippet">false</v>
+                                    <v n="Id">11L</v>
+                                  </o>
+                                  <o t="BoxTreeOperand">
+                                    <o n="Operand" t="Operand">
+                                      <v n="Operand">"T#2m"</v>
+                                      <v n="Type">"TIME"</v>
+                                      <v n="Comment">""</v>
+                                      <v n="SymbolComment">""</v>
+                                      <v n="Address">""</v>
+                                      <o n="Flags" t="Flags">
+                                        <v n="Flags">0</v>
+                                        <v n="Fixed">false</v>
+                                        <v n="Extensible">false</v>
+                                      </o>
+                                      <v n="LValue">false</v>
+                                      <v n="Boolean">false</v>
+                                      <v n="IsInstance">false</v>
+                                      <v n="Id">65L</v>
+                                    </o>
+                                    <v n="Id">64L</v>
+                                  </o>
+                                </l2>
+                                <o n="InputParam" t="ParamList">
+                                  <l2 n="Names" cet="String">
+                                    <v>IN</v>
+                                    <v>PT</v>
+                                  </l2>
+                                  <l2 n="Types" cet="String">
+                                    <v>BOOL</v>
+                                    <v>TIME</v>
+                                  </l2>
+                                </o>
+                                <o n="OutputParam" t="ParamList">
+                                  <l2 n="Names" cet="String">
+                                    <v>Q</v>
+                                    <v>ET</v>
+                                  </l2>
+                                  <l2 n="Types" cet="String">
+                                    <v>BOOL</v>
+                                    <v>TIME</v>
+                                  </l2>
+                                </o>
+                                <v n="CallType" t="Operator">FunctionBlock</v>
+                                <v n="EN">false</v>
+                                <v n="ENO">false</v>
+                                <n n="STSnippet" />
+                                <v n="ContainsExtensibleInputs">false</v>
+                                <v n="ProvidesSTSnippet">false</v>
+                                <v n="Id">8L</v>
+                              </o>
+                            </l2>
+                            <o n="InputParam" t="ParamList">
+                              <l2 n="Names" cet="String">
+                                <v>CLK</v>
+                              </l2>
+                              <l2 n="Types" cet="String">
+                                <v>BOOL</v>
+                              </l2>
+                            </o>
+                            <o n="OutputParam" t="ParamList">
+                              <l2 n="Names" cet="String">
+                                <v>Q</v>
+                              </l2>
+                              <l2 n="Types" cet="String">
+                                <v>BOOL</v>
+                              </l2>
+                            </o>
+                            <v n="CallType" t="Operator">FunctionBlock</v>
+                            <v n="EN">false</v>
+                            <v n="ENO">false</v>
+                            <n n="STSnippet" />
+                            <v n="ContainsExtensibleInputs">false</v>
+                            <v n="ProvidesSTSnippet">false</v>
+                            <v n="Id">6L</v>
+                          </o>
+                          <o t="BoxTreeOperand">
+                            <o n="Operand" t="Operand">
+                              <v n="Operand">"IN_FaultReset"</v>
+                              <v n="Type">"BOOL"</v>
+                              <v n="Comment">""</v>
+                              <v n="SymbolComment">""</v>
+                              <v n="Address">""</v>
+                              <o n="Flags" t="Flags">
+                                <v n="Flags">0</v>
+                                <v n="Fixed">false</v>
+                                <v n="Extensible">false</v>
+                              </o>
+                              <v n="LValue">false</v>
+                              <v n="Boolean">false</v>
+                              <v n="IsInstance">false</v>
+                              <v n="Id">67L</v>
+                            </o>
+                            <v n="Id">66L</v>
+                          </o>
+                        </l2>
+                        <o n="InputParam" t="ParamList">
+                          <l2 n="Names" cet="String">
+                            <v>SET1</v>
+                            <v>RESET</v>
+                          </l2>
+                          <l2 n="Types" cet="String">
+                            <v>BOOL</v>
+                            <v>BOOL</v>
+                          </l2>
+                        </o>
+                        <o n="OutputParam" t="ParamList">
+                          <l2 n="Names" cet="String">
+                            <v>Q1</v>
+                          </l2>
+                          <l2 n="Types" cet="String">
+                            <v>BOOL</v>
+                          </l2>
+                        </o>
+                        <v n="CallType" t="Operator">FunctionBlock</v>
+                        <v n="EN">false</v>
+                        <v n="ENO">false</v>
+                        <n n="STSnippet" />
+                        <v n="ContainsExtensibleInputs">false</v>
+                        <v n="ProvidesSTSnippet">false</v>
+                        <v n="Id">4L</v>
+                      </o>
+                    </l2>
+                    <l2 n="Connectors" />
+                    <v n="Id">2L</v>
+                  </o>
+                  <o>
+                    <v n="ILActive">false</v>
+                    <v n="FBDValid">false</v>
+                    <v n="ILValid">false</v>
+                    <l2 n="ILLines" />
+                    <v n="Comment">""</v>
+                    <v n="Title">""</v>
+                    <v n="Label">""</v>
+                    <v n="OutCommented">false</v>
+                    <l2 n="NetworkItems" />
+                    <l2 n="Connectors" />
+                    <v n="Id">1L</v>
+                  </o>
+                </l2>
+                <v n="BranchCounter">0</v>
+                <v n="ValidIds">true</v>
+              </o>
+            </Data>
+            <TypeList>
+              <Type n="Boolean">System.Boolean</Type>
+              <Type n="BoxTreeBox">{acfc6f68-8e3a-4af5-bf81-3dd512095a46}</Type>
+              <Type n="BoxTreeOperand">{9de7f100-1b87-424c-a62e-45b0cfc85ed2}</Type>
+              <Type n="Flags">{668066f2-6069-46b3-8962-8db8d13d7db2}</Type>
+              <Type n="Int32">System.Int32</Type>
+              <Type n="Int64">System.Int64</Type>
+              <Type n="Network">{d9a99d73-b633-47db-b876-a752acb25871}</Type>
+              <Type n="NWLImplementationObject">{25e509de-33d4-4447-93f8-c9e4ea381c8b}</Type>
+              <Type n="Operand">{c9b2f165-48a2-4a45-8326-3952d8a3d708}</Type>
+              <Type n="Operator">{bffb3c53-f105-4e85-aba2-e30df579d75f}</Type>
+              <Type n="OutputItemList">{f40d3e09-c02c-4522-a88c-dac23558cfc4}</Type>
+              <Type n="ParamList">{71496971-9e0c-4677-a832-b9583b571130}</Type>
+              <Type n="String">System.String</Type>
+            </TypeList>
+          </XmlArchive>
+        </NWL>
+      </Implementation>
+    </Action>
     <LineIds Name="PRG_10_CrossCutPosition">
-      <LineId Id="6" Count="16" />
+      <LineId Id="6" Count="2" />
+      <LineId Id="186" Count="3" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="10" Count="12" />
       <LineId Id="5" Count="0" />
       <LineId Id="153" Count="0" />
       <LineId Id="29" Count="0" />
@@ -143,22 +1456,47 @@ END_CASE]]></ST>
       <LineId Id="30" Count="3" />
       <LineId Id="119" Count="0" />
       <LineId Id="34" Count="4" />
+      <LineId Id="202" Count="0" />
       <LineId Id="40" Count="1" />
       <LineId Id="179" Count="0" />
       <LineId Id="168" Count="1" />
       <LineId Id="171" Count="1" />
+      <LineId Id="216" Count="0" />
       <LineId Id="170" Count="0" />
-      <LineId Id="42" Count="28" />
-      <LineId Id="141" Count="11" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="203" Count="0" />
+      <LineId Id="43" Count="2" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="46" Count="5" />
+      <LineId Id="205" Count="0" />
+      <LineId Id="52" Count="1" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="54" Count="7" />
+      <LineId Id="207" Count="0" />
+      <LineId Id="62" Count="2" />
+      <LineId Id="208" Count="0" />
+      <LineId Id="65" Count="2" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="68" Count="2" />
+      <LineId Id="141" Count="4" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="146" Count="2" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="149" Count="2" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="152" Count="0" />
       <LineId Id="139" Count="1" />
       <LineId Id="71" Count="1" />
       <LineId Id="74" Count="1" />
       <LineId Id="134" Count="0" />
+      <LineId Id="213" Count="0" />
       <LineId Id="76" Count="1" />
-      <LineId Id="135" Count="3" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="136" Count="2" />
+      <LineId Id="215" Count="0" />
       <LineId Id="80" Count="0" />
       <LineId Id="83" Count="1" />
-      <LineId Id="97" Count="15" />
       <LineId Id="28" Count="0" />
     </LineIds>
   </POU>

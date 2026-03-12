@@ -17,9 +17,12 @@
 	IN_EstopRight1	AT%I*	: BOOL ;
 	IN_EstopRight2	AT%I*	: BOOL ;
 	
-	SR_EstopPanel: SR;
-	SR_EstopLeft: SR;
-	SR_EstopRight: SR;
+	bEstopPanelErr		: BOOL ;
+	bEstopLeftErr		: BOOL ;
+	bEstopRightErr		: BOOL ;
+	
+	
+
 	
 END_VAR]]></Declaration>
   </GVL>

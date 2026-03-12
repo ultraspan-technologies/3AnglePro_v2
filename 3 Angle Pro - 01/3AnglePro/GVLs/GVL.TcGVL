@@ -193,19 +193,18 @@ VAR_GLOBAL
 	bTeachLeftTriggerOff: BOOL;
 	bTeachRightTriggerOff: BOOL;
 	
-	
 (* ########## HMI Controls ########## *)
 	bHorn: BOOL;
 	bFieldLight: BOOL;
 	bCarriageEN: BOOL;
 	bTurretEN: BOOL;
 	bLiftingPositionEnable: BOOL;
-	bHoseReel: BOOL;
-	bCableReel: BOOL;
+	bHoseReel: BOOL;		// Optional add-on
+	bCableReel: BOOL;		// Optional add-on
 	bTeachReadyLeft: BOOL;
 	bTeachReadyRight: BOOL;
 	bTeach: BOOL;
-	bRemote: BOOL;
+	bRemote: BOOL;		// Optional add-on
 	bWaterLine: BOOL;
 	bAutoCrossCutEnabled: BOOL;
 	iRipCutSpeed: INT;
@@ -236,6 +235,8 @@ VAR_GLOBAL
 	bEstopRight: BOOL;
 	bCrossCutEnabled: BOOL;
 	bAutoCrossCutReady: BOOL;
+	bSprayer: BOOL;		// Optional add-on
+	bText: BOOL;		// Placeholder variable
 
 END_VAR]]></Declaration>
   </GVL>

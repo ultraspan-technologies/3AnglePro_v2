@@ -465,7 +465,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{EC4FCDEB-9459-4E90-8A05-406BDFCA72DC}" Name="3AnglePro" PrjFilePath="3AnglePro\3AnglePro.plcproj" TmcFilePath="3AnglePro\3AnglePro.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="3AnglePro\3AnglePro.tmc" TmcHash="{902DB7E7-9EB2-496F-A81E-46E004E778D9}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="3AnglePro\3AnglePro.tmc" TmcHash="{51BC76A8-CB3E-ECFE-EE4C-F9CB84129BF4}">
 					<Name>3AnglePro Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -502,6 +502,10 @@
 							<Type GUID="{DE67163C-9E75-09C0-26C6-AA3B6E2EE067}">stPDO_SI6_OUT</Type>
 						</Var>
 						<Var>
+							<Name>.PDO_Z1ax_OUT</Name>
+							<Type GUID="{DE67163C-9E75-09C0-26C6-AA3B6E2EE067}">stPDO_SI6_OUT</Type>
+						</Var>
+						<Var>
 							<Name>.PDO_TURRETax_OUT</Name>
 							<Type GUID="{DE67163C-9E75-09C0-26C6-AA3B6E2EE067}">stPDO_SI6_OUT</Type>
 						</Var>
@@ -511,10 +515,6 @@
 						</Var>
 						<Var>
 							<Name>.PDO_XDRIVEax_OUT</Name>
-							<Type GUID="{DE67163C-9E75-09C0-26C6-AA3B6E2EE067}">stPDO_SI6_OUT</Type>
-						</Var>
-						<Var>
-							<Name>.PDO_Z1ax_OUT</Name>
 							<Type GUID="{DE67163C-9E75-09C0-26C6-AA3B6E2EE067}">stPDO_SI6_OUT</Type>
 						</Var>
 						<Var>

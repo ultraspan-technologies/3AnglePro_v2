@@ -45,16 +45,14 @@ PRG_07_ZAxis();
 PRG_08_AutoCrossCut();
 	PRG_08_AutoCrossCut.ACT_08_1_AutoCrossCut();
 PRG_09_HomePosition();
+	PRG_09_HomePosition.ACT_09_HomePosition();
 PRG_10_CrossCutPosition();
+	PRG_10_CrossCutPosition.ACT_10_CrossCutPosition();
 PRG_11_ScreenButtons();
 PRG_12_ProductionReport();
 PRG_90_GeneralConditions();
 PRG_91_TwinSAFE();
 PRG_99_Persistent();
-
-
-
-OUT_bFieldLight	:=	bFieldLight;
 
 ]]></ST>
     </Implementation>
@@ -1068,18 +1066,15 @@ OUT_bFieldLight	:=	bFieldLight;
       <LineId Id="251" Count="0" />
       <LineId Id="254" Count="0" />
       <LineId Id="252" Count="0" />
+      <LineId Id="389" Count="0" />
       <LineId Id="308" Count="0" />
+      <LineId Id="390" Count="0" />
       <LineId Id="326" Count="0" />
       <LineId Id="344" Count="0" />
       <LineId Id="359" Count="0" />
       <LineId Id="374" Count="0" />
       <LineId Id="253" Count="0" />
-      <LineId Id="113" Count="0" />
-      <LineId Id="117" Count="0" />
-      <LineId Id="186" Count="0" />
-      <LineId Id="185" Count="0" />
-      <LineId Id="188" Count="0" />
-      <LineId Id="114" Count="0" />
+      <LineId Id="113" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

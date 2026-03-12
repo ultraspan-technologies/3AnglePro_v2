@@ -28,7 +28,14 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[	IF		NOT bSafetyOK OR IN_FaultReset OR NOT OUT_bSawON OR bAnyServoError OR bMachineHoming OR bCrossCutPosition
+      <ST><![CDATA[	IF		NOT bSafetyOK 
+			OR IN_FaultReset 
+			OR NOT OUT_bSawON 
+			OR bAnyServoError 
+			OR bMachineHoming 
+			OR bCrossCutPosition 
+			OR SR_WatchdogTriggered.Q1
+			OR bRemote
 	THEN	iStep	:=	0 ;
 			bWatchdogReset := TRUE ;
 	END_IF
@@ -2980,7 +2987,9 @@ END_CASE]]></ST>
       </Implementation>
     </Action>
     <LineIds Name="PRG_08_AutoCrossCut">
-      <LineId Id="6" Count="1" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="261" Count="6" />
+      <LineId Id="7" Count="0" />
       <LineId Id="215" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="198" Count="0" />
