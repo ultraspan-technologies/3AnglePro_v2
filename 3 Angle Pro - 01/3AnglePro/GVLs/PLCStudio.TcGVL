@@ -10,6 +10,9 @@ VAR_GLOBAL
 	Errors_TwinSAFE			: TERRORS2;		(* TwinSAFE errors *)
 	Errors_AutoCycle		: TERRORS2;		(* Errors from the automatic cycles *)
 	Errors_Axes				: TERRORS2;		(* Errors from Stober drive axes *)
+	Errors_AutoCrossCut		: TERRORS2;		(* Errors Auto CrossCut time out *)
+	Errors_LiftingPosition	: TERRORS2;		(* Errors Lifting Position time out *)
+	Errors_CrossCutPosition	: TERRORS2;		(* Errors CrossCut Position time out *)
 	
 (* ########## Warnings ########## *)
 	Warnings_Saw			: TERRORS2;		(* Warnings *)

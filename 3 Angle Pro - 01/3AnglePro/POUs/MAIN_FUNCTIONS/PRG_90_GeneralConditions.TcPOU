@@ -38,7 +38,42 @@ Errors_Axes.ERRORS[0].1 := fbCrossCut_manager.Error ;		// CrossCut axis manager 
 Errors_Axes.ERRORS[0].2 := fbTurret_manager.Error ;		// Turret axis manager error
 Errors_Axes.ERRORS[0].3 := fbXDrive_manager.Error ;		// X-Drive axis manager error
 Errors_Axes.ERRORS[0].4 := fbZ1_manager.Error ;		// Z1 (panel side) axis manager error
-Errors_Axes.ERRORS[0].5 := fbZ2_manager.Error ;		// Z2 (reel side) axis manager error]]></ST>
+Errors_Axes.ERRORS[0].5 := fbZ2_manager.Error ;		// Z2 (reel side) axis manager error
+
+(* Errors Auto CrossCut time out *)
+Errors_AutoCrossCut.ERRORS[0].0 := 	PRG_08_AutoCrossCut.SR_WatchdogTriggered.Q1
+								AND PRG_08_AutoCrossCut.iStepErr = 20 ;
+Errors_AutoCrossCut.ERRORS[0].1 := 	PRG_08_AutoCrossCut.SR_WatchdogTriggered.Q1
+								AND PRG_08_AutoCrossCut.iStepErr = 30 ;
+Errors_AutoCrossCut.ERRORS[0].2 := 	PRG_08_AutoCrossCut.SR_WatchdogTriggered.Q1
+								AND PRG_08_AutoCrossCut.iStepErr = 40 ;
+Errors_AutoCrossCut.ERRORS[0].3 := 	PRG_08_AutoCrossCut.SR_WatchdogTriggered.Q1
+								AND PRG_08_AutoCrossCut.iStepErr = 50 ;
+Errors_AutoCrossCut.ERRORS[0].4 := 	PRG_08_AutoCrossCut.SR_WatchdogTriggered.Q1
+								AND PRG_08_AutoCrossCut.iStepErr = 60 ;
+								
+(* Errors Lifting Position time out *)
+Errors_LiftingPosition.ERRORS[0].0 := 	PRG_09_HomePosition.SR_WatchdogTriggered.Q1
+									AND PRG_09_HomePosition.iStepErr = 10 ;
+Errors_LiftingPosition.ERRORS[0].1 := 	PRG_09_HomePosition.SR_WatchdogTriggered.Q1
+									AND PRG_09_HomePosition.iStepErr = 20 ;
+Errors_LiftingPosition.ERRORS[0].2 := 	PRG_09_HomePosition.SR_WatchdogTriggered.Q1
+									AND PRG_09_HomePosition.iStepErr = 30 ;
+Errors_LiftingPosition.ERRORS[0].3 := 	PRG_09_HomePosition.SR_WatchdogTriggered.Q1
+									AND PRG_09_HomePosition.iStepErr = 40 ;
+Errors_LiftingPosition.ERRORS[0].4 := 	PRG_09_HomePosition.SR_WatchdogTriggered.Q1
+									AND PRG_09_HomePosition.iStepErr = 50 ;
+								
+(* Errors CrossCut Position time out *)
+Errors_CrossCutPosition.ERRORS[0].0 := 	PRG_10_CrossCutPosition.SR_WatchdogTriggered.Q1
+									AND PRG_10_CrossCutPosition.iStepErr = 10 ;
+Errors_CrossCutPosition.ERRORS[0].1 := 	PRG_10_CrossCutPosition.SR_WatchdogTriggered.Q1
+									AND PRG_10_CrossCutPosition.iStepErr = 20 ;
+Errors_CrossCutPosition.ERRORS[0].2 := 	PRG_10_CrossCutPosition.SR_WatchdogTriggered.Q1
+									AND PRG_10_CrossCutPosition.iStepErr = 30 ;
+Errors_CrossCutPosition.ERRORS[0].3 := 	PRG_10_CrossCutPosition.SR_WatchdogTriggered.Q1
+									AND PRG_10_CrossCutPosition.iStepErr = 40 ;
+]]></ST>
     </Implementation>
     <LineIds Name="PRG_90_GeneralConditions">
       <LineId Id="13" Count="0" />
@@ -58,6 +93,16 @@ Errors_Axes.ERRORS[0].5 := fbZ2_manager.Error ;		// Z2 (reel side) axis manager 
       <LineId Id="35" Count="0" />
       <LineId Id="30" Count="0" />
       <LineId Id="36" Count="5" />
+      <LineId Id="54" Count="1" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="59" Count="8" />
+      <LineId Id="69" Count="9" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="81" Count="7" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="57" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
