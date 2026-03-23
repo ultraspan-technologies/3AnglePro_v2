@@ -82,6 +82,7 @@ CASE iStep OF
 				AND NOT bMachineHoming
 				AND NOT bCrossCutPosition
 				AND bCarriageCentreRef
+				AND bSawUpLimit
 		THEN
 				bAutoCrossCut := TRUE	;
 				bWatchdogReset := TRUE  ;
@@ -2449,7 +2450,9 @@ END_CASE]]></ST>
       <LineId Id="213" Count="0" />
       <LineId Id="28" Count="6" />
       <LineId Id="181" Count="0" />
-      <LineId Id="35" Count="2" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="334" Count="0" />
+      <LineId Id="36" Count="1" />
       <LineId Id="211" Count="0" />
       <LineId Id="38" Count="2" />
       <LineId Id="212" Count="0" />

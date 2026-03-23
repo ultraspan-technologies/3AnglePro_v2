@@ -8,7 +8,6 @@ VAR_GLOBAL
 (* ########## Errors ########## *)
 	Errors_Cabinet			: TERRORS2;		(* Errors from inside the cabinet *)
 	Errors_TwinSAFE			: TERRORS2;		(* TwinSAFE errors *)
-	Errors_AutoCycle		: TERRORS2;		(* Errors from the automatic cycles *)
 	Errors_Axes				: TERRORS2;		(* Errors from Stober drive axes *)
 	Errors_AutoCrossCut		: TERRORS2;		(* Errors Auto CrossCut time out *)
 	Errors_LiftingPosition	: TERRORS2;		(* Errors Lifting Position time out *)

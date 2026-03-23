@@ -27,11 +27,6 @@ Warnings_Saw.ERRORS[0].6 := NOT (OUT_bSawON AND bTurret045Range AND bCarriageCen
 Warnings_Saw.ERRORS[0].7 := NOT OUT_bSawON AND NOT bSawUpLimit ;		// Saw blade not ready to turn on
 Warnings_Saw.ERRORS[0].8 := FALSE ;
 
-(* Errors Auto Cycle *)
-Errors_AutoCycle.ERRORS[0].0 := PRG_08_AutoCrossCut.SR_WatchdogTriggered.Q1 ;
-Errors_AutoCycle.ERRORS[0].1 := PRG_09_HomePosition.SR_WatchdogTriggered.Q1 ;
-Errors_AutoCycle.ERRORS[0].2 := PRG_10_CrossCutPosition.SR_WatchdogTriggered.Q1 ;
-
 (* Errors Axes *)
 Errors_Axes.ERRORS[0].0 := fbCarriage_manager.Error ;		// Carriage axis manager error
 Errors_Axes.ERRORS[0].1 := fbCrossCut_manager.Error ;		// CrossCut axis manager error
@@ -89,7 +84,6 @@ Errors_CrossCutPosition.ERRORS[0].3 := 	PRG_10_CrossCutPosition.SR_WatchdogTrigg
       <LineId Id="14" Count="0" />
       <LineId Id="29" Count="0" />
       <LineId Id="31" Count="0" />
-      <LineId Id="45" Count="4" />
       <LineId Id="35" Count="0" />
       <LineId Id="30" Count="0" />
       <LineId Id="36" Count="5" />
